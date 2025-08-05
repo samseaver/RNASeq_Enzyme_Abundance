@@ -1,0 +1,6 @@
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+integration_results
+data/RNASeq_data
+.fa
