@@ -135,6 +135,9 @@ class ComputeScoresPredictions:
         self.trmt_colmn = param.trmt_colmn
         self.treatments = list()
 
+        self.objSaveTo = param.objSaveTo
+        self.relabSaveTo = param.relabSaveTo
+
 
 # Find the path to JSON model files for each species
 def jsonModelPath2Var(csp, verbose=True):
@@ -317,7 +320,7 @@ def readTMMdata(spc, csp, verbose=True):
 
     return tmm_df
 
-def run_pipeline(parameters_class, project:str='QPSI', project_species:list=[], verbose=True):
+def generate_reactionScores(parameters_class, project:str='QPSI', project_species:list=[], verbose=True):
     csp = ComputeScoresPredictions(parameters_class, project, project_species)
 
     if not os.path.exists(csp.results_folder):
@@ -356,7 +359,9 @@ def run_pipeline(parameters_class, project:str='QPSI', project_species:list=[], 
         tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, csp.control_id, csp.trmt_colmn, value_col=csp.value_column, percentile=90, verbose=False)
 
         #  Save results to file
-        tmm_scores.to_csv(f"{csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv", index=False, sep='\t')
+        if not csp.objSaveTo: 
+            csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv"
+        tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         # continue
 
         if csp.project not in ["QPSI", "hAlpha"]:
@@ -415,8 +420,9 @@ def run_pipeline(parameters_class, project:str='QPSI', project_species:list=[], 
         print(bc.PROMPT+"Writing reaction scores and details to:")
         print(csp.results_folder+spc.name+"_rxn_scores_"+csp.msr+".csv"+bc.ENDC)
 
- 
-        rxn_scores.to_csv(csp.results_folder+spc.name+"_relab_rxn_scores_"+csp.msr+".csv", index=False)
+        if not csp.relabSaveTo:
+            csp.relabSaveTo = csp.results_folder+spc.name+"_relab_rxn_scores_"+csp.msr+".csv"
+        rxn_scores.to_csv(csp.relabSaveTo, index=False)
 
         #  Processing file genrates a new scores file that edits the format of the DF
         #   if the pipeline is run again, remove the existing edited RES file in order to
@@ -816,5 +822,5 @@ def integrateRoles():
 if __name__ == '__main__':
     #Parameters_test_a, Parameters_QPSI, Parameters_secMeta_TSU
     project = Parameters_QPSI
-    run_pipeline(project)
+    generate_reactionScores(project)
 

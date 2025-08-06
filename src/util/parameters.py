@@ -36,6 +36,9 @@ class Parameters_QPSI:
         self.control_id      = 'Control'
         self.trmt_colmn      = 'treatment'
 
+        self.objSaveTo       = ''
+        self.relabSaveTo     = ''
+
         project_root = str(Path(__file__).resolve()).split('src')[0]
 
         # # Get predictions from here
