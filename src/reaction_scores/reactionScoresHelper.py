@@ -150,7 +150,7 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
                 # filter mdlrxn_subunit_ftrs
                 ## if any(pref in AT_gene.upper() for pref in ['ATC', 'ATM']):
 
-                mdlrxn_subunit_ftrs = [ftr in mdlrxn_subunit_ftrs if any(pref in ftr.upper() for pref in ['ATC', 'ATM'])]
+                mdlrxn_subunit_ftrs = [ftr for ftr in mdlrxn_subunit_ftrs if not any(pref in ftr.upper() for pref in ['ATC', 'ATM'])]
                 
                 if not mdlrxn_subunit_ftrs:
                     continue
