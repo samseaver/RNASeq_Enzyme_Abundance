@@ -215,16 +215,14 @@ def readRNASeq(spc, csp, verbose=True):
     weights_df = pa.DataFrame.from_dict(pwg.protein_weight_dict, orient="index", columns=['weight'])
     weights_df = weights_df.rename_axis(csp.rnaSeq_id_col).reset_index()
     print(weights_df.head())
-    # print(abc)
+    
 
     # Add gene weights
     relab_df = pa.merge(relab_df, weights_df, on=csp.rnaSeq_id_col, how='left')
     # get total plastid protein mass datafame
     totalProteinMass_df = pwg.plastid_weight_sums  # totalPlastidProteinMass()
     if verbose: print(totalProteinMass_df.reset_index().head(5))
-    print(totalProteinMass_df.reset_index().head(5))
 
-    print(abc)
     # Compute relative molecular abundance
     temp = pa.DataFrame()
     for name, group in relab_df.groupby(csp.group_columns):
@@ -243,8 +241,6 @@ def readRNASeq(spc, csp, verbose=True):
     temp = temp.pivot(index=ind, columns=col, values=val)
     temp.columns = temp.columns.get_level_values(0) + '_' +  temp.columns.get_level_values(1)
 
-    # temp.to_csv("compare_weighted_value_control.csv")
-    # print(abc)
 
     if verbose: print(relab_df.head(5))
     csp.value_column = 'rma'
@@ -515,7 +511,6 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
     print("-------- ", spc.name)
     # print(counts_df[counts_df['treatment'].isin(['FeLim', 'Control'])])
     print(counts_df[counts_df['treatment'].isin(['FeLim', 'Control'])].groupby(['variable'])['counts'].sum())
-    # print(abc)
 
     if verbose: print(counts_df.head(4))
     treatments = list(counts_df['treatment'].unique())
@@ -536,7 +531,6 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
 
     print("Conrol ", weight_df[weight_df['treatment']=='FeLim']['TotalPlastidMass'].mean())
 
-    # print(abc)
     index = 0
 
     for trmt in treatments:
@@ -636,7 +630,7 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
     fig.update_yaxes(range=[min_count, max_count], secondary_y=False)
     
     fig.show()
-    # print(abc)
+    
     plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps.png")
     pio.write_image(fig, plot_path, scale=6, width=wt, height=ht)
 
@@ -661,7 +655,7 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
                         )
         fig.update_layout(barmode='group')
         fig.show()
-        # print(abc)
+        
         fig = px.histogram(tmm_old_scores, x="value",
                             color = 'variable',
                             facet_col='treatment',
