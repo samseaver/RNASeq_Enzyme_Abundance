@@ -39,8 +39,6 @@ class Parameters_QPSI:
         self.objSaveTo       = ''
         self.relabSaveTo     = ''
 
-        project_root = str(Path(__file__).resolve()).split('src')[0]
-
         # # Get predictions from here
         # self.rgb_folders = project_root+"data/prediction_folders"
         # if not os.path.exists(self.rgb_folders):

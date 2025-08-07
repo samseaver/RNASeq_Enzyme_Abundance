@@ -100,9 +100,7 @@ class Species:
 
 ## Pipeline parameters
 class ComputeScoresPredictions:
-    def __init__(self, parameters_class, project='QPSI', project_species=list()):
-        param = parameters_class()
-
+    def __init__(self, param, project='QPSI', project_species=list()):
         if param.error:
             sys.exit("Please fix errors above.")
 
@@ -316,8 +314,8 @@ def readTMMdata(spc, csp, verbose=True):
 
     return tmm_df
 
-def generate_reactionScores(parameters_class, project:str='QPSI', project_species:list=[], verbose=True):
-    csp = ComputeScoresPredictions(parameters_class, project, project_species)
+def generate_reactionScores(parameters, project:str='QPSI', project_species:list=[], verbose=True):
+    csp = ComputeScoresPredictions(parameters, project, project_species)
 
     if not os.path.exists(csp.results_folder):
         os.makedirs(csp.results_folder)
@@ -815,6 +813,6 @@ def integrateRoles():
 
 if __name__ == '__main__':
     #Parameters_test_a, Parameters_QPSI, Parameters_secMeta_TSU
-    project = Parameters_QPSI
+    project = Parameters_QPSI()
     generate_reactionScores(project)
 

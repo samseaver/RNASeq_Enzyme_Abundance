@@ -31,7 +31,7 @@ if generate_models:
 
 # Compute reaction scores
 if compute_scores:
-    project_param = Parameters_QPSI # 
+    project_param = Parameters_QPSI() # 
     csp.generate_reactionScores(project_param)
 
 
