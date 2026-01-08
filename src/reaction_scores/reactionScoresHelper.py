@@ -16,8 +16,8 @@ from src.util.bcolors import bcolors
 #                                   values are summed up to return the subunit score.
 #   2. Sum: subunit score is the sum of the abundances of its paralogs
 #   3. Max: subunit score is the max of the abundances of its paralogs
-def compute_subunit_score(df, id_col, value_col, group_cols, method='relab', rxn_id = ''):
-    df['Gene_ID'] = df['Gene_ID'].astype(str)
+def compute_subunit_score(df, id_col, value_col, std_col, group_cols, method='relab', rxn_id = ''):
+
     rxn_id_only = rxn_id.split('_')[0]
 
     if method == 'relab':
@@ -33,12 +33,12 @@ def compute_subunit_score(df, id_col, value_col, group_cols, method='relab', rxn
 
 
     elif method == 'sum':
-
+    
         sums_df =  df.groupby(group_cols).agg({value_col: 'sum' \
                         , id_col:','.join \
                         # , id_col: lambda x: ','.join(str(x))
                         # , id_col: lambda x: list(x) \lambda x: ','.join(x))
-                        ,value_col+'_std': lambda value_std : np.sqrt((value_std*value_std).sum()),\
+                        ,std_col: lambda std_col : np.sqrt((std_col*std_col).sum()),\
                     }).reset_index()
     else:
         sums_df = df.loc[df.groupby(group_cols)[value_col].idxmax()]
@@ -80,7 +80,7 @@ def genera_list(rows):
             ]
 
 
-def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_set, ftr_list, binding, method='relab', rxn_id = ''):
+def compute_rxn_score_value(df, id_col, rxn, value_col, std_col, group_cols, subsystems_set, ftr_list, binding, method='relab', rxn_id = ''):
     new_df = pa.DataFrame()
 
     if method == 'relab':
@@ -90,12 +90,12 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_s
         new_df = df.groupby(group_cols).agg({value_col:'sum'\
                 , id_col: ','.join \
                 # , id_col: lambda x : genera_list(x) \
-                ,value_col+'_std': lambda value_std : np.sqrt((value_std*value_std).sum()),\
+                ,std_col: lambda std_col : np.sqrt((std_col*std_col).sum()),\
                 }).reset_index()
     else:
         new_df = df.loc[df.groupby(group_cols)[value_col].idxmax()]
 
-    new_df.rename(columns = {value_col:'value'}, inplace=True)
+    # new_df.rename(columns = {value_col:'value'}, inplace=True)
     new_df = new_df.assign(subsystems = [subsystems_set for i in new_df.index])
 
     if not binding:
@@ -113,9 +113,9 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_s
 #   - compute_subunit_score
 #   - compute_mrp_score
 #   - compute_rxn_score_value
-def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc_name, method='relab', verbose=False):
+def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_cols, spc_name, method='relab', verbose=False):
     # -- input
-    # relab_data.columns: Gene_ID, treatment, tissue, time_stamp, value (TPM, TMM, or any other)
+    # relab_data.columns: gene_id, treatment, tissue, time_stamp, value (TPM, TMM, or any other)
     # model_rxn_dict: rxn_id -> Reaction object (modelComponents)
     # -- output
     # dfcolumns: rxn_ID, treatment, subsystems, 2d, 4d, ...
@@ -123,15 +123,32 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
     rxn_scores = pa.DataFrame()
     n_rxn = len(metModel.modelreactions_dict)
 
+    # Implementing EXTREAM algorithm here
+    # Create a set of unique (Gene, Base_Reaction) tuples
+    # We strip the last 2 chars if they are directional tags (_f or _r) to get the biological ID
+    # Using a set automatically handles the deduplication (counting the pair only once)
+    unique_gene_rxn_pairs = set(
+        (g, r.id[:-2] if r.id.endswith(('_f', '_r')) else r.id)
+        for r in metModel.modelreactions_dict.values()
+        for g in r.genes
+    )
+
+    # Count reaction associations per gene
+    gene_rxns_count = pa.Series([pair[0] for pair in unique_gene_rxn_pairs]).value_counts()
+
+    # Store original values and Normalize
+    relab_data['original_value'] = relab_data[value_col]
+    relab_data[value_col] /= relab_data[id_col].map(gene_rxns_count).fillna(1)
+
     for rxn_id, rxn in metModel.modelreactions_dict.items():
         nr+=1
         rxn_subsys = rxn.subsystems
 
         if not rxn.genes:
-            print(bcolors.PROG+" -- No features, skipping {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
+            # print(bcolors.PROG+" -- No features, skipping {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
             continue
 
-        print(bcolors.PROG+"Computing scores for {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
+        # print(bcolors.PROG+"Computing scores for {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
 
         mdlrxn_prot_list = rxn.gpr
 
@@ -147,16 +164,16 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
             sub = 0
             for mdlrxn_subunit_ftrs in mdlrxn_prot:
                 sub += 1
-                # filter mdlrxn_subunit_ftrs
-                ## if any(pref in AT_gene.upper() for pref in ['ATC', 'ATM']):
 
                 mdlrxn_subunit_ftrs = [ftr for ftr in mdlrxn_subunit_ftrs if not any(pref in ftr.upper() for pref in ['ATC', 'ATM'])]
                 
                 if not mdlrxn_subunit_ftrs:
                     continue
+    
                 feature_value_df = relab_data[(relab_data[id_col].isin(mdlrxn_subunit_ftrs))]
+                feature_value_df[id_col] = feature_value_df[id_col].astype(str)
                 ftr_list.extend(mdlrxn_subunit_ftrs)
-                mrps_score =compute_subunit_score(feature_value_df, id_col, value_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
+                mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, std_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
                 mrps_scores= pa.concat([mrps_scores, mrps_score], ignore_index=True)
 
             if not mrps_scores.empty:
@@ -164,8 +181,8 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
                 mrp_scores= pa.concat([mrp_scores, mrp_score], ignore_index=True)
 
         if not mrp_scores.empty:
-            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, \
-                                        group_cols, rxn_subsys, ftr_list, rxn.binds, method, rxn_id = rxn_id)
+            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, std_col, \
+                                        group_cols, sorted(rxn_subsys), ftr_list, rxn.binds, method, rxn_id = rxn_id)
             
             rxn_scores= pa.concat([rxn_scores, rxn_score], ignore_index=True)
 
@@ -177,7 +194,7 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
 #       x <- treatment score
 #       y <- control score
 def compute_rxn_variability(scores_df, group_cols, treatments, control_id, trmt_colm, value_col, percentile=90, verbose=False):
-    print(" --------- Computing rxn score varibility --------- norm_"+value_col)
+    if verbose: print(" --------- Computing rxn score varibility --------- norm_"+value_col)
     quantiles = [i*5/100 for i in range(0, 21)]
     labels = [int(i*100) for i in quantiles[:-1]]
     # Identity line

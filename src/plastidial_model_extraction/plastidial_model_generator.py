@@ -22,7 +22,8 @@ elif os.path.exists('/Users/selalaoui/'):
     ModelSEEDDB_path = '/Users/selalaoui/packages/ModelSEED_KBase/ModelSEEDDatabase/Libs/Python/'
     sys.path.append(ModelSEEDDB_path)
 else:
-    ModelSEEDDB_path = None
+    ModelSEEDDB_path = '/scratch/seaver/Git_Repos/ModelSEEDDatabase/Libs/Python/'
+    sys.path.append(ModelSEEDDB_path)
 
 printModelDetails = False
 writeModelXML = True
@@ -101,7 +102,7 @@ class ModelBuilder:
             raise ValueError(bcolors.FAIL+"  Couldn't load parameters."+bcolors.ENDC)
 
         # Files
-        self.folder = project_root+param_dict["files_paths"]["in_folder"]
+        self.folder = param_dict["files_paths"]["in_folder"]
         self.media_json = project_root+param_dict["files_paths"]["media_json"]
         self.spc_model_xml = self.folder+param_dict["files_paths"][self.spc]["spc_model_xml"]
         self.spc_model_json = self.folder+param_dict["files_paths"][self.spc]["spc_model_json"]
@@ -109,7 +110,7 @@ class ModelBuilder:
         # Creating the output folder
         if not os.path.exists(project_root+param_dict["files_paths"]["out_folder"]):
             os.makedirs(project_root+param_dict["files_paths"]["out_folder"])
-        self.output_model_file = project_root+param_dict["files_paths"]["out_folder"]+param_dict["files_paths"][self.spc]["output_model_file"]
+        self.output_model_file = param_dict["files_paths"]["out_folder"]+param_dict["files_paths"][self.spc]["output_model_file"]
         self.KBase_FBA = project_root+param_dict["files_paths"]["KBase_FBA"]
 
         # Compartments
@@ -602,11 +603,11 @@ class ModelGenerator:
         self.cobrahelperobject = CobraHelper(self.mb.plast_model)
 
         self.cobrahelperobject.create_cobra_model(self.mb.media_from_json,
-         self.mb.media_cprmt,[self.mb.main_cprmt]+self.mb.extra_cprmts)
+        self.mb.media_cprmt,[self.mb.main_cprmt]+self.mb.extra_cprmts)
 
         print(bcolors.PROMPT+" Running optimization"+bcolors.ENDC)
-        self.cobrahelperobject.run_optimization()
-        self.cobrahelperobject.FBA_analysis(self.mb.KBase_FBA)
+        # self.cobrahelperobject.run_optimization()
+        # self.cobrahelperobject.FBA_analysis(self.mb.KBase_FBA)
 
         # print model properties and details
         if printModelDetails :
@@ -646,6 +647,7 @@ class ModelGenerator:
         print(bcolors.PROMPT+" Writing models to file "+bcolors.ENDC)
         json_model = self.mb.plast_model.as_dict()
         with open(self.mb.output_model_file+".json", "w") as outfile:
+            print(self.mb.output_model_file+".json")
             json.dump(json_model, outfile, indent=4)
 
         # Save it as xml

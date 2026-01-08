@@ -15,14 +15,19 @@ from src.plastidial_model_extraction.plastidial_model_generator import ModelBuil
 # Reaction scores 
 import src.reaction_scores.computeScoresAndPredictions as csp
 
-# Parameters file
+# Parameters class
+# The parameters dictate where to find the files
+# And how to link them to different species/conditions
 from src.util.parameters import Parameters_QPSI
+from src.util.parameters import Parameters_ColdResponse
+project_param = Parameters_ColdResponse()
 
-generate_models = False
+# This flag is for the sake of our publication
+# As described in our work, we take a full reconstruction
+# And we reduce it to a working reconstruction of a plastid
 compute_scores = True
 
-
-if generate_models:
+if project_param.generate_plastidial_models:
     spcs = ['Athaliana', 'Poplar', 'Sorghum']
     for spc in spcs:
         mBuilder = ModelBuilder(spc)
@@ -31,10 +36,4 @@ if generate_models:
 
 # Compute reaction scores
 if compute_scores:
-    project_param = Parameters_QPSI() # 
-    csp.generate_reactionScores(project_param)
-
-
-
-
-
+    csp.generate_reactionScores(project_param,project_species=['TSU','C24'])

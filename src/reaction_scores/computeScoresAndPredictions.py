@@ -10,7 +10,6 @@ import numpy as np
 from scipy.stats import zscore
 import math
 
-
 import reactionScoresHelper as rsh
 import fluxes_to_reactions as f2r
 
@@ -18,9 +17,8 @@ from pathlib import Path
 project_root = str(Path(__file__).resolve()).split('src')[0]
 sys.path.append(project_root)
 from src.util.modelComponents import *
-# from src.metalBinding.metalRdgbHelper import RDGBHelper
+
 from src.util.proteinWeightGenerator import ProteinWeightGenerator
-from src.util.bcolors import bcolors as bc
 from src.util.parameters import *
 
 import plotly.express as px
@@ -35,7 +33,7 @@ PS_tag  = "8cf60046e4af68912f7a7d3eeff16880a07f56bd"
 PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"
 
 def generateRolesDict():
-    print(bc.SUBRESULT+"PS Roles reading ...")
+    print("Reading PlantSEED Database")
     # PS_json_data = json.load(urlopen(PS_url+PS_tag+PS_json))
 
     roles_file = os.path.join(project_root, "data", "metabolic_models", "PlantSEED_Roles.json")
@@ -51,17 +49,16 @@ def generateRolesDict():
         role_dict["reactions"]   = list()
         roles_dict[item["role"]] = role_dict
 
-    i = 1
-    for fr in ["1", "2", "3", "C1", "C2"]:
-        role_dict = dict()
-        role_dict["role"]        = f"Ferredoxin {fr} (EC 0.0.0.{i})"
-        role_dict["subsystems"]  = ["Ferredoxins"]
-        role_dict["reactions"]   = [f"rxn00fd{fr}_d0", "rxn00fdA_d0"]
-        roles_dict[role_dict["role"]] = role_dict
-        i += 1
+    # i = 1
+    # for fr in ["1", "2", "3", "C1", "C2"]:
+    #     role_dict = dict()
+    #     role_dict["role"]        = f"Ferredoxin {fr} (EC 0.0.0.{i})"
+    #     role_dict["subsystems"]  = ["Ferredoxins"]
+    #     role_dict["reactions"]   = [f"rxn00fd{fr}_d0", "rxn00fdA_d0"]
+    #     roles_dict[role_dict["role"]] = role_dict
+    #     i += 1
     return roles_dict
 roles_dict = generateRolesDict()
-
 
 # Model species information
 class Species:
@@ -87,16 +84,7 @@ class Species:
             self.metModel = Model().fromJSON(json_model, roles_dict)
 
         if self.metModel == None:
-            raise ValueError(bc.FAIL+f"  Couldn't load metabolic model from {modelJSON_file_path}."+bc.ENDC)
-
-    def updateMetalBinding(self, id_pfam_dict, metal):
-        intersection = set(id_pfam_dict.keys()).\
-                        intersection(self.metModel.modelfeatures_dict.keys())
-
-        for gene_id in intersection:
-            self.metModel.modelfeatures_dict[gene_id].binds = metal
-            self.metModel.modelfeatures_dict[gene_id].pfam.add(id_pfam_dict[gene_id])
-
+            raise ValueError(f"  Couldn't load metabolic model from {modelJSON_file_path}.")
 
 ## Pipeline parameters
 class ComputeScoresPredictions:
@@ -106,21 +94,17 @@ class ComputeScoresPredictions:
 
         self.project = param.project
         self.project_species = project_species if project_species else param.project_species
+
         self.outlier_cap_percentile = 95
-
-        # if not os.path.exists(param.rgb_folders):
-        #     raise FileNotFoundError("Prediction folders not found.")
-
-        # self.folders = os.listdir(param.rgb_folders)
-        # self.folders = [os.path.join(param.rgb_folders, f) for f in self.folders]
+        print("Reminder: Capped value: ",self.outlier_cap_percentile)
 
         self.PS_json_data = list()
         self.species_list =  list()
         self.cons_dict_list = list()
 
         self.msr = param.msr
-        self.metals = param.metals
         self.value_column  = param.value_column
+        self.std_column = param.std_column
         self.modelJSON_files_folder = param.json_files_folder
         self.RNASeq_folder = param.RNASeq_folder
         # Write the results to this folder
@@ -140,40 +124,33 @@ class ComputeScoresPredictions:
 # Find the path to JSON model files for each species
 def jsonModelPath2Var(csp, verbose=True):
     json_dict = dict()
-    if verbose: print(bc.PROMPT+"-"*10+" Updating JSON file paths "+"-"*10)
+    if verbose: print("-"*10+" Updating JSON file paths "+"-"*10)
     fileNames = [os.path.join(csp.modelJSON_files_folder, x)
                     for x in os.listdir(csp.modelJSON_files_folder)]
 
-    for fileName in fileNames:
-        for spc in csp.project_species:
+    for spc in csp.project_species:
+        for fileName in fileNames:
+            if("media" in fileName.lower()):
+                continue
             synonyms = parameters_all_spc[spc]['synonyms']
             if any(y.lower() in fileName.lower() for y in synonyms) and fileName.endswith('.json'):
-            #  \
-            # and (('070224'.lower() in fileName.lower()) or ('250512'.lower() in fileName.lower())):
-            # Athaliana_Thylakoid_Reconstruction_ComplexFix_070224
                 json_dict[spc] = fileName
                 break
 
     return json_dict
 
-
 # Find the path to RNASeq files for each species
 def rnaSeqFile2Var(csp, verbose=True):
     rnaseq_dict = dict()
 
-    if verbose: print(bc.PROMPT+"-"*10+" Updating RNASeq file paths "+"-"*10)
+    if verbose: print("-"*10+" Updating RNASeq file paths "+"-"*10)
     fileNames = os.listdir(csp.RNASeq_folder+csp.msr+"/")
     for fileName in fileNames:
-        if (csp.msr in fileName.lower()) and ('mean' in fileName.lower()):# and ('counts' in fileName.lower()):
-            for spc in csp.project_species:
-                if (csp.project != 'secMeta') and ('atha' in spc.lower()):
-                    rnaseq_dict[spc] = ""
-                    continue
-
-                synonyms = parameters_all_spc[spc]['synonyms']
-                if any(y.lower() in fileName.lower() for y in synonyms):
-                    rnaseq_dict[spc] = csp.RNASeq_folder+csp.msr+"/"+fileName
-                    break
+        for spc in csp.project_species:
+            synonyms = parameters_all_spc[spc]['synonyms']
+            if any(y.lower() in fileName.lower() for y in synonyms):
+                rnaseq_dict[spc] = csp.RNASeq_folder+csp.msr+"/"+fileName
+                break
 
     return rnaseq_dict
 
@@ -181,7 +158,7 @@ def rnaSeqFile2Var(csp, verbose=True):
 # Compute protein weights and total Plastid Protein Mass
 # Compute relative molecular abundance (rma) to be used for relative-RES
 def readRNASeq(spc, csp, verbose=True):
-    print(bc.PROG+f" Computing Protein weights for {spc.name} ..."+bc.ENDC)
+    print(f" Computing Protein weights for {spc.name} ...")
     # Read RANSeq data from file
     relab_df = pa.read_csv(spc.RNASeq_file_path)
 
@@ -193,13 +170,16 @@ def readRNASeq(spc, csp, verbose=True):
         # add '0' to single digit time points for ordering purposes
         relab_df['time_stamp'] = relab_df['time_stamp'].transform(lambda ts:ts if ts in ['14d', '21d'] else '0'+ts)
 
-
+    print("WE ARE READING RNASEQ FILE: ",spc.RNASeq_file_path)
     # # Remove outliers: !!! NOT NEEDED WHEN USING COUNTS (ALREADY CAPPED) !!!
     percent = -1
     if csp.msr in ['tpm', 'tmm']:
         percent = relab_df[csp.value_column].\
             describe([csp.outlier_cap_percentile/100])\
             [str(csp.outlier_cap_percentile)+'%']
+
+        print("THE CAP IS :",csp.outlier_cap_percentile)
+        print("THE PERCENT IS: ",percent)
 
         relab_df.loc[(relab_df[csp.value_column] > percent), csp.value_column] = percent
 
@@ -212,8 +192,6 @@ def readRNASeq(spc, csp, verbose=True):
     pwg.computeWeightsAndMass(to_file=False)
     weights_df = pa.DataFrame.from_dict(pwg.protein_weight_dict, orient="index", columns=['weight'])
     weights_df = weights_df.rename_axis(csp.rnaSeq_id_col).reset_index()
-    print(weights_df.head())
-    
 
     # Add gene weights
     relab_df = pa.merge(relab_df, weights_df, on=csp.rnaSeq_id_col, how='left')
@@ -263,12 +241,18 @@ def readTMMdata(spc, csp, verbose=True):
     tmm_file = spc.RNASeq_file_path
     if csp.project == 'QPSI':
         tmm_file = tmm_file.replace(csp.msr, 'tmm')
+    print("Reading TMM File: ",tmm_file)
     tmm_df = pa.read_csv(tmm_file)
 
-
+    # Check for ID of first column for gene/transcript/protein ids
+    # Sometimes it is empty or has a different name, best to keep it consistent
+    if(tmm_df.columns[0] != csp.rnaSeq_id_col):
+        tmm_df.columns.values[0] = csp.rnaSeq_id_col
+        
     # keep only genes involved in plastidial reactions
-    print(bc.PROG +f"\tThere are {len(spc.metModel.modelfeatures_dict)} genes in the model")
-    print(bc.PROG +f"\t          {len(tmm_df[csp.rnaSeq_id_col].unique())} genes in the RNAseq")
+    if verbose:
+        print(f"\tThere are {len(spc.metModel.modelfeatures_dict)} genes in the model")
+        print(f"\t          {len(tmm_df[csp.rnaSeq_id_col].unique())} genes in the RNAseq")
     tmm_df = tmm_df[(tmm_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
 
     # Cap TMM values at the outlier_cap_percentile percentile
@@ -282,24 +266,25 @@ def readTMMdata(spc, csp, verbose=True):
     wt, ht = 800, 600
     fig = px.violin(tmm_df,
                     x='time_stamp',
-                    y='value',
+                    y=csp.value_column,
                     color="treatment",
                     title=spc.name+" after cap",
                     height=ht, width=wt
                 )
     # fig.update_yaxes(range=[-1500, 80000])
-    fig.show()
+    plot_path = os.path.join(csp.results_folder, f"{spc.name}_TMM_histogram.png")
+    fig.write_image(plot_path)
 
     nbins = math.ceil((tmm_df[csp.value_column].max() - tmm_df[csp.value_column].min()) / bin_width)
     fig = px.histogram(tmm_df, x=csp.value_column, nbins=nbins)
-    fig.show()
-
+    # Save figure before showing
+    plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_interactive.html")
+    fig.write_html(plot_path)
 
     # Format time points 
     if csp.project == 'QPSI':
         # add '0' to single digit time points
         tmm_df['time_stamp'] = tmm_df['time_stamp'].transform(lambda ts:ts if ts in ['14d', '21d'] else '0'+ts)
-
 
     ## -----------------------------------------------------------------------------------------
     if 'atha' in spc.name.lower():
@@ -314,61 +299,66 @@ def readTMMdata(spc, csp, verbose=True):
 
     return tmm_df
 
-def generate_reactionScores(parameters, project:str='QPSI', project_species:list=[], verbose=True):
+def generate_reactionScores(parameters, model=None, project:str='QPSI', project_species:list=[], verbose=False):
     csp = ComputeScoresPredictions(parameters, project, project_species)
 
     if not os.path.exists(csp.results_folder):
         os.makedirs(csp.results_folder)
 
     # set the file paths to RNAseq and models
-    json_dict = jsonModelPath2Var(csp)
+    json_dict = jsonModelPath2Var(csp,verbose)
     if verbose:
         for spc, json_file in json_dict.items():
-            print(bc.PROG+"        "+spc+" <-- "+json_file+bc.ENDC)
-    rnaseq_dict = rnaSeqFile2Var(csp)
+            print("        "+spc+" <-- "+json_file)
+    rnaseq_dict = rnaSeqFile2Var(csp,verbose)
     if verbose:
         for spc, rnaseq_file in rnaseq_dict.items():
-            print(bc.PROG+"        "+spc+" <-- "+rnaseq_file+bc.ENDC)
+            print("        "+spc+" <-- "+rnaseq_file)
+            
     # set model species
     csp.species_list = [Species(spc, parameters_all_spc[spc]['synonyms'], json_dict[spc], rnaseq_dict[spc]) for spc in csp.project_species]
-
 
     ## Reactions cores ============================================================================
     for spc in csp.species_list:
 
-        print(bc.PROMPT+"\n"+"-"*10+"    Computing reaction scores "+"-"*10+bc.ENDC)
-        if ('atha' in spc.name.lower()) and (csp.project != 'secMeta'): continue
+        if verbose:
+            print("\n"+"-"*10+"    Computing reaction scores for "+spc.name+"-"*10)
         ## Start reaction score computation using TMM -- used for K_app computation -------------
-        print(bc.PROG +"    Computing reactions scores using TMM data"+bc.ENDC)
-        tmm_df = readTMMdata(spc, csp)
+        if verbose:
+            print("    Computing reactions scores using TMM data")
+        tmm_df = readTMMdata(spc, csp,verbose=verbose)
         if 'value_log' not in tmm_df.columns:
             tmm_df['value_log'] = np.log(tmm_df[csp.value_column]) # np.log(tmm_df['value'])
 
         csp.treatments = list(tmm_df[csp.trmt_colmn].unique())
         csp.treatments.remove(csp.control_id)
         #  Compute reaction scores using the sum-min-sum method
-        tmm_scores = rsh.compute_model_score(tmm_df, spc.metModel, csp.rnaSeq_id_col,\
-                                 csp.value_column, csp.group_columns, spc.name, method='sum', verbose=True)
+        tmm_scores = rsh.compute_model_score(tmm_df, spc.metModel, csp.rnaSeq_id_col, \
+                                                csp.value_column, csp.std_column, csp.group_columns, \
+                                                spc.name, method='sum', verbose=verbose)
 
-        tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, csp.control_id, csp.trmt_colmn, value_col=csp.value_column, percentile=90, verbose=False)
+        tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, \
+                                                    csp.control_id, csp.trmt_colmn, value_col=csp.value_column,
+                                                    percentile=90, verbose=verbose)
 
         #  Save results to file
-        if not csp.objSaveTo: 
-            csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv"
+        csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv"
         tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         # continue
 
-        if csp.project not in ["QPSI", "hAlpha"]:
-            sys.exit(f"Scores saved to: \n {csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.csv")
-        ###### --- STOP HERE IF RELATIVE RS IS NOT RELEVANT 
+        if parameters.generate_plastidial_models is False:
+            if verbose:
+                print(f"Scores saved to: \n {csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv")
+            continue
 
+        ###### --- STOP HERE IF RELATIVE RS IS NOT RELEVANT
 
         ## RNASeq data and protein weight processing --------------------------------------------
-        print(bc.SUBRESULT +"        ** {} Model Reactions.".format(spc.name)+bc.ENDC)
+        print("        ** {} Model Reactions.".format(spc.name))
         relab_df, pwg = readRNASeq(spc, csp)
 
         ## Start relative abundance based reaction score computation ----------------------------
-        print(bc.PROG +"    Computing reactions scores"+bc.ENDC)
+        print("    Computing reactions scores")
         # set treatment list from the new DF in case they are different from previously set values
         csp.treatments = list(relab_df[csp.trmt_colmn].unique())
         csp.treatments.remove(csp.control_id)
@@ -378,7 +368,7 @@ def generate_reactionScores(parameters, project:str='QPSI', project_species:list
                 csp.value_column, csp.group_columns, spc.name, method='relab', verbose=True)
 
         # Add fluxes to each reaction -----------------------------------------------------------
-        print(bc.PROMPT+"    Running COBRApy FVA"+bc.ENDC)
+        print("    Running COBRApy FVA")
         fva_df = pa.DataFrame()
         merge_on = ['rxn_ID', 'tissue'] if csp.project == 'QPSI' else ['rxn_ID']
 
@@ -408,11 +398,10 @@ def generate_reactionScores(parameters, project:str='QPSI', project_species:list
         if "weightedSumWeight" in rxn_scores.columns:
             rxn_scores.rename(columns={'weightedSumWeight': csp.value_column}, inplace=True)
 
-        print(rxn_scores.columns)
         rxn_scores = rsh.compute_rxn_variability(rxn_scores, csp.group_columns, csp.treatments, csp.control_id, csp.trmt_colmn, csp.value_column, percentile=90, verbose=False)
 
-        print(bc.PROMPT+"Writing reaction scores and details to:")
-        print(csp.results_folder+spc.name+"_rxn_scores_"+csp.msr+".csv"+bc.ENDC)
+        print("Writing reaction scores and details to:")
+        print(csp.results_folder+spc.name+"_rxn_scores_"+csp.msr+".csv")
 
         if not csp.relabSaveTo:
             csp.relabSaveTo = csp.results_folder+spc.name+"_relab_rxn_scores_"+csp.msr+".csv"
@@ -507,8 +496,6 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
 
     counts_df = tmm_old_scores[tmm_old_scores['value']>=80].groupby(['treatment', 'time_stamp', 'variable']).size().reset_index(name='counts')
     print("-------- ", spc.name)
-    # print(counts_df[counts_df['treatment'].isin(['FeLim', 'Control'])])
-    print(counts_df[counts_df['treatment'].isin(['FeLim', 'Control'])].groupby(['variable'])['counts'].sum())
 
     if verbose: print(counts_df.head(4))
     treatments = list(counts_df['treatment'].unique())
@@ -523,11 +510,6 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
                     specs=specs)
     weight_df = pwg.plastid_weight_sums.reset_index()
     weight_df = weight_df[weight_df['tissue']=='Leaf']
-    print(weight_df[weight_df['treatment']=='FeLim'])
-    
-    print("FeLim ", weight_df[weight_df['treatment']=='FeLim']['TotalPlastidMass'].mean())
-
-    print("Conrol ", weight_df[weight_df['treatment']=='FeLim']['TotalPlastidMass'].mean())
 
     index = 0
 
@@ -627,11 +609,16 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
     fig.update_yaxes(range=[min_plastid, max_plastid], secondary_y=True)
     fig.update_yaxes(range=[min_count, max_count], secondary_y=False)
     
-    fig.show()
+    plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_scatter.png")
+    img_bytes = pio.to_image(fig, format="png")
+    with open(plot_path, "wb") as f:
+        f.write(img_bytes)
     
     plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps.png")
-    pio.write_image(fig, plot_path, scale=6, width=wt, height=ht)
-
+    img_bytes = pio.to_image(fig, format="png")
+    with open(plot_path, "wb") as f:
+        f.write(img_bytes)
+    
     return 
 
     print("min plastid: ", weight_df['TotalPlastidMass'].min(), "max plastid: ", weight_df['TotalPlastidMass'].max())
@@ -652,7 +639,9 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
                         # , height=1000, width=3000
                         )
         fig.update_layout(barmode='group')
-        fig.show()
+
+        plot_path = os.path.join(csp.results_folder, f"{spc.name}_scatter_plot.png")
+        pio.write_image(fig, plot_path, scale=2)
         
         fig = px.histogram(tmm_old_scores, x="value",
                             color = 'variable',
@@ -670,7 +659,9 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
                             # , height=1000, width=3000
                         )
         fig.update_layout(barmode='group')
-        fig.show()
+
+        plot_path = os.path.join(csp.results_folder, f"{spc.name}_scatter_plot.png")
+        pio.write_image(fig, plot_path, scale=2)
 
         fig = px.scatter(
             tmm_old_scores[tmm_old_scores['value']>=80], #variable  value
@@ -692,7 +683,9 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
             , facet_col_spacing=0.03
             # , height=1000, width=3000
         )
-        fig.show()
+
+        plot_path = os.path.join(csp.results_folder, f"{spc.name}_scatter_plot.png")
+        pio.write_image(fig, plot_path, scale=2)
 
     ## ########################### ########################### ###########################
 
