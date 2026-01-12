@@ -20,7 +20,8 @@ import src.reaction_scores.computeScoresAndPredictions as csp
 # And how to link them to different species/conditions
 from src.util.parameters import Parameters_QPSI
 from src.util.parameters import Parameters_ColdResponse
-project_param = Parameters_ColdResponse()
+from src.util.parameters import Parameters_BRaVE
+project_param = Parameters_BRaVE()
 
 # This flag is for the sake of our publication
 # As described in our work, we take a full reconstruction
@@ -36,4 +37,4 @@ if project_param.generate_plastidial_models:
 
 # Compute reaction scores
 if compute_scores:
-    csp.generate_reactionScores(project_param,project_species=['TSU','C24'])
+    csp.generate_reactionScores(project_param,project_species=['Sorghum'])

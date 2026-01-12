@@ -3,6 +3,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=Warning)
 
 import os
+import csv
 import json
 from urllib.request import urlopen
 import pandas as pa
@@ -241,8 +242,14 @@ def readTMMdata(spc, csp, verbose=True):
     tmm_file = spc.RNASeq_file_path
     if csp.project == 'QPSI':
         tmm_file = tmm_file.replace(csp.msr, 'tmm')
-    print("Reading TMM File: ",tmm_file)
-    tmm_df = pa.read_csv(tmm_file)
+    
+    # Read the first few bytes to guess the separator
+    with open(tmm_file, 'r') as f:
+        # 'sniff' the first 1024 bytes to find the dialect
+        dialect = csv.Sniffer().sniff(f.read(1024))
+    
+    # Now read it with the detected delimiter using the fast C engine (default)
+    tmm_df = pa.read_csv(tmm_file, sep=dialect.delimiter)
 
     # Check for ID of first column for gene/transcript/protein ids
     # Sometimes it is empty or has a different name, best to keep it consistent
@@ -262,24 +269,24 @@ def readTMMdata(spc, csp, verbose=True):
     tmm_df.loc[(tmm_df[csp.value_column] > percent), csp.value_column] = percent
 
     # Histogram and violin plot to double check
-    bin_width= 10
-    wt, ht = 800, 600
-    fig = px.violin(tmm_df,
-                    x='time_stamp',
-                    y=csp.value_column,
-                    color="treatment",
-                    title=spc.name+" after cap",
-                    height=ht, width=wt
-                )
+    # bin_width= 10
+    # wt, ht = 800, 600
+    # fig = px.violin(tmm_df,
+    #                 x='time_stamp',
+    #                 y=csp.value_column,
+    #                 color="treatment",
+    #                 title=spc.name+" after cap",
+    #                 height=ht, width=wt
+    #             )
     # fig.update_yaxes(range=[-1500, 80000])
-    plot_path = os.path.join(csp.results_folder, f"{spc.name}_TMM_histogram.png")
-    fig.write_image(plot_path)
+    # plot_path = os.path.join(csp.results_folder, f"{spc.name}_TMM_histogram.png")
+    # fig.write_image(plot_path)
 
-    nbins = math.ceil((tmm_df[csp.value_column].max() - tmm_df[csp.value_column].min()) / bin_width)
-    fig = px.histogram(tmm_df, x=csp.value_column, nbins=nbins)
+    # nbins = math.ceil((tmm_df[csp.value_column].max() - tmm_df[csp.value_column].min()) / bin_width)
+    # fig = px.histogram(tmm_df, x=csp.value_column, nbins=nbins)
     # Save figure before showing
-    plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_interactive.html")
-    fig.write_html(plot_path)
+    # plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_interactive.html")
+    # fig.write_html(plot_path)
 
     # Format time points 
     if csp.project == 'QPSI':
@@ -301,9 +308,6 @@ def readTMMdata(spc, csp, verbose=True):
 
 def generate_reactionScores(parameters, model=None, project:str='QPSI', project_species:list=[], verbose=False):
     csp = ComputeScoresPredictions(parameters, project, project_species)
-
-    if not os.path.exists(csp.results_folder):
-        os.makedirs(csp.results_folder)
 
     # set the file paths to RNAseq and models
     json_dict = jsonModelPath2Var(csp,verbose)
@@ -330,19 +334,48 @@ def generate_reactionScores(parameters, model=None, project:str='QPSI', project_
         if 'value_log' not in tmm_df.columns:
             tmm_df['value_log'] = np.log(tmm_df[csp.value_column]) # np.log(tmm_df['value'])
 
-        csp.treatments = list(tmm_df[csp.trmt_colmn].unique())
-        csp.treatments.remove(csp.control_id)
         #  Compute reaction scores using the sum-min-sum method
         tmm_scores = rsh.compute_model_score(tmm_df, spc.metModel, csp.rnaSeq_id_col, \
                                                 csp.value_column, csp.std_column, csp.group_columns, \
                                                 spc.name, method='sum', verbose=verbose)
 
-        tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, \
-                                                    csp.control_id, csp.trmt_colmn, value_col=csp.value_column,
-                                                    percentile=90, verbose=verbose)
+        # csp.treatments = list(tmm_df[csp.trmt_colmn].unique())
+        # csp.treatments.remove(csp.control_id)
+        # tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, \
+        #                                             csp.control_id, csp.trmt_colmn, value_col=csp.value_column,
+        #                                             percentile=90, verbose=verbose)
+
+        # --- Statistics Reporting ---
+        total_model_rxns = len(spc.metModel.modelreactions_dict)
+        
+        # Count reactions that actually have gene mappings (GPRs)
+        gene_associated_rxns = 0
+        for rxn in spc.metModel.modelreactions_dict.values():
+            if rxn.genes: # Checks if the gene list is not empty
+                gene_associated_rxns += 1
+                
+        # Count reactions that successfully received a score
+        scored_unique_rxns = tmm_scores['rxn_ID'].nunique()
+        
+        print(f"\n" + "="*50)
+        print(f"  Reaction Score Stats: {spc.name}")
+        print(f"  1. Total Model Reactions:       {total_model_rxns}")
+        print(f"  2. Gene-Associated Reactions:   {gene_associated_rxns}")
+        print(f"  3. Reactions with Transcript:   {scored_unique_rxns}")
+        
+        if total_model_rxns > 0:
+            pct_gene = (gene_associated_rxns / total_model_rxns) * 100
+            print(f"     -> Gene Coverage of Model:   {pct_gene:.2f}%")
+            
+        if gene_associated_rxns > 0:
+            pct_score = (scored_unique_rxns / gene_associated_rxns) * 100
+            print(f"     -> Transcript Coverage:      {pct_score:.2f}% (of gene-associated)")
+            
+        print("="*50 + "\n")
+        # ----------------------------
 
         #  Save results to file
-        csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv"
+        csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance.tsv"
         tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         # continue
 

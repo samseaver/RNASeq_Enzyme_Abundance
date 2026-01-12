@@ -121,3 +121,51 @@ class Parameters_ColdResponse:
         self.PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
         self.PS_tag  = "8cf60046e4af68912f7a7d3eeff16880a07f56bd"
         self.PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"
+
+class Parameters_BRaVE:
+    def __init__(self):
+        self.project         = 'brave'
+        # This parameter allows you to switch between different value types
+        # But they should be saved in a folder of the same name in the RNASeq_folder
+        # i.e. .../rnaseq-data/tmm/
+        self.msr             = 'tmm' # 'counts', 'tmm', 'DESeq2' or 'tpm'
+        self.value_column    = 'mean_value'
+        self.std_column      = 'std_value'
+        self.timepoints      = []
+        self.project_species = ["Sbicolor"]
+        self.group_columns   = ['treatment']
+
+        # This is the name of the column that contains gene/transcript/protein ids
+        self.rnaSeq_id_col   = 'Geneid'
+        self.error           = False
+        self.control_id      = 'CTL'
+        self.trmt_colmn      = 'treatment'
+
+        self.objSaveTo       = ''
+        self.relabSaveTo     = ''
+
+        self.generate_plastidial_models = False
+        
+        #Load the models from here
+        self.json_files_folder = runtime_root+f"/projects/{self.project}/inputs/"
+        if not os.path.exists(self.json_files_folder):
+            print("Please move all species models to:")
+            print(self.json_files_folder)
+            self.error = True
+
+        # RNAseq data will be here
+        self.RNASeq_folder = runtime_root+f"/projects/{self.project}/rnaseq-data/"
+        if not os.path.exists(self.RNASeq_folder):
+            print("Please move RNASeq data to:")
+            print(self.RNASeq_folder)
+            self.error = True
+
+        # Write the results to this folder
+        self.results_folder = runtime_root+f"/projects/{self.project}/integration-results/"
+        if not os.path.exists(self.results_folder):
+            os.makedirs(self.results_folder)
+
+        # Access PlantSEED DB
+        self.PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
+        self.PS_tag  = "8cf60046e4af68912f7a7d3eeff16880a07f56bd"
+        self.PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"

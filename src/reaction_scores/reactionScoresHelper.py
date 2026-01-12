@@ -18,33 +18,25 @@ from src.util.bcolors import bcolors
 #   3. Max: subunit score is the max of the abundances of its paralogs
 def compute_subunit_score(df, id_col, value_col, std_col, group_cols, method='relab', rxn_id = ''):
 
-    rxn_id_only = rxn_id.split('_')[0]
-
     if method == 'relab':
         # df['weight'] = df['me'].div(df.groupby(['date', 'rank'])['me'].transform('sum'))
         df['relab_frac'] = df[value_col].div(df.groupby(group_cols)[value_col].transform('sum'))
 
         df['weight_frac'] = df['relab_frac']*df['weight']
-
         
         sums_df =  df.groupby(group_cols).agg({id_col:','.join, \
             'weight_frac':'sum', value_col: 'sum'\
             }).reset_index()
 
-
     elif method == 'sum':
-    
-        sums_df =  df.groupby(group_cols).agg({value_col: 'sum' \
-                        , id_col:','.join \
-                        # , id_col: lambda x: ','.join(str(x))
-                        # , id_col: lambda x: list(x) \lambda x: ','.join(x))
-                        ,std_col: lambda std_col : np.sqrt((std_col*std_col).sum()),\
-                    }).reset_index()
+        sums_df = df.groupby(group_cols).agg({
+            value_col: 'sum',
+            id_col: ','.join
+        }).reset_index()
     else:
         sums_df = df.loc[df.groupby(group_cols)[value_col].idxmax()]
 
     return sums_df
-
 
 # Compute the protein complex's score using one of two methods:
 #   1. relab -- relative abundance: multiply each subunit weight by the minimum relative abundance
@@ -58,8 +50,6 @@ def compute_mrp_score(df, value_col, group_cols, method='relab', rxn_id = ''):
         sums_df =  df.groupby(group_cols).apply(lambda df,weight,relab: \
             sum(df[weight] * df[relab].min()), 'weight_frac', value_col)
         sums_df = sums_df.reset_index(name='weightedSumWeight')
-
-        rxn_id_only = rxn_id.split('_')[0]
 
     else:
         sums_df = df.loc[df.groupby(group_cols)[value_col].idxmin()]
@@ -87,11 +77,10 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, std_col, group_cols, sub
         new_df = df.groupby(group_cols).agg({'weightedSumWeight':'sum'}).reset_index()
         
     elif method == 'sum':
-        new_df = df.groupby(group_cols).agg({value_col:'sum'\
-                , id_col: ','.join \
-                # , id_col: lambda x : genera_list(x) \
-                ,std_col: lambda std_col : np.sqrt((std_col*std_col).sum()),\
-                }).reset_index()
+        new_df = df.groupby(group_cols).agg({
+            value_col: 'sum',
+            id_col: ','.join
+        }).reset_index()
     else:
         new_df = df.loc[df.groupby(group_cols)[value_col].idxmax()]
 
@@ -103,9 +92,7 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, std_col, group_cols, sub
     new_df = new_df.assign(bind = [binding for i in new_df.index])
     new_df['rxn_ID'] = rxn
     new_df['features'] = str(ftr_list)
-    # new_df["bind"] = binding
-    rxn_id_only = rxn_id.split('_')[0]
-
+    
     return new_df
 
 
@@ -145,10 +132,7 @@ def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_
         rxn_subsys = rxn.subsystems
 
         if not rxn.genes:
-            # print(bcolors.PROG+" -- No features, skipping {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
             continue
-
-        # print(bcolors.PROG+"Computing scores for {} ({}/{})".format(rxn_id, nr, n_rxn)+bcolors.ENDC)
 
         mdlrxn_prot_list = rxn.gpr
 
@@ -156,8 +140,6 @@ def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_
         mrp_scores = pa.DataFrame() # <-- return max
         # for plotting: 
         prot = 0 
-        rxn_id_only = rxn_id.split('_')[0]
-
         for mdlrxn_prot in mdlrxn_prot_list:
             prot += 1
             mrps_scores = pa.DataFrame() # <-- return min
