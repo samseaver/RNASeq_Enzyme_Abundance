@@ -31,15 +31,16 @@ from plotly.subplots import make_subplots
 #Global variables
 PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
 PS_tag  = "8cf60046e4af68912f7a7d3eeff16880a07f56bd"
+PS_tag = "dev"
 PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"
 
 def generateRolesDict():
-    print("Reading PlantSEED Database")
-    # PS_json_data = json.load(urlopen(PS_url+PS_tag+PS_json))
+    # print("Reading PlantSEED Database")
+    PS_json_data = json.load(urlopen(PS_url+PS_tag+PS_json))
 
-    roles_file = os.path.join(project_root, "data", "metabolic_models", "PlantSEED_Roles.json")
-    with open(roles_file, 'r') as f:
-        PS_json_data = json.load(f)
+    # roles_file = os.path.join(project_root, "data", "metabolic_models", "PlantSEED_Roles.json")
+    # with open(roles_file, 'r') as f:
+    #     PS_json_data = json.load(f)
 
     roles_dict = dict()
     for item in PS_json_data:
@@ -97,7 +98,7 @@ class ComputeScoresPredictions:
         self.project_species = project_species if project_species else param.project_species
 
         self.outlier_cap_percentile = 95
-        print("Reminder: Capped value: ",self.outlier_cap_percentile)
+        print("Reminder: TMM values capped at",self.outlier_cap_percentile,"percentile")
 
         self.PS_json_data = list()
         self.species_list =  list()
@@ -374,9 +375,16 @@ def generate_reactionScores(parameters, model=None, project:str='QPSI', project_
         print("="*50 + "\n")
         # ----------------------------
 
+        # RENAME columns for clarity
+        tmm_scores.rename(columns={
+            csp.value_column: 'reaction_score',    # Was 'mean_value'
+            csp.rnaSeq_id_col: 'limiting_subunit'  # Was 'Geneid'
+        }, inplace=True)
+
         #  Save results to file
         csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance.tsv"
         tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
+        print("Reaction scores saved to",csp.objSaveTo)
         # continue
 
         if parameters.generate_plastidial_models is False:
