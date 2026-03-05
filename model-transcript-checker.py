@@ -7,9 +7,9 @@ import re
 from cobrakbase.core.kbase_object_factory import KBaseObjectFactory
 
 # --- USER INPUTS ---
-model_path = "projects/brave/inputs/Sbicolor-v5.1-reconstruction.json"
-transcript_path = "projects/brave/rnaseq-data/tmm/average_genecounts_long_Sbicolor.tsv"
-transcript_id_col = "Geneid"
+model_path = "projects/brave/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json"
+transcript_path = "Poplar_raw_genes_tmm_mean.tsv"
+transcript_id_col = "Gene_ID"
 # -------------------
 
 def check_id_mapping():
