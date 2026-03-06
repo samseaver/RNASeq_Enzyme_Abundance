@@ -16,7 +16,7 @@ from src.util.bcolors import bcolors
 #                                   values are summed up to return the subunit score.
 #   2. Sum: subunit score is the sum of the abundances of its paralogs
 #   3. Max: subunit score is the max of the abundances of its paralogs
-def compute_subunit_score(df, id_col, value_col, std_col, group_cols, method='relab', rxn_id = ''):
+def compute_subunit_score(df, id_col, value_col, group_cols, method='relab', rxn_id = ''):
 
     if method == 'relab':
         # df['weight'] = df['me'].div(df.groupby(['date', 'rank'])['me'].transform('sum'))
@@ -70,7 +70,7 @@ def genera_list(rows):
             ]
 
 
-def compute_rxn_score_value(df, id_col, rxn, value_col, std_col, group_cols, subsystems_set, ftr_list, binding, method='relab', rxn_id = ''):
+def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_set, ftr_list, binding, method='relab', rxn_id = ''):
     new_df = pa.DataFrame()
 
     if method == 'relab':
@@ -100,7 +100,7 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, std_col, group_cols, sub
 #   - compute_subunit_score
 #   - compute_mrp_score
 #   - compute_rxn_score_value
-def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_cols, spc_name, method='relab', verbose=False):
+def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc_name, method='relab', verbose=False):
     # -- input
     # relab_data.columns: gene_id, treatment, tissue, time_stamp, value (TPM, TMM, or any other)
     # model_rxn_dict: rxn_id -> Reaction object (modelComponents)
@@ -155,7 +155,7 @@ def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_
                 feature_value_df = relab_data[(relab_data[id_col].isin(mdlrxn_subunit_ftrs))]
                 feature_value_df[id_col] = feature_value_df[id_col].astype(str)
                 ftr_list.extend(mdlrxn_subunit_ftrs)
-                mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, std_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
+                mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
                 mrps_scores= pa.concat([mrps_scores, mrps_score], ignore_index=True)
 
             if not mrps_scores.empty:
@@ -163,7 +163,7 @@ def compute_model_score(relab_data, metModel, id_col, value_col, std_col, group_
                 mrp_scores= pa.concat([mrp_scores, mrp_score], ignore_index=True)
 
         if not mrp_scores.empty:
-            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, std_col, \
+            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, \
                                         group_cols, sorted(rxn_subsys), ftr_list, rxn.binds, method, rxn_id = rxn_id)
             
             rxn_scores= pa.concat([rxn_scores, rxn_score], ignore_index=True)

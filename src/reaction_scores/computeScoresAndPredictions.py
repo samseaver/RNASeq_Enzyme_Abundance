@@ -90,7 +90,7 @@ class Species:
 
 ## Pipeline parameters
 class ComputeScoresPredictions:
-    def __init__(self, param, project='QPSI', project_species=list()):
+    def __init__(self, param, project_species=list()):
         if param.error:
             sys.exit("Please fix errors above.")
 
@@ -106,7 +106,6 @@ class ComputeScoresPredictions:
 
         self.msr = param.msr
         self.value_column  = param.value_column
-        self.std_column = param.std_column
         self.modelJSON_files_folder = param.json_files_folder
         self.RNASeq_folder = param.RNASeq_folder
         # Write the results to this folder
@@ -166,11 +165,6 @@ def readRNASeq(spc, csp, verbose=True):
 
     # # keep only genes involved in plastidial reactions
     relab_df = relab_df[(relab_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
-
-    # format time_stamp
-    if csp.project == 'QPSI':
-        # add '0' to single digit time points for ordering purposes
-        relab_df['time_stamp'] = relab_df['time_stamp'].transform(lambda ts:ts if ts in ['14d', '21d'] else '0'+ts)
 
     print("WE ARE READING RNASEQ FILE: ",spc.RNASeq_file_path)
     # # Remove outliers: !!! NOT NEEDED WHEN USING COUNTS (ALREADY CAPPED) !!!
@@ -241,8 +235,6 @@ def readRNASeq(spc, csp, verbose=True):
 def readTMMdata(spc, csp, verbose=True):
     # Read RANSeq data from file
     tmm_file = spc.RNASeq_file_path
-    if csp.project == 'QPSI':
-        tmm_file = tmm_file.replace(csp.msr, 'tmm')
     
     # Read the first few bytes to guess the separator
     with open(tmm_file, 'r') as f:
@@ -289,11 +281,6 @@ def readTMMdata(spc, csp, verbose=True):
     # plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_interactive.html")
     # fig.write_html(plot_path)
 
-    # Format time points 
-    if csp.project == 'QPSI':
-        # add '0' to single digit time points
-        tmm_df['time_stamp'] = tmm_df['time_stamp'].transform(lambda ts:ts if ts in ['14d', '21d'] else '0'+ts)
-
     ## -----------------------------------------------------------------------------------------
     if 'atha' in spc.name.lower():
         # remove ATC and ATM
@@ -307,8 +294,8 @@ def readTMMdata(spc, csp, verbose=True):
 
     return tmm_df
 
-def generate_reactionScores(parameters, model=None, project:str='QPSI', project_species:list=[], verbose=False):
-    csp = ComputeScoresPredictions(parameters, project, project_species)
+def generate_reactionScores(parameters, model=None, project_species:list=[], verbose=False):
+    csp = ComputeScoresPredictions(parameters, project_species)
 
     # set the file paths to RNAseq and models
     json_dict = jsonModelPath2Var(csp,verbose)
@@ -332,14 +319,20 @@ def generate_reactionScores(parameters, model=None, project:str='QPSI', project_
         if verbose:
             print("    Computing reactions scores using TMM data")
         tmm_df = readTMMdata(spc, csp,verbose=verbose)
+
         if 'value_log' not in tmm_df.columns:
             tmm_df['value_log'] = np.log(tmm_df[csp.value_column]) # np.log(tmm_df['value'])
 
         #  Compute reaction scores using the sum-min-sum method
         tmm_scores = rsh.compute_model_score(tmm_df, spc.metModel, csp.rnaSeq_id_col, \
-                                                csp.value_column, csp.std_column, csp.group_columns, \
+                                                csp.value_column, csp.group_columns, \
                                                 spc.name, method='sum', verbose=verbose)
 
+        if 'rxn_ID' not in tmm_scores.columns:
+            print(f"Error: Zero reaction scores were generated.")
+            print(f"This is an indication that none of the genes in the model were linked to transcripts in the RNASeq dataset")
+            sys.exit(1)
+    
         # csp.treatments = list(tmm_df[csp.trmt_colmn].unique())
         # csp.treatments.remove(csp.control_id)
         # tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, \
@@ -385,12 +378,7 @@ def generate_reactionScores(parameters, model=None, project:str='QPSI', project_
         csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance.tsv"
         tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         print("Reaction scores saved to",csp.objSaveTo)
-        # continue
-
-        if parameters.generate_plastidial_models is False:
-            if verbose:
-                print(f"Scores saved to: \n {csp.results_folder}{spc.name}_objective_abundance_{csp.control_id}.tsv")
-            continue
+        continue
 
         ###### --- STOP HERE IF RELATIVE RS IS NOT RELEVANT
 
@@ -409,30 +397,30 @@ def generate_reactionScores(parameters, model=None, project:str='QPSI', project_
                 csp.value_column, csp.group_columns, spc.name, method='relab', verbose=True)
 
         # Add fluxes to each reaction -----------------------------------------------------------
-        print("    Running COBRApy FVA")
-        fva_df = pa.DataFrame()
-        merge_on = ['rxn_ID', 'tissue'] if csp.project == 'QPSI' else ['rxn_ID']
+        # print("    Running COBRApy FVA")
+        # fva_df = pa.DataFrame()
+        # merge_on = ['rxn_ID']
 
         #  Compute the min and max fluxes using Flux Variability Analysis (FVA)
         #  Use different models for root and leaf to generate FVA values for QPSI model
-        for tissue in ['Leaf']:#, 'Root']:
-            model_file = spc.modelJSON_file_path.replace('.json', '.xml')
-            if tissue == 'Root':
-                if csp.project != 'QPSI':
-                    continue
-                model_file = model_file.replace('.xml', '_sucrose.xml')
+        # for tissue in ['Leaf']:#, 'Root']:
+        #    model_file = spc.modelJSON_file_path.replace('.json', '.xml')
+        #    if tissue == 'Root':
+        #        if csp.project != 'QPSI':
+        #            continue
+        #        model_file = model_file.replace('.xml', '_sucrose.xml')
 
-            fva_df = pa.concat([fva_df, f2r.run_FVA(model_file, tissue, spc.name)], ignore_index=True)
+        #    fva_df = pa.concat([fva_df, f2r.run_FVA(model_file, tissue, spc.name)], ignore_index=True)
 
-        if not fva_df.empty:
-            if csp.project != 'QPSI':
-                fva_df.drop(['tissue'], axis=1, inplace=True)
-            rxn_scores =  pa.merge(rxn_scores, fva_df, how="left", on=merge_on)
+        # if not fva_df.empty:
+        #     if csp.project != 'QPSI':
+        #         fva_df.drop(['tissue'], axis=1, inplace=True)
+        #     rxn_scores =  pa.merge(rxn_scores, fva_df, how="left", on=merge_on)
 
         # Setting flexibility
-        rxn_scores['flexibility'] = 'none'
-        rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) <= 10**-6, 'flexibility'] = 'fixed'
-        rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) > 10**-6, 'flexibility'] = 'flexible'
+        # rxn_scores['flexibility'] = 'none'
+        # rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) <= 10**-6, 'flexibility'] = 'fixed'
+        # rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) > 10**-6, 'flexibility'] = 'flexible'
 
         # Add dist to identity line -------------------------------------------------------------
         csp.value_column =  "value"
@@ -847,6 +835,6 @@ def integrateRoles():
 
 if __name__ == '__main__':
     #Parameters_test_a, Parameters_QPSI, Parameters_secMeta_TSU
-    project = Parameters_QPSI()
+    project = Parameters()
     generate_reactionScores(project)
 
