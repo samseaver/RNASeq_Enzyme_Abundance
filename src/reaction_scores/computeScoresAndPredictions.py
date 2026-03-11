@@ -85,6 +85,9 @@ class Species:
             json_model = json.loads(data)
             self.metModel = Model().fromJSON(json_model, roles_dict)
 
+            with open(self.name+'.json','w') as f:
+                json.dump(self.metModel.as_dict(),f,indent=2)
+
         if self.metModel == None:
             raise ValueError(f"  Couldn't load metabolic model from {modelJSON_file_path}.")
 
@@ -260,91 +263,52 @@ def readTMMdata(spc, csp, verbose=True):
         describe([csp.outlier_cap_percentile/100])\
         [str(csp.outlier_cap_percentile)+'%']
     tmm_df.loc[(tmm_df[csp.value_column] > percent), csp.value_column] = percent
-
-    # Histogram and violin plot to double check
-    # bin_width= 10
-    # wt, ht = 800, 600
-    # fig = px.violin(tmm_df,
-    #                 x='time_stamp',
-    #                 y=csp.value_column,
-    #                 color="treatment",
-    #                 title=spc.name+" after cap",
-    #                 height=ht, width=wt
-    #             )
-    # fig.update_yaxes(range=[-1500, 80000])
-    # plot_path = os.path.join(csp.results_folder, f"{spc.name}_TMM_histogram.png")
-    # fig.write_image(plot_path)
-
-    # nbins = math.ceil((tmm_df[csp.value_column].max() - tmm_df[csp.value_column].min()) / bin_width)
-    # fig = px.histogram(tmm_df, x=csp.value_column, nbins=nbins)
-    # Save figure before showing
-    # plot_path = os.path.join(csp.results_folder, f"{spc.name}_TotalPlastidMass_RESComps_interactive.html")
-    # fig.write_html(plot_path)
-
-    ## -----------------------------------------------------------------------------------------
-    if 'atha' in spc.name.lower():
-        # remove ATC and ATM
-        if verbose: print('-----> before removing the ATC/ATM ', tmm_df.shape)
-        clm = 'Gene_Id' if 'Gene_Id' in tmm_df else 'Gene_ID'
-        filter = tmm_df[clm].str.contains("ATC.*|ATM.*")
-        tmm_df = tmm_df[~filter]
-        if verbose: 
-            print('-----> after removing the ATC/ATM ', tmm_df.shape)
-            print(tmm_df.head(5))
-
+    
     return tmm_df
 
-def generate_reactionScores(parameters, model=None, project_species:list=[], verbose=False):
+def generate_reactionScores(parameters, project_species:list=[], verbose=False):
     csp = ComputeScoresPredictions(parameters, project_species)
 
     # set the file paths to RNAseq and models
     json_dict = jsonModelPath2Var(csp,verbose)
     if verbose:
-        for spc, json_file in json_dict.items():
-            print("        "+spc+" <-- "+json_file)
+        for species, json_file in json_dict.items():
+            print("        "+species+" <-- "+json_file)
     rnaseq_dict = rnaSeqFile2Var(csp,verbose)
     if verbose:
-        for spc, rnaseq_file in rnaseq_dict.items():
-            print("        "+spc+" <-- "+rnaseq_file)
+        for species, rnaseq_file in rnaseq_dict.items():
+            print("        "+species+" <-- "+rnaseq_file)
             
     # set model species
     csp.species_list = [Species(spc, parameters_all_spc[spc]['synonyms'], json_dict[spc], rnaseq_dict[spc]) for spc in csp.project_species]
 
     ## Reactions cores ============================================================================
-    for spc in csp.species_list:
+    for species in csp.species_list:
 
         if verbose:
-            print("\n"+"-"*10+"    Computing reaction scores for "+spc.name+"-"*10)
+            print("\n"+"-"*10+"    Computing reaction scores for "+species.name+"-"*10)
         ## Start reaction score computation using TMM -- used for K_app computation -------------
         if verbose:
             print("    Computing reactions scores using TMM data")
-        tmm_df = readTMMdata(spc, csp,verbose=verbose)
+        tmm_df = readTMMdata(species, csp,verbose=verbose)
 
         if 'value_log' not in tmm_df.columns:
             tmm_df['value_log'] = np.log(tmm_df[csp.value_column]) # np.log(tmm_df['value'])
 
         #  Compute reaction scores using the sum-min-sum method
-        tmm_scores = rsh.compute_model_score(tmm_df, spc.metModel, csp.rnaSeq_id_col, \
-                                                csp.value_column, csp.group_columns, \
-                                                spc.name, method='sum', verbose=verbose)
+        tmm_scores = rsh.compute_model_score(tmm_df, parameters, species, csp, method='sum', verbose=verbose)
 
         if 'rxn_ID' not in tmm_scores.columns:
             print(f"Error: Zero reaction scores were generated.")
             print(f"This is an indication that none of the genes in the model were linked to transcripts in the RNASeq dataset")
             sys.exit(1)
     
-        # csp.treatments = list(tmm_df[csp.trmt_colmn].unique())
-        # csp.treatments.remove(csp.control_id)
-        # tmm_scores = rsh.compute_rxn_variability(tmm_scores, csp.group_columns, csp.treatments, \
-        #                                             csp.control_id, csp.trmt_colmn, value_col=csp.value_column,
-        #                                             percentile=90, verbose=verbose)
-
         # --- Statistics Reporting ---
-        total_model_rxns = len(spc.metModel.modelreactions_dict)
+        total_model_rxns = len(species.metModel.modelreactions_dict)
         
         # Count reactions that actually have gene mappings (GPRs)
         gene_associated_rxns = 0
-        for rxn in spc.metModel.modelreactions_dict.values():
+        for rxn in species.metModel.modelreactions_dict.values():
             if rxn.genes: # Checks if the gene list is not empty
                 gene_associated_rxns += 1
                 
@@ -352,7 +316,7 @@ def generate_reactionScores(parameters, model=None, project_species:list=[], ver
         scored_unique_rxns = tmm_scores['rxn_ID'].nunique()
         
         print(f"\n" + "="*50)
-        print(f"  Reaction Score Stats: {spc.name}")
+        print(f"  Reaction Score Stats: {species.name}")
         print(f"  1. Total Model Reactions:       {total_model_rxns}")
         print(f"  2. Gene-Associated Reactions:   {gene_associated_rxns}")
         print(f"  3. Reactions with Transcript:   {scored_unique_rxns}")
@@ -375,7 +339,7 @@ def generate_reactionScores(parameters, model=None, project_species:list=[], ver
         }, inplace=True)
 
         #  Save results to file
-        csp.objSaveTo = f"{csp.results_folder}{spc.name}_objective_abundance.tsv"
+        csp.objSaveTo = f"{csp.results_folder}{species.name}_objective_abundance.tsv"
         tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         print("Reaction scores saved to",csp.objSaveTo)
         continue
