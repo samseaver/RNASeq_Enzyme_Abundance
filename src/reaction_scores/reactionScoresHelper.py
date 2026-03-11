@@ -3,12 +3,12 @@ warnings.simplefilter(action='ignore', category=Warning)
 
 import pandas as pa
 import sys
+import json
 import numpy as np
 
 from pathlib import Path
 project_root = str(Path(__file__).resolve()).split('src')[0]
 sys.path.append(project_root)
-from src.util.bcolors import bcolors
 
 # Compute the protein subunit score using one of three methods:
 #   1. relab -- relative abundance: computes the fraction of each paralog and multiply
@@ -100,16 +100,22 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_s
 #   - compute_subunit_score
 #   - compute_mrp_score
 #   - compute_rxn_score_value
-def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc_name, method='relab', verbose=False):
+def compute_model_score(tmm_data, params, species, csp, method='relab', verbose=False):
+
+    metModel = species.metModel
+    spc_name = species.name
+
+    id_col = csp.rnaSeq_id_col
+    value_col = csp.value_column
+    group_cols = csp.group_columns
+    
     # -- input
     # relab_data.columns: gene_id, treatment, tissue, time_stamp, value (TPM, TMM, or any other)
     # model_rxn_dict: rxn_id -> Reaction object (modelComponents)
     # -- output
     # dfcolumns: rxn_ID, treatment, subsystems, 2d, 4d, ...
-    nr = 0
-    rxn_scores = pa.DataFrame()
-    n_rxn = len(metModel.modelreactions_dict)
-
+    
+    # ------------------- EXTREAM -------------------------
     # Implementing EXTREAM algorithm here
     # Create a set of unique (Gene, Base_Reaction) tuples
     # We strip the last 2 chars if they are directional tags (_f or _r) to get the biological ID
@@ -124,8 +130,23 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
     gene_rxns_count = pa.Series([pair[0] for pair in unique_gene_rxn_pairs]).value_counts()
 
     # Store original values and Normalize
-    relab_data['original_value'] = relab_data[value_col]
-    relab_data[value_col] /= relab_data[id_col].map(gene_rxns_count).fillna(1)
+    tmm_data['original_value'] = tmm_data[value_col]
+    tmm_data[value_col] /= tmm_data[id_col].map(gene_rxns_count).fillna(1)
+    # ------------------- EXTREAM -------------------------------
+
+    # ------------------- ORGANELLAR SUBUNITS -------------------------------
+    # Load the exact subunit roles to ignore
+    ignore_file = params.ignore_organellar_roles
+    with open(ignore_file, 'r') as f:
+        ignored_roles = set(line.strip() for line in f if line.strip())
+
+    model_file = species.modelJSON_file_path
+    with open(model_file, 'r') as f:
+        raw_model_data = json.load(f)
+    # ------------------- ORGANELLAR SUBUNITS -------------------------------
+
+    nr = 0
+    rxn_scores = pa.DataFrame()
 
     for rxn_id, rxn in metModel.modelreactions_dict.items():
         nr+=1
@@ -134,25 +155,33 @@ def compute_model_score(relab_data, metModel, id_col, value_col, group_cols, spc
         if not rxn.genes:
             continue
 
-        mdlrxn_prot_list = rxn.gpr
-
         ftr_list = list()
         mrp_scores = pa.DataFrame() # <-- return max
         # for plotting: 
         prot = 0 
-        for mdlrxn_prot in mdlrxn_prot_list:
+
+        for mdlrxn_prot in rxn.modelReactionProteins:
             prot += 1
-            mrps_scores = pa.DataFrame() # <-- return min
+            mrps_scores = pa.DataFrame() 
             sub = 0
-            for mdlrxn_subunit_ftrs in mdlrxn_prot:
+            
+            # Iterate over the actual SubUnit objects
+            for mpsu in mdlrxn_prot.modelReactionProteinSubunits:
                 sub += 1
 
-                mdlrxn_subunit_ftrs = [ftr for ftr in mdlrxn_subunit_ftrs if not any(pref in ftr.upper() for pref in ['ATC', 'ATM'])]
-                
+                # 1. YOU CAN NOW CHECK THE ROLE DIRECTLY!
+                # We use getattr just in case the role key was completely missing in the JSON
+                if getattr(mpsu, 'role', 'Unknown') in ignored_roles:
+                    continue  # Skip this entire organellar subunit!
+
+                # 2. Rebuild the string list of gene IDs so the rest of your math still works
+                mdlrxn_subunit_ftrs = [ftr.gene_id for ftr in mpsu.feature_refs]
+
                 if not mdlrxn_subunit_ftrs:
                     continue
     
-                feature_value_df = relab_data[(relab_data[id_col].isin(mdlrxn_subunit_ftrs))]
+                # Does not include any transcripts/genes that are not found in the tmm_data
+                feature_value_df = tmm_data[(tmm_data[id_col].isin(mdlrxn_subunit_ftrs))]
                 feature_value_df[id_col] = feature_value_df[id_col].astype(str)
                 ftr_list.extend(mdlrxn_subunit_ftrs)
                 mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
