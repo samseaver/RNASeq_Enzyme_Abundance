@@ -56,6 +56,8 @@ class Parameters:
         if not os.path.exists(self.results_folder):
             os.makedirs(self.results_folder)
 
+        self.ignore_organellar_roles = 'data/organellar-encoded_subunits_to_ignore.txt'
+        
         # Access PlantSEED DB
         self.PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
         self.PS_tag  = "dev"
