@@ -24,18 +24,20 @@ parameters_all_spc={"TSU":{'name':'TSU','synonyms':['TSU','Athaliana']},
 # Sets project specif information for automatic processing of transcriptome
 class Parameters:
     def __init__(self):
-        self.project         = 'qpsi'
+        self.project         = 'qpsi-plastidial'
         self.msr             = 'tmm'
         self.value_column    = 'value'
-        self.project_species = ["Sorghum", "Poplar"]
+        self.project_species = ["Sorghum","Poplar"]
         self.group_columns   = ['condition']
         self.rnaSeq_id_col   = 'Gene_ID'
         self.error           = False
         self.control_id      = 'Control'
         self.trmt_colmn      = 'condition'
 
-        self.objSaveTo       = ''
-        self.relabSaveTo     = ''
+        # if method = 'sum' then compute reaction scores using the sum-min-sum method
+        # if method = 'relab' then compute reaction scores in the same manner
+        #   but normalized to the plastidial proteome
+        self.reaction_score_method = 'sum'
 
         #Load the models from here
         self.json_files_folder = project_root+"projects/"+self.project+"/inputs/"
