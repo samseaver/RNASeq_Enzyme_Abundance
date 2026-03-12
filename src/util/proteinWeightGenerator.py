@@ -5,14 +5,11 @@ import sys
 import pandas as pa
 from time import time
 
-
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.io as pio
 import seaborn as sns
 pio.templates.default = "plotly_white"
-
-
 
 from pathlib import Path
 project_root = str(Path(__file__).resolve()).split('src')[0]
@@ -25,7 +22,6 @@ from src.util.bcolors import bcolors
 
 avogadro = 6.02214076e+23
 
-
 class ProteinWeightGenerator:
     def __init__(self, spc_name:str="Sorghum", project='QPSI', rnaseq_path:str=None, model_genes:set={}, project_cols:list=[], cap_percent:int=-1):
 
@@ -36,41 +32,27 @@ class ProteinWeightGenerator:
         self.project_cols           = project_cols if project_cols else ['tissue', 'treatment', 'time_stamp']
         self.cap_percent            = cap_percent
 
-        
         ## Plastid proteome data 
-        self.chloro_atha_file       = os.path.join(project_root, "data", "plastid_proteome",
-                                "Full_AT_CHLORO_2019.tsv")
-
+        self.chloro_atha_file = os.path.join(project_root, "data", "plastid_proteome", "Full_AT_CHLORO_2019.tsv")
         self.PPDB_file = os.path.join(project_root, "data", "plastid_proteome", "PPDB_Plastid_Proteome.tsv")
-                             
-        
-        
+
         ## Amino Acids propeties including "molecular_mass" and "num_atoms"
-        self.AA_properties_file     = os.path.join(project_root, "data", "ProteinSeq",
-                                "AA_properties.csv")
+        self.AA_properties_file = os.path.join(project_root, "data", "ProteinSeq", "AA_properties.csv")
 
         ## Protein seqeuences: A. Thaliana and other species
         ## And orthologs files     
-        self.protein_weight_file    = os.path.join(project_root, "data", "ProteinSeq",
-                                f"{self.spc_name}_protein_weights.csv")
+        self.protein_weight_file    = os.path.join(project_root, "data", "ProteinSeq", f"{self.spc_name}_protein_weights.csv")
         ortho_version = 'apr10'
         if spc_name.lower() == 'sorghum':
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Sbicolor_454_v3.1.1.protein.fa")
-            # self.orthologs_file     = os.path.join(project_root, "data", "orthologs",
-            #                 "Athaliana_Araport11__v__Sbicolor_v3.1.1.tsv")
-            self.orthologs_file     = os.path.join(project_root, "data", "orthologs",
-                            f"orthologs_{ortho_version}",
-                            f"Sbicolor_v3.1.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Sbicolor_454_v3.1.1.protein.fa")
+            self.orthologs_file     = os.path.join(project_root, "data", "orthologs", f"orthologs_{ortho_version}", f"Sbicolor_v3.1.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
 
         elif spc_name.lower() == 'poplar':
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Ptrichocarpa_533_v4.1.protein.fa")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Ptrichocarpa_533_v4.1.protein.fa")
             self.orthologs_file     = os.path.join(project_root, "data", "orthologs", f"orthologs_{ortho_version}", f"Ptrichocarpa_v4.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
             
         else:
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Athaliana_447_Araport11.protein.fa")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Athaliana_447_Araport11.protein.fa")
             self.orthologs_file     = None
 
         ## for data processing
