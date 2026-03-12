@@ -34,17 +34,23 @@ if module not in sys.path:
 from src.plastidial_model_extraction.plastidial_model_generator import ModelBuilder, ModelGenerator
 
 # Load full model and generate plastidial model by extracting plastidial reactions
-model_file = 'projects/qpsi/inputs/Sbicolor-v5.1-reconstruction_fixed.json'
-mBuilder = ModelBuilder(json_file=model_file)
-mGen = ModelGenerator(mBuilder)
-mGen.run_model_generator(toJSON=False)
+model_files = ['projects/qpsi/inputs/Sbicolor-v5.1-reconstruction_fixed.json', # Sorghum
+               'projects/qpsi/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json'] # Poplar
 
-# Add media exchange reactions from ModelSEED/KBase Media JSON
-mBuilder.load_media_file('data/metabolic_models/plastidial_biomass_media/PlantPlastidialAutotrophicMedia.json')
-mBuilder.add_media_exchange_reactions("_c0")
+media_file = 'data/metabolic_models/plastidial_biomass_media/PlantPlastidialAutotrophicMedia.json'
+biomass_file = 'data/metabolic_models/plastidial_biomass_media/plastid_biomass.csv'
 
-# Add plastidial biomass from file
-mBuilder.add_biomass_bio1('data/metabolic_models/plastidial_biomass_media/plastid_biomass.csv')
+for model_file in model_files:
+    mBuilder = ModelBuilder(json_file=model_file)
+    mGen = ModelGenerator(mBuilder)
+    mGen.run_model_generator(toJSON=False)
 
-# Write plastidial model to file
-mGen.clean_write_model(False)
+    # Add media exchange reactions from ModelSEED/KBase Media JSON
+    mBuilder.load_media_file(media_file)
+    mBuilder.add_media_exchange_reactions("_c0")
+
+    # Add plastidial biomass from file
+    mBuilder.add_biomass_bio1(biomass_file)
+
+    # Write plastidial model to file
+    mGen.clean_write_model(False)
