@@ -121,10 +121,6 @@ class ComputeScoresPredictions:
         self.trmt_colmn = param.trmt_colmn
         self.treatments = list()
 
-        self.objSaveTo = param.objSaveTo
-        self.relabSaveTo = param.relabSaveTo
-
-
 # Find the path to JSON model files for each species
 def jsonModelPath2Var(csp, verbose=True):
     json_dict = dict()
@@ -269,6 +265,9 @@ def readTMMdata(spc, csp, verbose=True):
 def generate_reactionScores(parameters, project_species:list=[], verbose=False):
     csp = ComputeScoresPredictions(parameters, project_species)
 
+    method = 'sum'
+    print("Using default Sum-Min-Sum approach to compute reaction scores")
+    
     # set the file paths to RNAseq and models
     json_dict = jsonModelPath2Var(csp,verbose)
     if verbose:
@@ -282,7 +281,6 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
     # set model species
     csp.species_list = [Species(spc, parameters_all_spc[spc]['synonyms'], json_dict[spc], rnaseq_dict[spc]) for spc in csp.project_species]
 
-    ## Reactions cores ============================================================================
     for species in csp.species_list:
 
         if verbose:
@@ -293,12 +291,13 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
         tmm_df = readTMMdata(species, csp,verbose=verbose)
 
         if 'value_log' not in tmm_df.columns:
-            tmm_df['value_log'] = np.log(tmm_df[csp.value_column]) # np.log(tmm_df['value'])
+            tmm_df['value_log'] = np.log(tmm_df[csp.value_column])
 
-        #  Compute reaction scores using the sum-min-sum method
-        tmm_scores = rsh.compute_model_score(tmm_df, parameters, species, csp, method='sum', verbose=verbose)
+        ## Compute Reaction Scores ============================================================================
+        reaction_scores = rsh.compute_model_score(tmm_df, parameters, species, csp, method=method, verbose=verbose)
+        ##=====================================================================================================
 
-        if 'rxn_ID' not in tmm_scores.columns:
+        if 'rxn_ID' not in reaction_scores.columns:
             print(f"Error: Zero reaction scores were generated.")
             print(f"This is an indication that none of the genes in the model were linked to transcripts in the RNASeq dataset")
             sys.exit(1)
@@ -313,7 +312,7 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
                 gene_associated_rxns += 1
                 
         # Count reactions that successfully received a score
-        scored_unique_rxns = tmm_scores['rxn_ID'].nunique()
+        scored_unique_rxns = reaction_scores['rxn_ID'].nunique()
         
         print(f"\n" + "="*50)
         print(f"  Reaction Score Stats: {species.name}")
@@ -333,14 +332,14 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
         # ----------------------------
 
         # RENAME columns for clarity
-        tmm_scores.rename(columns={
+        reaction_scores.rename(columns={
             csp.value_column: 'reaction_score',    # Was 'mean_value'
             csp.rnaSeq_id_col: 'limiting_subunit'  # Was 'Geneid'
         }, inplace=True)
 
         #  Save results to file
         csp.objSaveTo = f"{csp.results_folder}{species.name}_objective_abundance.tsv"
-        tmm_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
+        reaction_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         print("Reaction scores saved to",csp.objSaveTo)
         continue
 
