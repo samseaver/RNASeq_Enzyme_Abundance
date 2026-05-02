@@ -34,9 +34,9 @@ if module not in sys.path:
 from src.plastidial_model_extraction.plastidial_model_generator import ModelBuilder, ModelGenerator
 
 # Load full model and generate plastidial model by extracting plastidial reactions
-model_files = ['projects/qpsi/inputs/Sbicolor-v5.1-reconstruction_fixed.json', # Sorghum
-               'projects/qpsi/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json'] # Poplar
-
+# model_files = ['projects/qpsi/inputs/Sbicolor-v5.1-reconstruction_fixed.json', # Sorghum
+#                'projects/qpsi/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json'] # Poplar
+model_files = ['athaliana-model-260323.json']
 media_file = 'data/metabolic_models/plastidial_biomass_media/PlantPlastidialAutotrophicMedia.json'
 biomass_file = 'data/metabolic_models/plastidial_biomass_media/plastid_biomass.csv'
 

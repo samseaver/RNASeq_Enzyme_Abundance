@@ -4,8 +4,11 @@ import re
 import sys
 
 # --- USER INPUTS ---
-input_model_path = "Ptrichocarpa-v4.1-reconstruction.json"
-output_model_path = "projects/brave/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json"
+input_model_path = "Sbicolor-v5.1-reconstruction_cleaned.json"
+input_model_path = "Ptrichocarpa-v4.1-reconstruction_cleaned.json"
+
+output_model_path = "projects/qpsi/inputs/Sbicolor-v5.1-reconstruction_fixed.json"
+output_model_path = "projects/qpsi/inputs/Ptrichocarpa-v4.1-reconstruction_fixed.json"
 
 # Sample Regex to remove suffix: matches a dot, one or more digits, dot, 'p' at the end
 TRANSCRIPT_REGEX = r'\.\d+\.p$'
