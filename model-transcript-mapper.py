@@ -30,7 +30,7 @@ def load_transcripts(transcript_path, transcript_id_col):
         sys.exit(1)
 
 def extract_model_genes(model_path):
-    """Extracts raw gene IDs depending on model format."""
+    """Extracts raw gene IDs with smart JSON format detection."""
     print(f"Loading model from: {model_path}")
     model_data = None
     model_genes = []
@@ -38,23 +38,38 @@ def extract_model_genes(model_path):
 
     try:
         if model_path.endswith('.json'):
-            model_type = 'kbase_json'
+            # Peek inside to distinguish between KBase and standard COBRA JSON
             with open(model_path, 'r') as f:
-                model_data = json.load(f)
-            # KBase JSON extraction
-            for rxn in model_data.get('modelreactions', []):
-                for prot in rxn.get('modelReactionProteins', []):
-                    for sub in prot.get('modelReactionProteinSubunits', []):
-                        for ref in sub.get('feature_refs', []):
-                            gene_id = ref.split('/')[-1]
-                            if gene_id not in model_genes:
-                                model_genes.append(gene_id)
-        else:
-            model_type = 'cobra'
-            if model_path.endswith('.yaml') or model_path.endswith('.yml'):
-                model_data = cobra.io.load_yaml_model(model_path)
+                raw_json = json.load(f)
+                
+            if 'modelreactions' in raw_json:
+                print(" -> Detected KBase JSON format.")
+                model_type = 'kbase_json'
+                model_data = raw_json
+                
+                # Extract directly from the KBase JSON dictionary
+                for rxn in model_data.get('modelreactions', []):
+                    for prot in rxn.get('modelReactionProteins', []):
+                        for sub in prot.get('modelReactionProteinSubunits', []):
+                            for ref in sub.get('feature_refs', []):
+                                gene_id = ref.split('/')[-1]
+                                if gene_id not in model_genes:
+                                    model_genes.append(gene_id)
             else:
-                model_data = cobra.io.read_sbml_model(model_path)
+                print(" -> Detected Standard COBRA JSON format.")
+                model_type = 'cobra'
+                model_data = cobra.io.load_json_model(model_path)
+                model_genes = [g.id for g in model_data.genes]
+                
+        elif model_path.endswith('.yaml') or model_path.endswith('.yml'):
+            print(" -> Detected YAML format.")
+            model_type = 'cobra'
+            model_data = cobra.io.load_yaml_model(model_path)
+            model_genes = [g.id for g in model_data.genes]
+        else:
+            print(" -> Detected SBML/XML format.")
+            model_type = 'cobra'
+            model_data = cobra.io.read_sbml_model(model_path)
             model_genes = [g.id for g in model_data.genes]
             
         print(f" -> Found {len(model_genes)} unique genes in the metabolic model.\n")
@@ -70,32 +85,28 @@ def predict_regex(unmatched_model_genes, transcript_ids):
     sample_model = list(unmatched_model_genes)[:5]
     sample_transcript = list(transcript_ids)[:5]
     
-    # Updated Labels
     print(f"Sample Unmatched Model IDs:  {sample_model}")
     print(f"Sample Valid Transcript IDs: {sample_transcript}")
     
-    # New Explicit Warning
     print("\n[INFO] Note: If the unmatched model IDs look structurally completely different")
     print("from your valid transcript IDs (e.g., organelle genes vs nuclear genes), those")
     print("missing transcripts may simply not be present in your RNA-Seq dataset at all.")
     
     predicted_patterns = Counter()
     
-    # Check the first 500 unmatched genes to guess the pattern (for speed)
+    # Check the first 500 unmatched genes to guess the pattern
     for m_id in list(unmatched_model_genes)[:500]:
         for t_id in transcript_ids:
-            # If the model ID starts with the transcript ID, the rest is the "junk" suffix
             if m_id.startswith(t_id) and len(m_id) > len(t_id):
                 raw_suffix = m_id[len(t_id):]
                 
-                # Convert the raw suffix into a generalized regex
-                # Example: '.CDS.1' -> '\.CDS\.\d+'
+                # Generalize the raw suffix into a regex
                 generalized = raw_suffix.replace('.', r'\.')
                 generalized = re.sub(r'\d+', r'\\d+', generalized)
                 pattern = generalized + r'$'
                 
                 predicted_patterns[pattern] += 1
-                break # Move to next model gene once a root is found
+                break 
                 
     if predicted_patterns:
         print("\n[!] SUCCESS: Possible suffix patterns detected!")
@@ -130,13 +141,11 @@ def main():
     unmatched_originals = []
     
     for original in model_genes:
-        # Check Direct Match
         if original in transcript_ids:
             gene_map[original] = original
             direct_matches += 1
             continue
             
-        # Check Regex Transformations
         matched = False
         for pattern in args.regex:
             clean_guess = re.sub(pattern, '', original)
@@ -162,11 +171,11 @@ def main():
     print(f"Total Matched:        {total_matched}")
     print(f"Still Unmatched:      {len(unmatched_originals)}\n")
 
-    # 4. Auto-Predict Regex if there are still unmatched genes
+    # 4. Auto-Predict Regex
     if len(unmatched_originals) > 0:
         predict_regex(unmatched_originals, transcript_ids)
 
-    # 5. Save Fixed Model (If requested)
+    # 5. Save Fixed Model
     if args.output:
         if total_matched == 0:
             print("Aborting save: No genes matched. Check your regex or transcript file.")
@@ -206,7 +215,9 @@ def main():
                     gene.id = gene_map[gene.id]
                     genes_updated += 1
                     
-            if args.output.endswith('.yaml') or args.output.endswith('.yml'):
+            if args.output.endswith('.json'):
+                cobra.io.save_json_model(model_data, args.output)
+            elif args.output.endswith('.yaml') or args.output.endswith('.yml'):
                 cobra.io.save_yaml_model(model_data, args.output)
             else:
                 cobra.io.write_sbml_model(model_data, args.output)

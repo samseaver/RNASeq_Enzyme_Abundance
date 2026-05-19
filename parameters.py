@@ -3,7 +3,7 @@ import os
 import sys
 
 from pathlib import Path
-project_root = str(Path(__file__).resolve()).split('src')[0]
+project_root = str(Path(__file__).resolve().parent)
 sys.path.append(project_root)
 runtime_root = os.getcwd()
 
@@ -40,27 +40,22 @@ class Parameters:
         self.reaction_score_method = 'sum'
 
         #Load the models from here
-        self.json_files_folder = project_root+"projects/"+self.project+"/inputs/"
+        self.json_files_folder = os.path.join(project_root,"projects",self.project,"inputs")
         if not os.path.exists(self.json_files_folder):
             print("Please move all species models to:")
             print(self.json_files_folder)
             self.error = True
 
         # RNAseq data will be here
-        self.RNASeq_folder = project_root+"projects/"+self.project+"/rnaseq-data/"
+        self.RNASeq_folder = os.path.join(project_root,"projects",self.project,"rnaseq-data")
         if not os.path.exists(self.RNASeq_folder):
             print("Please move RNASeq data to:")
             print(self.RNASeq_folder)
             self.error = True
 
         # Write the results to this folder
-        self.results_folder = project_root+"projects/"+self.project+"/integration_results/"
+        self.results_folder = os.path.join(project_root,"projects",self.project,"integration_results")
         if not os.path.exists(self.results_folder):
             os.makedirs(self.results_folder)
 
         self.ignore_organellar_roles = 'data/organellar-encoded_subunits_to_ignore.txt'
-        
-        # Access PlantSEED DB
-        self.PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
-        self.PS_tag  = "dev"
-        self.PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"

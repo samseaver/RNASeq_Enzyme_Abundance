@@ -20,7 +20,7 @@ sys.path.append(project_root)
 from src.util.modelComponents import *
 
 from src.util.proteinWeightGenerator import ProteinWeightGenerator
-from src.util.parameters import *
+from parameters import *
 
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -144,12 +144,12 @@ def rnaSeqFile2Var(csp, verbose=True):
     rnaseq_dict = dict()
 
     if verbose: print("-"*10+" Updating RNASeq file paths "+"-"*10)
-    fileNames = os.listdir(csp.RNASeq_folder+csp.msr+"/")
+    fileNames = os.listdir(os.path.join(csp.RNASeq_folder,csp.msr))
     for fileName in fileNames:
         for spc in csp.project_species:
             synonyms = parameters_all_spc[spc]['synonyms']
             if any(y.lower() in fileName.lower() for y in synonyms):
-                rnaseq_dict[spc] = csp.RNASeq_folder+csp.msr+"/"+fileName
+                rnaseq_dict[spc] = os.path.join(csp.RNASeq_folder,csp.msr,fileName)
                 break
 
     return rnaseq_dict
@@ -338,7 +338,7 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
         }, inplace=True)
 
         #  Save results to file
-        csp.objSaveTo = f"{csp.results_folder}{species.name}_objective_abundance.tsv"
+        csp.objSaveTo = os.path.join(csp.results_folder,f"{species.name}_objective_abundance.tsv")
         reaction_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         print("Reaction scores saved to",csp.objSaveTo)
         continue
