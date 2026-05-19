@@ -1,91 +1,96 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pandas as pd
+import argparse
+import sys
 import os
 
-# --- Configuration: File Paths ---
-project_root = "." # Update this if running from a different directory
-species,short_species = "Sorghum","Sbi"
-species,short_species = "Poplar","Ptr"
+def load_plastid_genes(plastid_file):
+    """Reads the compiled single-column text file of Arabidopsis plastid genes."""
+    print(f"Loading master Arabidopsis plastid list: {plastid_file}")
+    try:
+        with open(plastid_file, 'r') as f:
+            genes = {line.strip().upper() for line in f if line.strip()}
+        print(f" -> Found {len(genes)} unique Arabidopsis plastid genes.")
+        return genes
+    except Exception as e:
+        sys.exit(f"Error reading plastid list: {e}")
 
-ortholog_file = os.path.join(project_root, f"data/orthologs/Ath-{short_species}-Orthologs.tsv")
-tmm_file = os.path.join(project_root, f"projects/qpsi-plastidial/rnaseq-data/tmm/{species}_raw_genes_tmm_mean.tsv")
-rxn_abundance_file = os.path.join(project_root, f"projects/qpsi-plastidial/integration_results/{species}_objective_abundance.tsv")
-
-at_chloro_file = os.path.join(project_root, 'data/plastid_proteome/Full_AT_CHLORO_2019.tsv')
-ppdb_file = os.path.join(project_root, 'data/plastid_proteome/PPDB_Plastid_Proteome.tsv')
-
-# Outputs
-fractions_output_file = os.path.join(project_root, f"projects/qpsi-plastidial/integration_results/{species}_rxn_molar_fractions.tsv")
-totals_output_file = os.path.join(project_root, f"projects/qpsi-plastidial/integration_results/{species}_plastid_transcript_totals.tsv")
-
-def clean_at_id(gene_id):
-    """Strips transcript suffixes (e.g., .1, .2) to return base AT gene ID."""
-    return str(gene_id).split('.')[0].strip().upper()
-
-print("1. Building Arabidopsis Plastid Proteome Union...")
-# Explicit usecols ensures we don't load extra garbage from hidden columns
-at_chloro_df = pd.read_csv(at_chloro_file, sep='\t')
-row_strings = at_chloro_df.astype(str).apply(' '.join, axis=1)
-mask = row_strings.str.contains('THY|STR|ENV', case=True, regex=True)
-filtered_at_chloro_df = at_chloro_df[mask]
-at_chloro_genes = set(filtered_at_chloro_df.iloc[:, 0].dropna().apply(clean_at_id))
-
-ppdb_df = pd.read_csv(ppdb_file, sep='\t', usecols=[0]) 
-ppdb_genes = set(ppdb_df.iloc[:, 0].dropna().apply(clean_at_id))
-
-at_plastid_union = at_chloro_genes.union(ppdb_genes)
-print(f"   -> Found {len(at_plastid_union)} unique Arabidopsis plastid genes.")
-
-
-print("2. Mapping to Poplar Plastid Proteome...")
-# CRITICAL FIX: usecols=[0,1] prevents pandas from turning extra columns into an index
-ortho_df = pd.read_csv(ortholog_file, sep='\t', header=None, usecols=[0, 1], names=['AT_gene', 'Ptri_gene'])
-ortho_df['AT_base'] = ortho_df['AT_gene'].apply(clean_at_id)
-
-poplar_plastid_genes = set(
-    ortho_df[ortho_df['AT_base'].isin(at_plastid_union)]['Ptri_gene'].dropna().apply(lambda x: str(x).strip())
-)
-print(f"   -> Mapped to {len(poplar_plastid_genes)} unique Poplar plastid genes.")
-
-
-print("3. Calculating Total Plastid Transcript Abundance per Condition...")
-# Read TMM data
-tmm_df = pd.read_csv(tmm_file, sep='\t')
-
-# CRITICAL FIX: The file has 6 columns. We just extract the 3 we need by their existing names!
-tmm_df = tmm_df[['Gene_ID', 'condition', 'value']]
-
-# Filter TMM data to ONLY include genes in the Poplar plastid proteome
-plastid_tmm_df = tmm_df[tmm_df['Gene_ID'].isin(poplar_plastid_genes)]
-
-# Group by condition and sum the values to get the denominator for each timepoint
-plastid_totals_by_condition = plastid_tmm_df.groupby('condition')['value'].sum().to_dict()
-
-# Save the totals to a separate file
-print(f"   -> Saving condition totals to {totals_output_file}...")
-totals_df = pd.DataFrame(list(plastid_totals_by_condition.items()), columns=['condition', 'total_plastid_transcripts'])
-totals_df.to_csv(totals_output_file, sep='\t', index=False)
-
-for cond, total in plastid_totals_by_condition.items():
-    print(f"      - {cond}: {total:.2f}")
-
-
-print("4. Calculating Molar Fractions for Reactions...")
-rxn_df = pd.read_csv(rxn_abundance_file, sep='\t')
-
-def calculate_fraction(row):
-    cond = row['condition']
-    score = row['reaction_score']
-    total = plastid_totals_by_condition.get(cond, 0)
+def calculate_molar_fractions(tmm_file, rxn_file, plastid_file, ortholog_file, 
+                              id_col, exp_col, val_col, out_rxn):
     
-    if total > 0:
-        return score / total
-    return 0.0
+    # 1. Load the Master Arabidopsis Plastid List
+    at_plastid_genes = load_plastid_genes(plastid_file)
 
-rxn_df['molar_fraction'] = rxn_df.apply(calculate_fraction, axis=1)
+    # 2. Load TMM Data
+    print(f"\nLoading expression data: {tmm_file}")
+    tmm_df = pd.read_csv(tmm_file, sep='\t')
 
-print(f"5. Saving results to {fractions_output_file}...")
-final_df = rxn_df[['condition', 'rxn_ID', 'reaction_score', 'molar_fraction']]
-final_df.to_csv(fractions_output_file, sep='\t', index=False)
+    # 3. Handle Ortholog Mapping (Ath Column 0, Species Column 1)
+    if ortholog_file and os.path.exists(ortholog_file):
+        print(f"Loading ortholog mapping: {ortholog_file}")
+        # header=None based on your head snippet; usecols 0 and 1
+        ortho_df = pd.read_csv(ortholog_file, sep='\t', header=None, usecols=[0, 1])
+        ortho_df.columns = ['Ath_ID', 'Species_ID']
+        
+        # Filter out duplicates to ensure 1:1 or N:1 mapping
+        ortho_df = ortho_df.drop_duplicates(subset=['Species_ID'])
+        ortho_map = dict(zip(ortho_df['Species_ID'], ortho_df['Ath_ID']))
+        
+        def is_plastidial(gene_id):
+            at_id = ortho_map.get(gene_id, "")
+            at_id_clean = str(at_id).split('.')[0].upper()
+            return at_id_clean in at_plastid_genes
+            
+        print(f" -> Filtering TMM data via Ath-orthology...")
+        plastid_tmm_df = tmm_df[tmm_df[id_col].apply(is_plastidial)].copy()
+    else:
+        print(" -> No ortholog file. Filtering TMM data directly against Ath IDs...")
+        plastid_tmm_df = tmm_df[tmm_df[id_col].str.split('.').str[0].str.upper().isin(at_plastid_genes)].copy()
 
-print("Done!")
+    if plastid_tmm_df.empty:
+        sys.exit("Error: No genes in TMM data matched the plastid database. Check ID formats.")
+
+    # 4. Calculate and Save Totals
+    print("\nCalculating total plastidial transcripts per condition...")
+    plastid_totals = plastid_tmm_df.groupby(exp_col)[val_col].sum().to_dict()
+    
+    # Auto-generate totals filename based on output name
+    totals_file = out_rxn.replace('.tsv', '_plastid_transcript_totals.tsv')
+    print(f" -> Saving experiment totals to: {totals_file}")
+    
+    totals_list = []
+    for cond, total in sorted(plastid_totals.items()):
+        print(f"      - {cond}: {total:.2f}")
+        totals_list.append({exp_col: cond, 'total_plastid_transcripts': total})
+    
+    pd.DataFrame(totals_list).to_csv(totals_file, sep='\t', index=False)
+
+    # 5. Calculate Relative Reaction Scores
+    print(f"\nLoading reaction abundances: {rxn_file}")
+    rxn_df = pd.read_csv(rxn_file, sep='\t')
+    
+    def get_fraction(row):
+        total = plastid_totals.get(row[exp_col], 0)
+        return row['reaction_score'] / total if total > 0 else 0.0
+
+    rxn_df['relative_reaction_score'] = rxn_df.apply(get_fraction, axis=1)
+
+    # 6. Save Final Reaction Scores
+    rxn_df.to_csv(out_rxn, sep='\t', index=False)
+    print(f"Success! Saved results to {out_rxn}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Calculate molar fractions using Arabidopsis orthology.")
+    parser.add_argument("-t", "--tmm", required=True, help="TMM expression data (TSV).")
+    parser.add_argument("-r", "--rxn", required=True, help="Reaction abundance data (TSV).")
+    parser.add_argument("-g", "--genes", default="data/plastid_proteome/compiled_arabidopsis_plastid_genes.txt", help="Master Ath plastid list.")
+    parser.add_argument("--orthologs", help="Path to Ath-Species ortholog mapping TSV.")
+    parser.add_argument("--id-col", default="Gene_ID", help="Gene ID column in TMM.")
+    parser.add_argument("--exp-col", default="condition", help="Condition column.")
+    parser.add_argument("--val-col", default="value", help="Expression value column.")
+    parser.add_argument("-o", "--output", required=True, help="Output file for relative scores.")
+    
+    args = parser.parse_args()
+    
+    calculate_molar_fractions(args.tmm, args.rxn, args.genes, args.orthologs, 
+                              args.id_col, args.exp_col, args.val_col, args.output)
