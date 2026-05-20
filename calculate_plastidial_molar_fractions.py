@@ -55,12 +55,12 @@ def calculate_molar_fractions(tmm_file, rxn_file, plastid_file, ortholog_file,
     plastid_totals = plastid_tmm_df.groupby(exp_col)[val_col].sum().to_dict()
     
     # Auto-generate totals filename based on output name
-    totals_file = out_rxn.replace('.tsv', '_plastid_transcript_totals.tsv')
+    totals_file = rxn_file.replace('_reaction_score.tsv', '_plastid_transcript_totals.tsv')
     print(f" -> Saving experiment totals to: {totals_file}")
     
     totals_list = []
     for cond, total in sorted(plastid_totals.items()):
-        print(f"      - {cond}: {total:.2f}")
+        # print(f"      - {cond}: {total:.2f}")
         totals_list.append({exp_col: cond, 'total_plastid_transcripts': total})
     
     pd.DataFrame(totals_list).to_csv(totals_file, sep='\t', index=False)
