@@ -28,40 +28,6 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-#Global variables
-PS_url  = "https://raw.githubusercontent.com/ModelSEED/PlantSEED/"
-PS_tag  = "8cf60046e4af68912f7a7d3eeff16880a07f56bd"
-PS_tag = "dev"
-PS_json = "/Data/PlantSEED_v3/PlantSEED_Roles.json"
-
-def generateRolesDict():
-    # print("Reading PlantSEED Database")
-    PS_json_data = json.load(urlopen(PS_url+PS_tag+PS_json))
-
-    # roles_file = os.path.join(project_root, "data", "metabolic_models", "PlantSEED_Roles.json")
-    # with open(roles_file, 'r') as f:
-    #     PS_json_data = json.load(f)
-
-    roles_dict = dict()
-    for item in PS_json_data:
-        # Create a new role entry for the consolidated model
-        role_dict = dict()
-        role_dict["role"]        = item["role"]
-        role_dict["subsystems"]  = item["subsystems"]
-        role_dict["reactions"]   = list()
-        roles_dict[item["role"]] = role_dict
-
-    # i = 1
-    # for fr in ["1", "2", "3", "C1", "C2"]:
-    #     role_dict = dict()
-    #     role_dict["role"]        = f"Ferredoxin {fr} (EC 0.0.0.{i})"
-    #     role_dict["subsystems"]  = ["Ferredoxins"]
-    #     role_dict["reactions"]   = [f"rxn00fd{fr}_d0", "rxn00fdA_d0"]
-    #     roles_dict[role_dict["role"]] = role_dict
-    #     i += 1
-    return roles_dict
-roles_dict = generateRolesDict()
-
 # Model species information
 class Species:
     def __init__(self, name, synonyms, modelJSON_file_path='', RNASeq_file_path='', model=None):
@@ -83,7 +49,7 @@ class Species:
         with open(modelJSON_file_path, 'r') as f:
             data=f.read()
             json_model = json.loads(data)
-            self.metModel = Model().fromJSON(json_model, roles_dict)
+            self.metModel = Model().fromJSON(json_model)
 
             with open(self.name+'.json','w') as f:
                 json.dump(self.metModel.as_dict(),f,indent=2)
@@ -107,12 +73,12 @@ class ComputeScoresPredictions:
         self.species_list =  list()
         self.cons_dict_list = list()
 
-        self.msr = param.msr
         self.value_column  = param.value_column
         self.modelJSON_files_folder = param.json_files_folder
         self.RNASeq_folder = param.RNASeq_folder
         # Write the results to this folder
         self.results_folder = param.results_folder
+        self.reaction_file_suffix = param.reaction_file_suffix
 
         self.model_compartments = set()
         self.group_columns = param.group_columns
@@ -120,39 +86,6 @@ class ComputeScoresPredictions:
         self.control_id = param.control_id
         self.trmt_colmn = param.trmt_colmn
         self.treatments = list()
-
-# Find the path to JSON model files for each species
-def jsonModelPath2Var(csp, verbose=True):
-    json_dict = dict()
-    if verbose: print("-"*10+" Updating JSON file paths "+"-"*10)
-    fileNames = [os.path.join(csp.modelJSON_files_folder, x)
-                    for x in os.listdir(csp.modelJSON_files_folder)]
-
-    for spc in csp.project_species:
-        for fileName in fileNames:
-            if("media" in fileName.lower()):
-                continue
-            synonyms = parameters_all_spc[spc]['synonyms']
-            if any(y.lower() in fileName.lower() for y in synonyms) and fileName.endswith('.json'):
-                json_dict[spc] = fileName
-                break
-
-    return json_dict
-
-# Find the path to RNASeq files for each species
-def rnaSeqFile2Var(csp, verbose=True):
-    rnaseq_dict = dict()
-
-    if verbose: print("-"*10+" Updating RNASeq file paths "+"-"*10)
-    fileNames = os.listdir(os.path.join(csp.RNASeq_folder,csp.msr))
-    for fileName in fileNames:
-        for spc in csp.project_species:
-            synonyms = parameters_all_spc[spc]['synonyms']
-            if any(y.lower() in fileName.lower() for y in synonyms):
-                rnaseq_dict[spc] = os.path.join(csp.RNASeq_folder,csp.msr,fileName)
-                break
-
-    return rnaseq_dict
 
 # Read RNASeq data, remove outliers by caping at the "outlier_cap_percentile"
 # Compute protein weights and total Plastid Protein Mass
@@ -166,17 +99,15 @@ def readRNASeq(spc, csp, verbose=True):
     relab_df = relab_df[(relab_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
 
     print("WE ARE READING RNASEQ FILE: ",spc.RNASeq_file_path)
-    # # Remove outliers: !!! NOT NEEDED WHEN USING COUNTS (ALREADY CAPPED) !!!
-    percent = -1
-    if csp.msr in ['tpm', 'tmm']:
-        percent = relab_df[csp.value_column].\
-            describe([csp.outlier_cap_percentile/100])\
-            [str(csp.outlier_cap_percentile)+'%']
+    
+    percent = relab_df[csp.value_column].\
+        describe([csp.outlier_cap_percentile/100])\
+        [str(csp.outlier_cap_percentile)+'%']
 
-        print("THE CAP IS :",csp.outlier_cap_percentile)
-        print("THE PERCENT IS: ",percent)
+    print("THE CAP IS :",csp.outlier_cap_percentile)
+    print("THE PERCENT IS: ",percent)
 
-        relab_df.loc[(relab_df[csp.value_column] > percent), csp.value_column] = percent
+    relab_df.loc[(relab_df[csp.value_column] > percent), csp.value_column] = percent
 
     # compute protein weights
     pwg = ProteinWeightGenerator(spc.name, csp.project, spc.RNASeq_file_path,
@@ -269,11 +200,11 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
     print("Using default Sum-Min-Sum approach to compute reaction scores")
     
     # set the file paths to RNAseq and models
-    json_dict = jsonModelPath2Var(csp,verbose)
+    json_dict = parameters.model_paths
     if verbose:
         for species, json_file in json_dict.items():
             print("        "+species+" <-- "+json_file)
-    rnaseq_dict = rnaSeqFile2Var(csp,verbose)
+    rnaseq_dict = parameters.rnaseq_paths
     if verbose:
         for species, rnaseq_file in rnaseq_dict.items():
             print("        "+species+" <-- "+rnaseq_file)
@@ -297,7 +228,7 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
         reaction_scores = rsh.compute_model_score(tmm_df, parameters, species, csp, method=method, verbose=verbose)
         ##=====================================================================================================
 
-        if 'rxn_ID' not in reaction_scores.columns:
+        if 'reaction_id' not in reaction_scores.columns:
             print(f"Error: Zero reaction scores were generated.")
             print(f"This is an indication that none of the genes in the model were linked to transcripts in the RNASeq dataset")
             sys.exit(1)
@@ -312,7 +243,7 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
                 gene_associated_rxns += 1
                 
         # Count reactions that successfully received a score
-        scored_unique_rxns = reaction_scores['rxn_ID'].nunique()
+        scored_unique_rxns = reaction_scores['reaction_id'].nunique()
         
         print(f"\n" + "="*50)
         print(f"  Reaction Score Stats: {species.name}")
@@ -337,85 +268,13 @@ def generate_reactionScores(parameters, project_species:list=[], verbose=False):
             csp.rnaSeq_id_col: 'limiting_subunit'  # Was 'Geneid'
         }, inplace=True)
 
+        # Reorder columns and implicitly drop anything not in this list (like 'features')
+        reaction_scores = reaction_scores[['condition', 'reaction_id', 'reaction_score', 'limiting_subunit']]
+
         #  Save results to file
-        csp.objSaveTo = os.path.join(csp.results_folder,f"{species.name}_objective_abundance.tsv")
+        csp.objSaveTo = os.path.join(csp.results_folder,f"{species.name}{csp.reaction_file_suffix}")
         reaction_scores.to_csv(csp.objSaveTo, index=False, sep='\t')
         print("Reaction scores saved to",csp.objSaveTo)
-        continue
-
-        ###### --- STOP HERE IF RELATIVE RS IS NOT RELEVANT
-
-        ## RNASeq data and protein weight processing --------------------------------------------
-        print("        ** {} Model Reactions.".format(spc.name))
-        relab_df, pwg = readRNASeq(spc, csp)
-
-        ## Start relative abundance based reaction score computation ----------------------------
-        print("    Computing reactions scores")
-        # set treatment list from the new DF in case they are different from previously set values
-        csp.treatments = list(relab_df[csp.trmt_colmn].unique())
-        csp.treatments.remove(csp.control_id)
-
-        # compute the relative abundance scores -------------------------------------------------
-        rxn_scores = rsh.compute_model_score(relab_df, spc.metModel, csp.rnaSeq_id_col,\
-                csp.value_column, csp.group_columns, spc.name, method='relab', verbose=True)
-
-        # Add fluxes to each reaction -----------------------------------------------------------
-        # print("    Running COBRApy FVA")
-        # fva_df = pa.DataFrame()
-        # merge_on = ['rxn_ID']
-
-        #  Compute the min and max fluxes using Flux Variability Analysis (FVA)
-        #  Use different models for root and leaf to generate FVA values for QPSI model
-        # for tissue in ['Leaf']:#, 'Root']:
-        #    model_file = spc.modelJSON_file_path.replace('.json', '.xml')
-        #    if tissue == 'Root':
-        #        if csp.project != 'QPSI':
-        #            continue
-        #        model_file = model_file.replace('.xml', '_sucrose.xml')
-
-        #    fva_df = pa.concat([fva_df, f2r.run_FVA(model_file, tissue, spc.name)], ignore_index=True)
-
-        # if not fva_df.empty:
-        #     if csp.project != 'QPSI':
-        #         fva_df.drop(['tissue'], axis=1, inplace=True)
-        #     rxn_scores =  pa.merge(rxn_scores, fva_df, how="left", on=merge_on)
-
-        # Setting flexibility
-        # rxn_scores['flexibility'] = 'none'
-        # rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) <= 10**-6, 'flexibility'] = 'fixed'
-        # rxn_scores.loc[np.abs(rxn_scores['maximum']-rxn_scores['minimum']) > 10**-6, 'flexibility'] = 'flexible'
-
-        # Add dist to identity line -------------------------------------------------------------
-        csp.value_column =  "value"
-        if "weightedSumWeight" in rxn_scores.columns:
-            rxn_scores.rename(columns={'weightedSumWeight': csp.value_column}, inplace=True)
-
-        rxn_scores = rsh.compute_rxn_variability(rxn_scores, csp.group_columns, csp.treatments, csp.control_id, csp.trmt_colmn, csp.value_column, percentile=90, verbose=False)
-
-        print("Writing reaction scores and details to:")
-        print(csp.results_folder+spc.name+"_rxn_scores_"+csp.msr+".csv")
-
-        if not csp.relabSaveTo:
-            csp.relabSaveTo = csp.results_folder+spc.name+"_relab_rxn_scores_"+csp.msr+".csv"
-        rxn_scores.to_csv(csp.relabSaveTo, index=False)
-
-        #  Processing file genrates a new scores file that edits the format of the DF
-        #   if the pipeline is run again, remove the existing edited RES file in order to
-        #   compute a new one in the processing script.
-        rxn_scores_edited = csp.results_folder+"{}_rxn_scores_{}_edited.csv".format(spc.name, csp.msr)
-        if os.path.exists(rxn_scores_edited):
-            os.remove(rxn_scores_edited)
-
-        #  Write species list of features and their binding properties to be used for result
-        #    processing
-        with open(csp.results_folder+spc.name+"_all_features.csv", "w") as outfile:
-            all_features = spc.metModel.modelfeatures_dict.keys()
-            for key, ftr in spc.metModel.modelfeatures_dict.items():
-                bind = None if not ftr.binds else "_".join(ftr.binds)
-                outfile.write(f"{key}, {bind}\n")
-        # continue
-        # Compare RES computation methods ------------------------------------------------------
-        plotMethodDiffs(csp, spc, tmm_df, tmm_scores, rxn_scores, pwg)
 
 ## Compare different reaction score computation methods
 ##  (sum_min_sum) vs. (max_min_max) vs. relative abundance
@@ -681,7 +540,6 @@ def plotMethodDiffs(csp, spc, tmm_df, tmm_scores, relative_scores, pwg, verbose=
 
     ## ########################### ########################### ###########################
 
-
 ## ## ----------- OTHER PROCESSING (not used in pipeline) -----------
 def compareProteins(aProt, oProt, otherSpc):
     # Check number of modelReactionProteins
@@ -741,60 +599,6 @@ def checkProteinLists(athalianaModelJson, otherSpcModelJson):
             c = 0
 
     return rxns
-
-def rxn2genes(otherSpcModelJson):
-    print("get subsystems")
-    rxn_subsystems = integrateRoles()
-    print("generating file")
-    otherModel = dict()
-    with open(otherSpcModelJson, 'r') as f:
-        otherModel = json.load(f)
-    if not otherModel:
-        return
-
-    otherSpc = otherModel["name"]
-
-    with open(otherSpc+'_reaction_paralogs.tsv','w') as fh:
-        fh.write("reaction_id\tparalog\tenzyme_number\tsubunit_number\tsubsystems\n")
-        for reaction in otherModel["modelreactions"]:
-            try:
-                subsystems = rxn_subsystems[reaction['id'].split('_')[0]]
-            except KeyError:
-                subsystems = 'Unknown'
-
-            p = 1
-            for mrp in reaction["modelReactionProteins"]:
-                su = 1
-                for mrps in mrp["modelReactionProteinSubunits"]:
-                    if len(mrps["feature_refs"]) == 0:
-                        fh.write(f"{reaction['id']}\tmissing\t{p}\t{su}\t{subsystems}\n")
-                    else:
-                        for ftr in mrps["feature_refs"]:
-                            fh.write(f"{reaction['id']}\t{ftr.split('/')[-1]}\t{p}\t{su}\t{subsystems}\n")
-                    su += 1
-                p += 1
-
-def integrateRoles():
-    rxn_subsystems = dict()
-    print("PS Role Integration ...")
-    data = json.load(urlopen(PS_url+PS_tag+PS_json))
-
-    result_list = list()
-    subsys_set = set()
-    role_set = set()
-    for item in data:
-        role       = item["role"]
-        subsystems = set(item["subsystems"])
-        # Get all reactions associated with the role
-        reactions = list()
-        for r_id in item["reactions"]:
-            if r_id in rxn_subsystems:
-                rxn_subsystems[r_id] = rxn_subsystems[r_id].union(subsystems)
-            else:
-                rxn_subsystems[r_id]= subsystems
-    return rxn_subsystems
-
-## ## ---------------------------------------------------------------
 
 if __name__ == '__main__':
     #Parameters_test_a, Parameters_QPSI, Parameters_secMeta_TSU

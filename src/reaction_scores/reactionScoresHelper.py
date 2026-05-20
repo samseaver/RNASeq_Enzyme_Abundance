@@ -16,7 +16,7 @@ sys.path.append(project_root)
 #                                   values are summed up to return the subunit score.
 #   2. Sum: subunit score is the sum of the abundances of its paralogs
 #   3. Max: subunit score is the max of the abundances of its paralogs
-def compute_subunit_score(df, id_col, value_col, group_cols, method='relab', rxn_id = ''):
+def compute_subunit_score(df, id_col, value_col, group_cols, method='relab'):
 
     if method == 'relab':
         # df['weight'] = df['me'].div(df.groupby(['date', 'rank'])['me'].transform('sum'))
@@ -43,7 +43,7 @@ def compute_subunit_score(df, id_col, value_col, group_cols, method='relab', rxn
 #                                   across all subunits return the sums representing the protein
 #                                   weight
 #   2. Min: subunit score is the min of its sub-units
-def compute_mrp_score(df, value_col, group_cols, method='relab', rxn_id = ''):
+def compute_mrp_score(df, value_col, group_cols, method='relab'):
     if method == 'relab':
         # multiply each subunit weight by the minimum relative abundance across all subunits
         # return the sums representing the protein weight
@@ -62,7 +62,7 @@ def compute_mrp_score(df, value_col, group_cols, method='relab', rxn_id = ''):
 #                                   complex
 #   2. Sum: sum the scores of all reacrion protein complex
 #   3. Max: max of all reacrion protein complex scores
-# Add features, binding information and subsystem data to the result
+# Keep features
 
 def genera_list(rows):
     return [y for x in rows
@@ -70,7 +70,7 @@ def genera_list(rows):
             ]
 
 
-def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_set, ftr_list, binding, method='relab', rxn_id = ''):
+def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, ftr_list, method='relab'):
     new_df = pa.DataFrame()
 
     if method == 'relab':
@@ -84,13 +84,7 @@ def compute_rxn_score_value(df, id_col, rxn, value_col, group_cols, subsystems_s
     else:
         new_df = df.loc[df.groupby(group_cols)[value_col].idxmax()]
 
-    # new_df.rename(columns = {value_col:'value'}, inplace=True)
-    new_df = new_df.assign(subsystems = [subsystems_set for i in new_df.index])
-
-    if not binding:
-        binding = "None"
-    new_df = new_df.assign(bind = [binding for i in new_df.index])
-    new_df['rxn_ID'] = rxn
+    new_df['reaction_id'] = rxn
     new_df['features'] = str(ftr_list)
     
     return new_df
@@ -108,13 +102,7 @@ def compute_model_score(tmm_data, params, species, csp, method='relab', verbose=
     id_col = csp.rnaSeq_id_col
     value_col = csp.value_column
     group_cols = csp.group_columns
-    
-    # -- input
-    # relab_data.columns: gene_id, treatment, tissue, time_stamp, value (TPM, TMM, or any other)
-    # model_rxn_dict: rxn_id -> Reaction object (modelComponents)
-    # -- output
-    # dfcolumns: rxn_ID, treatment, subsystems, 2d, 4d, ...
-    
+
     # ------------------- EXTREAM -------------------------
     # Implementing EXTREAM algorithm here
     # Create a set of unique (Gene, Base_Reaction) tuples
@@ -150,7 +138,6 @@ def compute_model_score(tmm_data, params, species, csp, method='relab', verbose=
 
     for rxn_id, rxn in metModel.modelreactions_dict.items():
         nr+=1
-        rxn_subsys = rxn.subsystems
 
         if not rxn.genes:
             continue
@@ -184,22 +171,20 @@ def compute_model_score(tmm_data, params, species, csp, method='relab', verbose=
                 feature_value_df = tmm_data[(tmm_data[id_col].isin(mdlrxn_subunit_ftrs))]
                 feature_value_df[id_col] = feature_value_df[id_col].astype(str)
                 ftr_list.extend(mdlrxn_subunit_ftrs)
-                mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}_{sub}")
+                mrps_score = compute_subunit_score(feature_value_df, id_col, value_col, group_cols, method)
                 mrps_scores= pa.concat([mrps_scores, mrps_score], ignore_index=True)
 
             if not mrps_scores.empty:
-                mrp_score  = compute_mrp_score(mrps_scores, value_col, group_cols, method, rxn_id = f"{rxn_id}_{spc_name}_{prot}")
+                mrp_score  = compute_mrp_score(mrps_scores, value_col, group_cols, method)
                 mrp_scores= pa.concat([mrp_scores, mrp_score], ignore_index=True)
 
         if not mrp_scores.empty:
-            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, \
-                                        group_cols, sorted(rxn_subsys), ftr_list, rxn.binds, method, rxn_id = rxn_id)
+            rxn_score = compute_rxn_score_value(mrp_scores, id_col, rxn_id, value_col, group_cols, ftr_list, method)
             
             rxn_scores= pa.concat([rxn_scores, rxn_score], ignore_index=True)
 
     if verbose: print(rxn_scores.head(5))
     return rxn_scores
-
 
 # For every treatment, compute the distance between the identity line and the point:
 #       x <- treatment score
@@ -229,7 +214,7 @@ def compute_rxn_variability(scores_df, group_cols, treatments, control_id, trmt_
     # Compute distance
     for trmt in treatments:
         trmtScores_df = scores_df[scores_df[trmt_colm].isin([trmt, control_id])].copy()
-        trmtScores_df = trmtScores_df[['norm_'+value_col, 'rxn_ID']+group_cols]
+        trmtScores_df = trmtScores_df[['norm_'+value_col, 'reaction_id']+group_cols]
 
         #    pivot the DF
         col = [trmt_colm]
@@ -253,7 +238,7 @@ def compute_rxn_variability(scores_df, group_cols, treatments, control_id, trmt_
         result = pa.concat([result, trmtScores_df[['rxn_score_I_dist', trmt_colm]+list(ind)]], ignore_index=True)
         if verbose: print(f"Appending {result.columns}")
 
-    scores_df = pa.merge(scores_df, result, how='left', on=['rxn_ID']+group_cols)
+    scores_df = pa.merge(scores_df, result, how='left', on=['reaction_id']+group_cols)
 
     # ### #### Compute quantiles
     scores_df['rxn_dist_quantile'] = 0
