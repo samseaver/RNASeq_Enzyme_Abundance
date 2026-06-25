@@ -3,7 +3,7 @@ import re
 import copy
 import os
 import sys
-from typing import TYPE_CHECKING, Dict, List, Optional, Set, TypeVar, Generic
+from typing import TYPE_CHECKING, Dict, List, TypeVar, Generic
 T = TypeVar('T')
 
 ## ----------------------------------------------------------------------------------------

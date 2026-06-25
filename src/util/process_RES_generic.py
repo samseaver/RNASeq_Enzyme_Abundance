@@ -28,9 +28,7 @@ import sys
 from pathlib import Path
 project_root = str(Path(__file__).resolve()).split('src')[0]
 sys.path.append(project_root)
-from src.util.parameters import *
-#Parameters_QPSI, Parameters_hAlpha, parameters_all_spc, Parameters_secMeta, Parameters_test_a
-
+from parameters import Parameters
 
 # Identity line
 A, B = 1, -1
@@ -49,30 +47,25 @@ class bc:
     #96
 
 class ResultProcessingHelper:
-    def __init__(self, parameters_class, spc='Sorghum', project='QPSI', msr="tmm"):
-        param = parameters_class()
-
+    def __init__(self, parameters, spc='Sorghum', project="QPSI"):
         self.spc = spc
-        self.msr = param.msr
-        self.project = param.project
-        self.control_name = param.control_id
-        self.group_cols = param.group_columns
-        self.trmt_col = param.trmt_colmn
+        self.project = parameters.project
+        self.control_name = parameters.control_id
+        self.group_cols = parameters.group_columns
+        self.trmt_col = parameters.trmt_colmn
+        self.value = parameters.value_column
 
         # Write the results to this folder
-        self.results_folder = param.results_folder
+        self.results_folder = parameters.results_folder
 
-        self.rxn_scores_file = self.results_folder+f"{self.spc}_objective_abundance_{self.control_name}.tsv"
+        self.rxn_scores_file = parameters.rxn_scores_paths[spc]
+        self.RNASeq_file_path = parameters.rnaseq_paths[spc]
 
-        self.RNASeq_folder = param.RNASeq_folder
-        self.RNASeq_file_path = self.RNASeq_folder+f"{self.msr}/{self.spc}_raw_genes_{self.msr}_mean_std.csv"
-
-
-        self.output_folder = param.results_folder+"processing_results/"
+        self.output_folder = os.path.join(parameters.results_folder,"..","processing_results")
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
 
-        folder = param.json_files_folder
+        folder = parameters.json_files_folder
         if self.project == "QPSI":
             spc_model = "sbicolor_3.1.1_Thylakoid_Reconstruction_ComplexFix_070224.xml" if spc == 'Sorghum' else "ptrich_4.1_Thylakoid_Reconstruction_ComplexFix_070224.xml"
 
@@ -110,7 +103,6 @@ def apply_literal_eval(row, col='subsystems'):
 
 ## ---------------------------------------------------------------------------------
 
-
 ## ----------------------- PLOT REACTION SCORE SCATTER -----------------------------
 def edit_rxn_scores_df(RPHelper, rxn_scores_file=''):
     print(" --------- Loading reactions score DF --------- ")
@@ -129,22 +121,22 @@ def edit_rxn_scores_df(RPHelper, rxn_scores_file=''):
         gcs = RPHelper.group_cols.copy()
         gcs.remove(RPHelper.trmt_col)
 
-        df['value'] = df['value'].astype('float')
-        df['value'] = np.log(df['value'])
+        value = 'reaction_score'
+        df[value] = df[value].astype('float')
+        df[value] = np.log(df[value])
         # Group the scores DF
         groups = df.groupby(gcs)
         # computes group-wise mean/std,
         # then auto broadcasts to size of group chunk
-        min = groups['value'].transform("min")
-        max = groups['value'].transform("max")
-        df['norm_'+'value'] = (df['value'] - min) / (max - min)
+        min = groups[value].transform("min")
+        max = groups[value].transform("max")
+        df['norm_'+value] = (df[value] - min) / (max - min)
 
     # Remove unnecessary columns
-    keep = {'rxn_ID', 'flexibility', 'bind', 'isTrans', 'subsystems', 'features', 'Gene_ID', 'flexibility', 'value', 'norm_value', 'rxn_score_I_dist', 'rxn_dist_quantile', 'spc'}
+    keep = {'reaction_id', 'flexibility', 'bind', 'isTrans', 'subsystems', 'features', 'Gene_ID', 'flexibility', 'value', 'norm_value', 'rxn_score_I_dist', 'rxn_dist_quantile', 'spc'}
     keep.update(RPHelper.group_cols)
     df.drop(set(df.columns)-keep, inplace=True, axis=1)
 
-   
     df['value'] = df['norm_value']
     # Rename time stamp column and keep only used time points
     if RPHelper.project == 'QPSI':
@@ -518,35 +510,6 @@ def compute_var_std(input_df, trmt_col, spc='', cprmt='', var_column='rxn_score_
         ax.spines['bottom'].set_visible(False)
         ax.spines['left'].set_visible(False)
         plt.savefig(RPHelper.results_folder+f'std_figures/{spc}_{col}_Leaf.png', bbox_inches='tight', dpi=400)
-        # plt.show()
-    #
-    # for tissue in sort_dict[group_cols[-1]]:
-    #     for gs in sort_dict[group_cols[0]]:
-    #         col = f'{gs}_{tissue}'
-    #         if verbose: print(f"Generating figure for {col}")
-    #         width, height = 4.5, 2
-    #         fig, ax = plt.subplots(figsize=(width, height))
-    #         ax.plot(up_trans[col], label='Up-regulation', color='chocolate')
-    #         ax.plot(down_trans[col], label='Down-regulation', color='steelblue')
-    #         # ax.legend(fancybox=True)
-    #         # leg=plt.legend(loc='best', numpoints=1, fancybox=True)
-    #         ax.grid()
-    #         ax.ticklabel_format(style='sci', axis='y', useOffset=True)
-    #         # plt.ticklabel_format(style='sci', useOffset=True)
-    #         plt.xlabel('Treatment')
-    #         plt.ylabel(r'$\sigma$')
-    #         ax.set_ylim([0, ymax])
-    #         # ax.legend(frameon=True, loc='best', facecolor='green', framealpha=1, fancybox=True)
-    #         plt.legend(frameon=True, loc='best', facecolor='white', framealpha=.8, fancybox=True)
-    #         fig.suptitle(f"{col.replace('_', ' ')} {cprmt}")
-    #
-    #         ax.spines['top'].set_visible(False)
-    #         ax.spines['right'].set_visible(False)
-    #         ax.spines['bottom'].set_visible(False)
-    #         ax.spines['left'].set_visible(False)
-    #         plt.savefig(f'std_figures/{col}.png', bbox_inches='tight', dpi=400)
-    #         # plt.show()
-
 
 ## ----------------------- PAPER FIGURES - PROJECT SPECIFIC -----------------------
 def get_subsysClass(subsystems, verbose=False):
@@ -591,8 +554,8 @@ def all_rxn_scores(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap=Fal
                     'res_spc' : res_spc, 
                     'day': RPHelper.cols_values['day']}
 
-    res_label= {"relab": "$r_{s}^{r} \; here$",
-                "obj": "$r_{s} \; here$"}
+    res_label= {"relab": r"$r_{s}^{r} \; here$",
+                "obj": r"$r_{s} \; here$"}
     res_labels = {r+"_"+s: res_label[r].replace('here', s) for r in ['obj', 'relab']
                         for s in ['Poplar', 'Sorghum']} 
     print(res_labels)
@@ -602,8 +565,6 @@ def all_rxn_scores(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap=Fal
 
     ctrl = RPHelper.control_name
     cols_indices = [i for i in range(0, len(group_cols))]
-    # if RPHelper.project == 'QPSI': cols_indices.reverse()
-    # cols_indices.remove(group_cols.index(RPHelper.trmt_col))
     
     percentile = RPHelper.score_perct
 
@@ -814,8 +775,8 @@ def all_rxn_scores_spc(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap
                     'res_trmt' : res_trmt, 
                     'day': RPHelper.cols_values['day']}
 
-    res_label= {"relab": "$r_{s}^{r} \; here$",
-                "obj": "$r_{s} \; here$"}
+    res_label= {"relab": r"$r_{s}^{r} \; here$",
+                "obj": r"$r_{s} \; here$"}
     res_labels = {r+"_"+s: res_label[r].replace('here', s) for r in ['obj', 'relab']
                         for s in fig_rows} 
     print(res_labels)
@@ -825,8 +786,6 @@ def all_rxn_scores_spc(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap
 
     ctrl = RPHelper.control_name
     cols_indices = [i for i in range(0, len(group_cols))]
-    # if RPHelper.project == 'QPSI': cols_indices.reverse()
-    # cols_indices.remove(group_cols.index(RPHelper.trmt_col))
     
     percentile = RPHelper.score_perct
 
@@ -879,8 +838,7 @@ def all_rxn_scores_spc(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap
     if verbose: print(distance_df.columns)
 
     treatments = RPHelper.cols_values[RPHelper.trmt_col].copy()
-    # print(f"{treatments} {ctrl}")
-    # treatments.remove(ctrl)
+
     if (RPHelper.project != 'QPSI') and (cmprt != 'all'): tmts = ['N20']
     else: tmts = treatments
 
@@ -949,14 +907,8 @@ def all_rxn_scores_spc(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap
 
 
         col_values = cols_values[group_cols[cols_indices[0]]]
-        # if ('znlim' in trmt.lower()) and(RPHelper.project == 'QPSI'):
-        #     col_values.reverse()
-
         row_values = cols_values[group_cols[cols_indices[-1]]]
-        # #remove
-        # row_values = 'Leaf' #RPHelper.cols_values[group_cols[cols_indices[-1]]]
 
-        # print(abc)
         num_unique = 0
         for row_idx, row_figs in enumerate(fig._grid_ref):
             for col_idx, col_fig in enumerate(row_figs):
@@ -1018,11 +970,9 @@ def all_rxn_scores_spc(RPHelper, rxn_scores_df, cmprt='', verbose=False, heatmap
 
 if __name__ == '__main__':
 
-    spc = "Poplar" # "Sorghum" #
-    project = 'QPSI'
-    param = Parameters_QPSI
-
-    RPHelper = ResultProcessingHelper(Parameters_QPSI, spc, project)
+    params = Parameters()
+    spc = "Sorghum"
+    RPHelper = ResultProcessingHelper(params, spc)
 
     # ## ## ## Get reaction scores and the identity line distance
     RPHelper.rxn_scores_df = edit_rxn_scores_df(RPHelper)

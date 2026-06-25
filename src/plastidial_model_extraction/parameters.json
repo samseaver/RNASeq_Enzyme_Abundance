@@ -1,62 +1,26 @@
 {
     "compartments": {
         "main_cprmt" : "_d0",
+        "transport_cprmt" : ["_e0", "_c0"],
         "extra_cprmts" : ["_c0", "_y0"],
         "media_cprmt" : "_e0",
         "cprmts" : ["_c0", "_y0", "_m0"]
     },
     "reactions":{
-        "purine_reactions" : ["rxn00917", "rxn00834",
-                    "rxn00239"],
-        "udp_missing" : ["rxn00211", "rxn01007",
-                    "rxn00213"],
+        "purine_reactions" : ["rxn00917", "rxn00834", "rxn00239"],
+        "udp_missing" : ["rxn00211", "rxn01007", "rxn00213"],
         "asparagine_reaction" : ["rxn00416"],
-        "TCA_missing" : ["rxn00330", "rxn00154",
-                    "rxn00799","rxn00499"],
+        "TCA_missing" : ["rxn00330", "rxn00154", "rxn00799", "rxn00499"],
         "Phenylpropanoids_missing" : ["rxn00495", "rxn01611"],
         "acetyl_coa_missing" : ["rxn00257"],
         "oneCarbon_missing" : ["rxn04954"],
         "Pyrimidines_missing": ["rxn01362", "rxn00710"],
         "ATP_new_reactions": ["rxn20632", "rxn20595", "rxn08173"],
-        "main_cprmt_rxns" : ["purine_reactions",
-                    "udp_missing", "asparagine_reaction"],
-        "extra_cprmt_rxns" : {"_c0": ["TCA_missing",
-                    "Phenylpropanoids_missing", "acetyl_coa_missing",
-                    "oneCarbon_missing", "Pyrimidines_missing"],
-                              "_y0": ["ATP_new_reactions"]
-                             },
+        "main_cprmt_rxns" : ["purine_reactions", "udp_missing", "asparagine_reaction","oneCarbon_missing"],
+        "extra_cprmt_rxns" : {"_c0": ["TCA_missing", "Phenylpropanoids_missing", "acetyl_coa_missing","Pyrimidines_missing"],
+                              "_y0": ["ATP_new_reactions"]},
         "missing_trans" : {"_c0": ["cpd00137", "cpd00103"]},
-        "remove_trans" : ["rxn13213","rxn10826",
-                    "rxn09777"],
-        "reactionsFromMSD" : ["rxn01361"],
-        "exclude_reactions" : ["rxn20617_d0"]
-    },
-    "files_paths":{
-        "biomass_file" : "data/metabolic_models/fullmodels_media/plastid_biomass.csv",
-        "media_json" : "data/metabolic_models/fullmodels_media/PlantPlastidialAutotrophicMedia_noATP_noADP.json",
-        "KBase_FBA":"data/KBase_FBA/ptrichPlastidialModelFBA-reactions.tsv",
-        "in_folder" : "data/metabolic_models/fullmodels_media/",
-        "out_folder" : "data/metabolic_models/plastidial_models/",
-        "spc" : ["Poplar", "Sorghum"],
-        "Poplar":{
-            "spc_model_xml" : "ptrich_4.1_Thylakoid_Reconstruction_ComplexFix_070224.xml",
-            "spc_model_json" : "ptrich_4.1_Thylakoid_Reconstruction_ComplexFix_070224.json",
-            "output_model_file" : "ptrich_4.1_plastid_Thylakoid_Reconstruction_ComplexFix_070224"
-        },
-        "Sorghum":{
-            "spc_model_xml" : "sbicolor_3.1.1_Thylakoid_Reconstruction_ComplexFix_070224.xml",
-            "spc_model_json" : "sbicolor_3.1.1_Thylakoid_Reconstruction_ComplexFix_070224.json",
-            "output_model_file" : "sbicolor_3.1.1_plastid_Thylakoid_Reconstruction_ComplexFix_070224"
-        },
-        "Athaliana":{
-            "spc_model_xml" : "Athaliana_Thylakoid_Reconstruction_ComplexFix_070224.xml",
-            "spc_model_json" : "Athaliana_Thylakoid_Reconstruction_ComplexFix_070224.json",
-            "output_model_file" : "Athaliana_plastid_Thylakoid_Reconstruction_ComplexFix_070224"
-        },
-        "newAtha":{
-            "spc_model_xml" : "athaliana_tair10_model.xml",
-            "spc_model_json" : "Athaliana_Thylakoid_Reconstruction_HemeBiosynthesis_061924.json",
-            "output_model_file" : "Athaliana_plastid_Thylakoid_Reconstruction_061124"
-        }
+        "remove_trans" : ["rxn13213", "rxn10826", "rxn09777"],
+        "reactionsFromMSD" : ["rxn01361"]
     }
 }

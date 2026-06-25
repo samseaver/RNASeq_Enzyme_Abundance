@@ -234,7 +234,7 @@ class CobraHelper:
 
     # Write reaction fluxes to file:
     #   rxn_id rxn_definition flux max_flux min_flux
-    def write_flux_details(self, spc:str, output_folder:str=''):
+    def write_flux_details(self, output_folder:str=''):
         fluxes_df = self.co_model.optimize().fluxes
         fva_df = fva(self.co_model, self.co_model.reactions, processes=1)
         # Set reactions fluxes < 10^-6 to 0
@@ -242,8 +242,8 @@ class CobraHelper:
         # print(fluxes_df.head())
         # fva_df[fva_df.abs() < 10**-6] = 0
 
-        print(bcolors.PROMPT+" Writing fluxes details to "+output_folder+spc+"_model_fluxes.tsv"+bcolors.ENDC)
-        with open(output_folder+spc+'_model_fluxes.tsv','w') as fh:
+        print(bcolors.PROMPT+" Writing fluxes details to "+output_folder+"model_fluxes.tsv"+bcolors.ENDC)
+        with open(output_folder+'model_fluxes.tsv','w') as fh:
             fh.write("rxn_id\tdefinition\tflux\tmax_flux\tmin_flux\n")
             for i in range(len(fluxes_df.index)):
                 rxn_cpt = fluxes_df.index[i]
@@ -272,13 +272,13 @@ class CobraHelper:
                     fh.write(rxn_cpt+"\t"+str(flux)+"\t"+str(max)+"\t"+str(min)+"\n")
 
     # Write list of biomass metabolites, their names and coefficients to file
-    def write_biomass_details(self, spc:str, output_folder=''):
+    def write_biomass_details(self, output_folder=''):
         from BiochemPy import Compounds
         cpd_helper = Compounds()
 
-        print(bcolors.PROMPT+" Writing biomass details to "+output_folder+spc+"_model_biomass.tsv"+bcolors.ENDC)
+        print(bcolors.PROMPT+" Writing biomass details to "+output_folder+"model_biomass.tsv"+bcolors.ENDC)
         bio=self.co_model.reactions.get_by_id("bio1_biomass")
-        with open(output_folder+spc+'_model_biomass.tsv','w') as fh:
+        with open(output_folder+'model_biomass.tsv','w') as fh:
             fh.write("Metabolite\tname\tcoefficient\n")
             for metabolite, coeff in bio.metabolites.items():
                 fh.write('%s \t %s \t %s \n' % (metabolite, metabolite.name, coeff))

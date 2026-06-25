@@ -1,18 +1,16 @@
 import itertools
 from Bio.SeqUtils import molecular_weight
+import gzip
 import csv
 import sys
 import pandas as pa
 from time import time
-
 
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.io as pio
 import seaborn as sns
 pio.templates.default = "plotly_white"
-
-
 
 from pathlib import Path
 project_root = str(Path(__file__).resolve()).split('src')[0]
@@ -25,7 +23,6 @@ from src.util.bcolors import bcolors
 
 avogadro = 6.02214076e+23
 
-
 class ProteinWeightGenerator:
     def __init__(self, spc_name:str="Sorghum", project='QPSI', rnaseq_path:str=None, model_genes:set={}, project_cols:list=[], cap_percent:int=-1):
 
@@ -36,41 +33,27 @@ class ProteinWeightGenerator:
         self.project_cols           = project_cols if project_cols else ['tissue', 'treatment', 'time_stamp']
         self.cap_percent            = cap_percent
 
-        
         ## Plastid proteome data 
-        self.chloro_atha_file       = os.path.join(project_root, "data", "plastid_proteome",
-                                "Full_AT_CHLORO_2019.tsv")
-
+        self.chloro_atha_file = os.path.join(project_root, "data", "plastid_proteome", "Full_AT_CHLORO_2019.tsv")
         self.PPDB_file = os.path.join(project_root, "data", "plastid_proteome", "PPDB_Plastid_Proteome.tsv")
-                             
-        
-        
+
         ## Amino Acids propeties including "molecular_mass" and "num_atoms"
-        self.AA_properties_file     = os.path.join(project_root, "data", "ProteinSeq",
-                                "AA_properties.csv")
+        self.AA_properties_file = os.path.join(project_root, "data", "ProteinSeq", "AA_properties.csv")
 
         ## Protein seqeuences: A. Thaliana and other species
         ## And orthologs files     
-        self.protein_weight_file    = os.path.join(project_root, "data", "ProteinSeq",
-                                f"{self.spc_name}_protein_weights.csv")
+        self.protein_weight_file    = os.path.join(project_root, "data", "ProteinSeq", f"{self.spc_name}_protein_weights.csv")
         ortho_version = 'apr10'
         if spc_name.lower() == 'sorghum':
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Sbicolor_454_v3.1.1.protein.fa")
-            # self.orthologs_file     = os.path.join(project_root, "data", "orthologs",
-            #                 "Athaliana_Araport11__v__Sbicolor_v3.1.1.tsv")
-            self.orthologs_file     = os.path.join(project_root, "data", "orthologs",
-                            f"orthologs_{ortho_version}",
-                            f"Sbicolor_v3.1.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Sbicolor_454_v3.1.1.protein.fa")
+            self.orthologs_file     = os.path.join(project_root, "data", "orthologs", f"orthologs_{ortho_version}", f"Sbicolor_v3.1.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
 
         elif spc_name.lower() == 'poplar':
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Ptrichocarpa_533_v4.1.protein.fa")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Ptrichocarpa_533_v4.1.protein.fa")
             self.orthologs_file     = os.path.join(project_root, "data", "orthologs", f"orthologs_{ortho_version}", f"Ptrichocarpa_v4.1_Athaliana_Araport11_Functional_Homologs_{ortho_version}.tsv")
             
         else:
-            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq",
-                            "Athaliana_447_Araport11.protein.fa")
+            self.spc_fasta          = os.path.join(project_root, "data", "ProteinSeq", "Athaliana_447_Araport11.protein.fa")
             self.orthologs_file     = None
 
         ## for data processing
@@ -102,12 +85,22 @@ class ProteinWeightGenerator:
 
                 if('ENV' not in row[3]) and ('THY' not in row[3]) and ('STR' not in row[3]):
                     continue
-                #
-                # if(row[1] not in protein_seqs_dict):
-                #     #print(row[1])
-                #     continue # WHY IS THIS HAPPENING?!
 
                 self.atha_chloro_proteins.add(row[1])
+
+        with open(self.PPDB_file) as fh:
+            reader = csv.reader(fh, delimiter='\t')
+            # This skips the first row of the CSV file.
+            next(reader)
+
+            for row in reader:
+                if not row:
+                    continue
+
+                if(row[0]==''):
+                    continue
+
+                self.atha_chloro_proteins.add(row[0])
 
     # load RNASeq data (transcriptome) to a pandas dataframe
     def readRNASeq(self):
@@ -123,70 +116,37 @@ class ProteinWeightGenerator:
 
         return rnaseq_df
 
-    def readOrthologs(self, verbose=False):
+    def readOrthologs(self, files=[], verbose=False):
         if not self.atha_chloro_proteins:
             self.readAthatChloroProteins()
         
         if verbose: print(bcolors.PROG+"There are ", len(self.atha_chloro_proteins), " A. Thaliana platid proteins"+bcolors.ENDC)
 
-        print(bcolors.PROG+f"Generating orthologs dict from {self.orthologs_file} ..."+bcolors.ENDC)
+        if(len(files)==0):
+            files.append(self.orthologs_file)
 
-        with open(self.orthologs_file, mode='r') as inFile:
-            reader = csv.reader(inFile, delimiter='\t')
-            for row in reader:
-                AT_genes = {gene.rsplit('.', 1)[0] for gene in row[1].split(', ')}
-                for at_gene in AT_genes:
-                    # keep proteins found in the chloroplast only
-                    if at_gene in self.atha_chloro_proteins:
-                        spc_genes = {gene.rsplit('.', 1)[0] for gene in row[2].split(', ')}
-                        try:
-                            self.ortho_mapping_dict[at_gene].update(spc_genes)
-                        except KeyError:
-                            self.ortho_mapping_dict[at_gene] = spc_genes
+        for file in files:
+            print(bcolors.PROG+f"Generating orthologs dict from {file} ..."+bcolors.ENDC)
+
+            with open(file, mode='r') as inFile:
+                reader = csv.reader(inFile, delimiter='\t')
+                for row in reader:
+                    AT_genes = {gene.rsplit('.', 1)[0] for gene in row[0].split(', ')}
+                    for at_gene in AT_genes:
+                        # keep proteins found in the chloroplast only
+                        if at_gene in self.atha_chloro_proteins:
+                            spc_genes = {gene.rsplit('.', 1)[0] for gene in row[1].split(', ')}
+                            try:
+                                self.ortho_mapping_dict[at_gene].update(spc_genes)
+                            except KeyError:
+                                self.ortho_mapping_dict[at_gene] = spc_genes
 
         if not self.ortho_mapping_dict:
             print(bcolors.WARNING+"No ortholog mapping found!"+bcolors.ENDC)
             sys.exit(1)
 
-    def readOrthologs_new(self, mode=3):
-        ortho_mapping_dict = dict()
-        print(bcolors.PROG+f"Generating orthologs dict from {self.orthologs_file} ..."+bcolors.ENDC)
-        
-        sep = '\t' if 'tsv' in self.orthologs_file else ','
-        with open(self.orthologs_file, mode='r') as inFile:
-            reader = csv.reader(inFile, delimiter=sep)
-            for row in reader:
-                if (mode==1) and (float(row[5]) <= 0.5):
-                    continue
-
-                if (mode==2) and (row[6] != 'O'):
-                    continue
-
-                if (mode==3) and (row[6] not in ['O', 'PA']):
-                    continue
-
-
-                if 'at' in row[3].lower():
-                    AT_gene = row[3].split('.')[0]
-                    spc_gene = row[4].rsplit('.', 2)[0]
-                else:
-                    AT_gene = row[4].split('.')[0]
-                    spc_gene = row[3].rsplit('.', 2)[0]
-
-                try:
-                    ortho_mapping_dict[AT_gene].add(spc_gene)
-                except KeyError:
-                    ortho_mapping_dict[AT_gene] = {spc_gene}
-
-
-        if not ortho_mapping_dict:
-            print(bcolors.WARNING+"No ortholog mapping found!"+bcolors.ENDC)
-            sys.exit(1)
-
-        return ortho_mapping_dict
-
     # Read protein (RNA) sequences from provided fasta files
-    def readProteinSeq(self, chloro_only=False, model_genes_only=False, prim_seq=False):
+    def readProteinSeq(self, chloro_only=False, model_genes_only=False, prim_seq=False, file_configs=[]):
         # All species orthologs found in the plastid
         chloro_proteins = set()
         if (not self.ortho_mapping_dict) and chloro_only:
@@ -196,65 +156,54 @@ class ProteinWeightGenerator:
 
         print(bcolors.PROG+f"Reading protein sequences ..."+bcolors.ENDC)
 
-        # open fasta file and alternate header and sequence
-        fasta_handle = open(self.spc_fasta)
-        fasta_iterator = (x[1] for x in itertools.groupby(fasta_handle, lambda line: line[0] == ">"))
-        for header in fasta_iterator:
-            # drop the ">"
-            header = header.__next__()[1:].strip()
-            # join all sequence lines to one.
-            seq = "".join(s.strip() for s in fasta_iterator.__next__())
-            # extract the ID field from header
-            gene_id, transcript_id = ProteinWeightGenerator.getGeneID(header, self.spc_name)
+        if(len(file_configs)==0):
+            file_configs.append({'file':self.spc_fasta,'gene_regex':r'^(\S+)'})
 
-            # check if gene is in chloroplast if chloro_only==True
-            if chloro_only and (gene_id not in chloro_proteins):
-                continue
-            # process model gene only if model_genes_only == True
-            if model_genes_only and self.model_genes and (gene_id not in self.model_genes):
-                continue
+        for config in file_configs:
+            file = config['file']
+            gene_id_pattern = re.compile(config['gene_regex'])
 
-            # Add sequence to dictionary for processing
-            #   Use the primary sequence (.1) if prim_seq == True
-            if prim_seq:
-                if transcript_id == 1:
-                    self.protein_seqs_dict[gene_id]=seq.rstrip('*')
-            #   Use the longer sequence instead
+            # open fasta file and alternate header and sequence
+            if self.is_gzipped(file):
+                fasta_handle = gzip.open(file, 'rt')
             else:
-                try:
-                    oSeq = self.protein_seqs_dict[gene_id]
-                    if len(seq.rstrip('*')) > len(oSeq):
-                        self.protein_seqs_dict[gene_id]=seq.rstrip('*')
-                except KeyError:
-                    self.protein_seqs_dict[gene_id]=seq.rstrip('*')
+                fasta_handle = open(file,'r')
+            fasta_iterator = (x[1] for x in itertools.groupby(fasta_handle, lambda line: line[0] == ">"))
+            for header in fasta_iterator:
+                # drop the ">"
+                header = header.__next__()[1:].strip()
+                # join all sequence lines to one.
+                seq = "".join(s.strip() for s in fasta_iterator.__next__())
+                # extract the ID field from header
+                gene_id = ProteinWeightGenerator.getGeneID(header, gene_id_pattern)
 
+                # check if gene is in chloroplast if chloro_only==True
+                if chloro_only and (gene_id not in chloro_proteins):
+                    continue
+                # process model gene only if model_genes_only == True
+                if model_genes_only and self.model_genes and (gene_id not in self.model_genes):
+                    continue
+
+                # Associate multiple sequences with a single ID by appending to a list
+                self.protein_seqs_dict.setdefault(gene_id, []).append(seq.rstrip('*'))
+
+                # Compute protein molecular weight
+                self.protein_weight_dict.setdefault(gene_id, []).append(molecular_weight(seq.rstrip('*'),"protein"))
 
         print(bcolors.PROG+f"  -> There are {len(self.protein_seqs_dict)} sequences ..."+bcolors.ENDC)
 
     # Process the header file to extract the gene ID and the transcripy ID
     # return gene_ID and transcript ID
     @staticmethod
-    def getGeneID(line, species):
-        fields_dict = {}
+    def getGeneID(line, id_pattern=None):
+        if id_pattern:
+            match = id_pattern.search(line)
+            if match:
+                return match.group(1)
 
-        temp_fields = line.split(' ')
-        for field in temp_fields:
-            if '=' in field:
-                key = field.split('=')[0]
-                value = field.split('=')[1]
-                fields_dict[key.lower()]=value
-
-        try:
-            id = fields_dict.get("id")
-        except KeyError:
-            id = line.split(' ', 1)[0]
-
-        if 'atha' in species:
-            id, transcript = id.split('.')[0], id.split('.')[1]
-        else:
-            id, transcript = id.split('.')[0]+'.'+id.split('.')[1], id.split('.')[2]
-
-        return  id, transcript
+        # Fallback: use the first word of the header text if no pattern or match fails
+        # Safely drops trailing description metadata
+        return line.split()[0]
 
     # Read amino acids properites form file "AA_properties_file"
     # returns a dictionary with "abreviation_s"->"num_atoms"
@@ -378,6 +327,12 @@ class ProteinWeightGenerator:
 
         fig.show()
 
+    @staticmethod
+    def is_gzipped(filepath):
+        # Peek at the first two bytes in binary mode
+        with open(filepath, 'rb') as test_f:
+            return test_f.read(2) == b'\x1f\x8b'
+    
     ## Additional processing for gene localization and function
     @staticmethod
     def process_localization(ftr_loc_dict, loc_dict, role='', reactions=[], publications=[]):
