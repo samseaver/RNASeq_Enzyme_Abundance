@@ -33,7 +33,7 @@ class Parameters:
         self.json_files_folder = os.path.join(project_root, "projects", self.project, "inputs")
         self.RNASeq_folder     = os.path.join(project_root, "projects", self.project, "rnaseq-data")
         self.results_folder    = os.path.join(project_root, "projects", self.project, "integration_results")
-        self.reaction_file_suffix = '_reaction_score.tsv'
+        self.reaction_file_suffix = '_reaction_scores.tsv'
 
         # Initial Directory Existence Testing
         for folder_name, folder_path in [("Models Input", self.json_files_folder), 
