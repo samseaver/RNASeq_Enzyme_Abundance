@@ -49,7 +49,7 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
     target_days = ['2d', '4d', '7d', '14d', '21d']
     numeric_days = np.array([2, 4, 7, 14, 21])
     
-    specs = [[{}, {}, {}, {}, {}, {'secondary_y': True}]] * 4
+    specs = [[{}, {}, {}, {}, {}, {}]] * 4
     
     subplot_titles = [f"Day {d}" for d in target_days] + [""]
     subplot_titles += [""] * 6 * 3 
@@ -71,8 +71,8 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
     for row_idx, (df, row_title) in enumerate(row_configs):
         r = row_idx + 1 
         
-        print(f"\n{'='*45}\n STATS FOR: {row_title}\n{'='*45}")
-        print(f"{'Day':<5} | {'Dir':<5} | {'Mean':<10} | {'SD':<10}\n{'-'*45}")
+        print(f"\n{'='*55}\n STATS FOR: {row_title}\n{'='*55}")
+        print(f"{'Day':<5} | {'Dir':<5} | {'PopMean':<10} | {'SE':<10} | {'n':<5}\n{'-'*55}")
         
         # --- PANEL A: Scatter Plots (Cols 1 to 5) ---
         for col_idx, day in enumerate(target_days):
@@ -107,79 +107,82 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
 
             # X-Axes: Tick labels ONLY on the bottom row (r == 4)
             fig.update_xaxes(
-                range=[-0.05, 1.05], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0], 
+                range=[0, 1], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0],
                 tickformat=".2f", showticklabels=(r == 4), row=r, col=c
             )
-            # Y-Axes: Tick labels ONLY on the far left column (c == 1). 
+            # Y-Axes: Tick labels ONLY on the far left column (c == 1).
             # scaleanchor="x" forces the subplot to be a perfect square!
             fig.update_yaxes(
-                range=[-0.05, 1.05], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0], 
+                range=[0, 1], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0],
                 tickformat=".2f", showticklabels=(c == 1), scaleanchor="x", scaleratio=1, row=r, col=c
             )
             
             if r == 4: fig.update_xaxes(title_text="Control", row=r, col=c)
             if c == 1: fig.update_yaxes(title_text=f"<b>{row_title}</b><br>FeLim", row=r, col=c)
 
-        # --- PANEL B: Mean + Secondary Axis Error Bars (Col 6) ---
-        up_group = df[df['direction'] == 'Up'].groupby('day')['abs_dist']
-        up_mean, up_std = up_group.mean().reindex(target_days).fillna(0), up_group.std().reindex(target_days).fillna(0)
+        # --- PANEL B: Count-weighted Mean (sum/n_total) + Analytic SE (col 6) ---
+        n_total = df.groupby('day').size().reindex(target_days).fillna(0)
 
-        down_group = df[df['direction'] == 'Down'].groupby('day')['abs_dist']
-        down_mean, down_std = down_group.mean().reindex(target_days).fillna(0), down_group.std().reindex(target_days).fillna(0)
+        def _weighted(direction):
+            grp = df[df['direction'] == direction].groupby('day')['abs_dist']
+            n_sub = grp.size().reindex(target_days).fillna(0)
+            sd    = grp.std().reindex(target_days).fillna(0)
+            denom = n_total.replace(0, np.nan)
+            pop_mean = (grp.sum().reindex(target_days).fillna(0) / denom).fillna(0)
+            se       = (np.sqrt(n_sub) * sd / denom).fillna(0)
+            return pop_mean, se, n_sub
+
+        up_mean, up_se, up_n     = _weighted('Up')
+        down_mean, down_se, down_n = _weighted('Down')
 
         for day in target_days:
-            print(f"{day:<5} | Up    | {up_mean[day]:.6f}   | {up_std[day]:.6f}")
-            print(f"{'':<5} | Down  | {down_mean[day]:.6f}   | {down_std[day]:.6f}")
+            print(f"{day:<5} | Up    | {up_mean[day]:.6f}   | {up_se[day]:.6f}   | {int(up_n[day]):<5}")
+            print(f"{'':<5} | Down  | {down_mean[day]:.6f}   | {down_se[day]:.6f}   | {int(down_n[day]):<5}")
 
-        K = 5
-        offset = 0.4 
-        
-        # 1. Primary Traces: Just the Mean Lines
+        offset = 0.4
+
         fig.add_trace(go.Scatter(
             x=numeric_days - offset, y=up_mean.values,
-            mode='lines+markers', name='Up-reg Mean',
+            mode='lines+markers', name='Up',
             line=dict(color='chocolate', width=3), marker=dict(symbol='circle', size=10),
-            showlegend=(r == 1) 
-        ), row=r, col=6, secondary_y=False)
-        
+            error_y=dict(type='data', array=up_se.values, visible=True, thickness=2.5, width=6, color='chocolate'),
+            showlegend=(r == 1)
+        ), row=r, col=6)
+
         fig.add_trace(go.Scatter(
             x=numeric_days + offset, y=down_mean.values,
-            mode='lines+markers', name='Down-reg Mean',
+            mode='lines+markers', name='Down',
             line=dict(color='steelblue', width=3), marker=dict(symbol='square', size=10),
+            error_y=dict(type='data', array=down_se.values, visible=True, thickness=2.5, width=6, color='steelblue'),
             showlegend=(r == 1)
-        ), row=r, col=6, secondary_y=False)
-
-        # 2. Ghost Traces: Invisible markers mapped to Secondary Y
-        fig.add_trace(go.Scatter(
-            x=numeric_days - offset, y=up_mean.values * K,
-            mode='markers', name='Up-reg SD', marker=dict(opacity=0),
-            error_y=dict(type='data', array=up_std.values, visible=True, thickness=2.5, width=6, color='chocolate'),
-            showlegend=False 
-        ), row=r, col=6, secondary_y=True)
-
-        fig.add_trace(go.Scatter(
-            x=numeric_days + offset, y=down_mean.values * K,
-            mode='markers', name='Down-reg SD', marker=dict(opacity=0),
-            error_y=dict(type='data', array=down_std.values, visible=True, thickness=2.5, width=6, color='steelblue'),
-            showlegend=False 
-        ), row=r, col=6, secondary_y=True)
+        ), row=r, col=6)
 
         if r == 4: fig.update_xaxes(title_text="Time Point (Day)", row=r, col=6)
-        
-        fig.update_xaxes(range=[0, 23], tickmode='array', tickvals=[2, 4, 7, 14, 21], ticktext=['2d', '4d', '7d', '14d', '21d'], row=r, col=6)
 
-        # Primary Axis (Mean): 2 Decimal Places
+        fig.update_xaxes(range=[0, 23], tickmode='array', tickvals=[2, 4, 7, 14, 21], ticktext=['2d', '4d', '7d', '14d', '21d'], showticklabels=(r == 4), row=r, col=6)
+
         fig.update_yaxes(
-            range=[-0.02, 0.06], 
-            tickmode='array', tickvals=[-0.02, 0.00, 0.02, 0.04, 0.06], tickformat=".2f", 
-            row=r, col=6, secondary_y=False
-        ) 
-        # Secondary Axis (SD): 1 Decimal Place
-        fig.update_yaxes(
-            range=[-0.10, 0.30], 
-            tickmode='array', tickvals=[-0.10, 0.00, 0.10, 0.20, 0.30], tickformat=".1f", showgrid=False,
-            row=r, col=6, secondary_y=True
+            range=[-0.002, 0.040],
+            tickmode='array',
+            tickvals=[0.000, 0.010, 0.020, 0.030, 0.040],
+            ticktext=["0", "0.01", "0.02", "0.03", "0.04"],
+            side='right',
+            row=r, col=6
         )
+
+    # Dashed separator between scatter cols (1-5) and trend col (6),
+    # placed at the midpoint of the gap between col 5's right edge and col 6's left edge
+    x_separator = (fig.layout.xaxis5.domain[1] + fig.layout.xaxis6.domain[0]) / 2
+    # Legend anchored to the upper-left corner of col 6's top-row plot (row 1, col 6 = xaxis6/yaxis6)
+    legend_x = fig.layout.xaxis6.domain[0] + 0.005
+    legend_y = fig.layout.yaxis6.domain[1] - 0.005
+
+    fig.add_shape(
+        type='line', xref='paper', yref='paper',
+        x0=x_separator, x1=x_separator,
+        y0=0.04, y1=0.96,
+        line=dict(color='black', width=1.5, dash='dash')
+    )
 
     # --- Global Publication Layout ---
     fig.update_layout(
@@ -187,15 +190,14 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
         margin=dict(t=50, b=50, l=60, r=60),
         font=dict(size=16, color='black', family='Arial'), 
         coloraxis=dict(
-            colorscale='icefire', cmin=-1, cmax=1,      
+            colorscale='icefire', cmin=-1, cmax=1,
             colorbar=dict(
-                title=dict(text="Signed<br>Norm Dist", font=dict(size=18)),
                 thickness=20, len=0.7, y=0.5,
                 tickmode='array', tickvals=[-1.0, -0.5, 0.0, 0.5, 1.0], tickformat=".2f", tickfont=dict(size=16)
             )
         ),
         legend=dict(
-            yanchor="top", y=1.0, xanchor="left", x=0.83, 
+            yanchor="top", y=legend_y, xanchor="left", x=legend_x,
             bgcolor="rgba(255, 255, 255, 0.9)", bordercolor="black", borderwidth=1.5,
             font=dict(size=18)
         )
@@ -226,8 +228,9 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
     print(f"[*] Saved interactive HTML: {out_html}")
 
 if __name__ == '__main__':
-    base_dir = "/Users/seaver/Seaver_Lab/Git_Repos/RNASeq_Enzyme_Abundance/projects/qpsi-plastidial/integration_results/"
-    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.join(script_dir, "..", "projects", "qpsi-plastidial", "integration_results")
+
     poplar_abs = os.path.join(base_dir, 'Poplar_reaction_scores.tsv')
     sorghum_abs = os.path.join(base_dir, 'Sorghum_reaction_scores.tsv')
     poplar_rel = os.path.join(base_dir, 'Poplar_reaction_molar_fractions.tsv')
@@ -235,12 +238,12 @@ if __name__ == '__main__':
 
     print("\nGrouping and Normalizing Absolute Data (Poplar & Sorghum)...")
     df_abs = prepare_data_group(poplar_abs, sorghum_abs, val_col='reaction_score')
-    
+
     print("Grouping and Normalizing Relative Data (Poplar & Sorghum)...")
     df_rel = prepare_data_group(poplar_rel, sorghum_rel, val_col='relative_reaction_score')
 
-    out_png = os.path.join(base_dir, 'std_figures', "Plotly_Master_Dashboard_Normalized.png")
-    out_html = os.path.join(base_dir, 'std_figures', "Plotly_Master_Dashboard_Normalized.html")
-    
+    out_png = os.path.join(script_dir, "reaction_scores_dashboard_figure.png")
+    out_html = os.path.join(script_dir, "reaction_scores_dashboard_figure.html")
+
     if not df_abs.empty and not df_rel.empty:
         plot_normalized_dashboard(df_abs, df_rel, out_png, out_html)
