@@ -28,21 +28,19 @@ def calculate_molar_fractions(tmm_file, rxn_file, plastid_file, ortholog_file,
     # 3. Handle Ortholog Mapping (Ath Column 0, Species Column 1)
     if ortholog_file and os.path.exists(ortholog_file):
         print(f"Loading ortholog mapping: {ortholog_file}")
-        # header=None based on your head snippet; usecols 0 and 1
         ortho_df = pd.read_csv(ortholog_file, sep='\t', header=None, usecols=[0, 1])
         ortho_df.columns = ['Ath_ID', 'Species_ID']
-        
-        # Filter out duplicates to ensure 1:1 or N:1 mapping
-        ortho_df = ortho_df.drop_duplicates(subset=['Species_ID'])
-        ortho_map = dict(zip(ortho_df['Species_ID'], ortho_df['Ath_ID']))
-        
-        def is_plastidial(gene_id):
-            at_id = ortho_map.get(gene_id, "")
-            at_id_clean = str(at_id).split('.')[0].upper()
-            return at_id_clean in at_plastid_genes
-            
-        print(f" -> Filtering TMM data via Ath-orthology...")
-        plastid_tmm_df = tmm_df[tmm_df[id_col].apply(is_plastidial)].copy()
+
+        # A Species gene is plastidial if ANY of its Ath orthologs is in the
+        # plastid list. Avoids the ordering-dependence of picking "the first"
+        # Ath per Species gene, which silently drops Species genes whose
+        # alphabetically-first Ath partner happens to be non-plastidial.
+        ortho_df['Ath_key'] = ortho_df['Ath_ID'].astype(str).str.split('.').str[0].str.upper()
+        plastid_species_ids = set(
+            ortho_df.loc[ortho_df['Ath_key'].isin(at_plastid_genes), 'Species_ID']
+        )
+        print(f" -> {len(plastid_species_ids)} species genes classified plastidial via any-Ath-ortholog rule")
+        plastid_tmm_df = tmm_df[tmm_df[id_col].isin(plastid_species_ids)].copy()
     else:
         print(" -> No ortholog file. Filtering TMM data directly against Ath IDs...")
         plastid_tmm_df = tmm_df[tmm_df[id_col].str.split('.').str[0].str.upper().isin(at_plastid_genes)].copy()
@@ -55,7 +53,7 @@ def calculate_molar_fractions(tmm_file, rxn_file, plastid_file, ortholog_file,
     plastid_totals = plastid_tmm_df.groupby(exp_col)[val_col].sum().to_dict()
     
     # Auto-generate totals filename based on output name
-    totals_file = rxn_file.replace('_reaction_score.tsv', '_plastid_transcript_totals.tsv')
+    totals_file = rxn_file.replace('_reaction_scores.tsv', '_plastid_transcript_totals.tsv')
     print(f" -> Saving experiment totals to: {totals_file}")
     
     totals_list = []
