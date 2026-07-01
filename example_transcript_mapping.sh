@@ -4,7 +4,7 @@ echo '# Running model-transcript-mapper.py for Sorghum'
 echo '################################################'
 ./model-transcript-mapper.py \
     -m Models/Sbicolor-v3.1.1-reconstruction.json \
-    -t projects/qpsi-plastidial/rnaseq-data/Sorghum_raw_genes_tmm_mean.tsv \
+    -t projects/qpsi-plastidial/rnaseq-data/Sorghum_raw_genes_tmm_mean.tsv.xz \
     -o Models/Sbicolor-v3.1.1-reconstruction_cleaned.json \
     -r '\.\d+\.p$'
 echo

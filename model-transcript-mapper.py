@@ -13,9 +13,8 @@ def load_transcripts(transcript_path, transcript_id_col):
     """Loads the transcript file and returns a set of unique Gene IDs."""
     print(f"Loading transcripts from: {transcript_path}")
     try:
-        with open(transcript_path, 'r') as f:
-            dialect = csv.Sniffer().sniff(f.read(1024))
-        df = pd.read_csv(transcript_path, sep=dialect.delimiter)
+        # TSV format is canonical; pandas auto-decompresses .gz/.xz/.bz2 by extension
+        df = pd.read_csv(transcript_path, sep='\t')
         
         if transcript_id_col not in df.columns:
             print(f"Error: Column '{transcript_id_col}' not found in transcript file.")

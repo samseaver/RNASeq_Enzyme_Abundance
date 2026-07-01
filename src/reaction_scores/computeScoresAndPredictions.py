@@ -165,14 +165,9 @@ def readRNASeq(spc, csp, verbose=True):
 def readTMMdata(spc, csp, verbose=True):
     # Read RANSeq data from file
     tmm_file = spc.RNASeq_file_path
-    
-    # Read the first few bytes to guess the separator
-    with open(tmm_file, 'r') as f:
-        # 'sniff' the first 1024 bytes to find the dialect
-        dialect = csv.Sniffer().sniff(f.read(1024))
-    
-    # Now read it with the detected delimiter using the fast C engine (default)
-    tmm_df = pa.read_csv(tmm_file, sep=dialect.delimiter)
+
+    # TSV format is canonical; pandas auto-decompresses .gz/.xz/.bz2 by extension
+    tmm_df = pa.read_csv(tmm_file, sep='\t')
 
     # Check for ID of first column for gene/transcript/protein ids
     # Sometimes it is empty or has a different name, best to keep it consistent
