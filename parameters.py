@@ -19,7 +19,7 @@ class Parameters:
     def __init__(self, verbose=True):
         self.project         = 'qpsi-plastidial'
         self.value_column    = 'value'
-        self.project_species = ["Sorghum", "Poplar"]
+        self.project_species = ["Sorghum"] # ["Sorghum", "Poplar"]
         self.group_columns   = ['condition']
         self.rnaSeq_id_col   = 'Gene_ID'
         self.error           = False
@@ -27,7 +27,7 @@ class Parameters:
         self.control_name    = 'Control'  # Added to align with downstream scripts
         self.trmt_colmn      = 'condition'
         self.reaction_score_method = 'sum'
-        self.ignore_organellar_roles = 'data/organellar-encoded_subunits_to_ignore.txt'
+        self.ignore_organellar_roles = os.path.join(project_root, "data", "organellar-encoded_subunits_to_ignore.txt")
 
         # Baseline Directory Structuring
         self.json_files_folder = os.path.join(project_root, "projects", self.project, "inputs")
