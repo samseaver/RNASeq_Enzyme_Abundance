@@ -66,8 +66,9 @@ class ComputeScoresPredictions:
         self.project = param.project
         self.project_species = project_species if project_species else param.project_species
 
-        self.outlier_cap_percentile = 95
-        print("Reminder: TMM values capped at",self.outlier_cap_percentile,"percentile")
+        # TMM outlier capping removed: the percentile cap operated within the
+        # metabolic-enzyme set and clipped the most abundant enzymes (Rubisco,
+        # PPDK, carbonic anhydrase); transcript values are now used uncapped.
 
         self.PS_json_data = list()
         self.species_list =  list()
@@ -87,7 +88,7 @@ class ComputeScoresPredictions:
         self.trmt_colmn = param.trmt_colmn
         self.treatments = list()
 
-# Read RNASeq data, remove outliers by caping at the "outlier_cap_percentile"
+# Read RNASeq data (transcript values used uncapped)
 # Compute protein weights and total Plastid Protein Mass
 # Compute relative molecular abundance (rma) to be used for relative-RES
 def readRNASeq(spc, csp, verbose=True):
@@ -99,20 +100,13 @@ def readRNASeq(spc, csp, verbose=True):
     relab_df = relab_df[(relab_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
 
     print("WE ARE READING RNASEQ FILE: ",spc.RNASeq_file_path)
-    
-    percent = relab_df[csp.value_column].\
-        describe([csp.outlier_cap_percentile/100])\
-        [str(csp.outlier_cap_percentile)+'%']
 
-    print("THE CAP IS :",csp.outlier_cap_percentile)
-    print("THE PERCENT IS: ",percent)
-
-    relab_df.loc[(relab_df[csp.value_column] > percent), csp.value_column] = percent
+    # TMM outlier capping removed --- transcript values are used uncapped.
 
     # compute protein weights
     pwg = ProteinWeightGenerator(spc.name, csp.project, spc.RNASeq_file_path,
                                 set(spc.metModel.modelfeatures_dict.keys()),
-                                csp.group_columns, cap_percent=percent)
+                                csp.group_columns, cap_percent=-1)
 
     ## compute plastid protein mass and protein molecular weight
     pwg.computeWeightsAndMass(to_file=False)
@@ -161,7 +155,7 @@ def readRNASeq(spc, csp, verbose=True):
     return relab_df, pwg
 
 # Read Trimmed Mean of the M-values (TMM) values from file.
-# Cap the values at "outlier_cap_percentile" to remove outliers
+# Read TMM values (used uncapped)
 def readTMMdata(spc, csp, verbose=True):
     # Read RANSeq data from file
     tmm_file = spc.RNASeq_file_path
@@ -180,12 +174,8 @@ def readTMMdata(spc, csp, verbose=True):
         print(f"\t          {len(tmm_df[csp.rnaSeq_id_col].unique())} genes in the RNAseq")
     tmm_df = tmm_df[(tmm_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
 
-    # Cap TMM values at the outlier_cap_percentile percentile
-    percent = tmm_df[csp.value_column].\
-        describe([csp.outlier_cap_percentile/100])\
-        [str(csp.outlier_cap_percentile)+'%']
-    tmm_df.loc[(tmm_df[csp.value_column] > percent), csp.value_column] = percent
-    
+    # TMM outlier capping removed --- values are used uncapped.
+
     return tmm_df
 
 def generate_reactionScores(parameters, project_species:list=[], verbose=False):
