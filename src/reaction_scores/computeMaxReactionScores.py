@@ -21,7 +21,6 @@ SPECIES_SYNONYMS = {
     "Sorghum": ["Sorghum", "Sbicolor", "Sbi", "sbi"],
 }
 
-OUTLIER_CAP_PERCENTILE = 95
 
 
 def find_model_json(models_dir, species_name):
@@ -50,9 +49,8 @@ def find_tmm_file(tmm_dir, species_name):
 
 
 # Mirrors computeScoresAndPredictions.readTMMdata: restrict to genes present in
-# the model and cap outliers at the same percentile used by the rest of the pipeline.
-def load_tmm_data(tmm_file, species, id_col='Gene_ID', value_col='value',
-                   outlier_cap_percentile=OUTLIER_CAP_PERCENTILE):
+# the model. TMM outlier capping removed --- values are used uncapped.
+def load_tmm_data(tmm_file, species, id_col='Gene_ID', value_col='value'):
     tmm_df = pa.read_csv(tmm_file, sep=',')
 
     if tmm_df.columns[0] != id_col:
@@ -64,8 +62,7 @@ def load_tmm_data(tmm_file, species, id_col='Gene_ID', value_col='value',
 
     tmm_df = tmm_df[tmm_df[id_col].isin(species.metModel.modelfeatures_dict)]
 
-    percent = tmm_df[value_col].describe([outlier_cap_percentile / 100])[str(outlier_cap_percentile) + '%']
-    tmm_df.loc[(tmm_df[value_col] > percent), value_col] = percent
+    # TMM outlier capping removed --- values are used uncapped.
 
     return tmm_df
 
