@@ -18,7 +18,23 @@ def load_and_pivot(filepath, value_col):
     
     return df.pivot_table(index=['reaction_id', 'day'], columns='treatment', values=value_col, aggfunc='first').reset_index()
 
-def prepare_data_group(poplar_path, sorghum_path, val_col):
+LOG_FLOOR_QUANTILE = 0.001   # bottom 0.1% of non-zero scores are floored onto the axis
+
+
+def prepare_data_group(poplar_path, sorghum_path, val_col, dist_space='log'):
+    """Pivot, then place both conditions on a log10 axis.
+
+    Reaction scores are log-normal over ~5 decades, so the original
+    divide-by-global-max scaling pushed >90% of points into the bottom-left
+    corner. Plotting log10(score) spreads them out; the identity line is still
+    y = x.
+
+    dist_space controls how I-dist (distance to the identity line) is measured:
+      'log'    — perpendicular distance in log space, i.e. a scaled log fold
+                 change. Genuinely independent of the size of the scores.
+      'linear' — the original (FeLim - Control) / global_max. Ranks, and hence
+                 the top-5% outlines, are identical to the published figure.
+    """
     dfs = []
     if os.path.exists(poplar_path):
         df_p = load_and_pivot(poplar_path, val_col)
@@ -32,17 +48,29 @@ def prepare_data_group(poplar_path, sorghum_path, val_col):
     if not dfs: return pd.DataFrame()
     combined = pd.concat(dfs, ignore_index=True)
 
-    global_max = max(combined['Control'].max(), combined['FeLim'].max())
-    combined['Control_norm'] = combined['Control'] / global_max
-    combined['FeLim_norm'] = combined['FeLim'] / global_max
-    combined['signed_dist'] = combined['FeLim_norm'] - combined['Control_norm']
+    positive = pd.concat([combined['Control'], combined['FeLim']]).dropna()
+    positive = positive[positive > 0]
+    lo = float(np.floor(np.log10(positive.quantile(LOG_FLOOR_QUANTILE))))
+    hi = float(np.ceil(np.log10(positive.max())))
+    floor_val = 10.0 ** lo
+
+    combined['Control_log'] = np.log10(combined['Control'].clip(lower=floor_val))
+    combined['FeLim_log'] = np.log10(combined['FeLim'].clip(lower=floor_val))
+
+    if dist_space == 'log':
+        combined['signed_dist'] = (combined['FeLim_log'] - combined['Control_log']) / np.sqrt(2)
+    else:
+        global_max = max(combined['Control'].max(), combined['FeLim'].max())
+        combined['signed_dist'] = (combined['FeLim'] - combined['Control']) / global_max
+
     combined['abs_dist'] = combined['signed_dist'].abs()
     combined['rxn_dist_quantile'] = combined['abs_dist'].rank(pct=True)
-    
+
     max_dist = combined['abs_dist'].max()
     combined['alpha'] = 0.5 + 0.5 * (combined['abs_dist'] / max_dist) if max_dist > 0 else 0.5
     combined['direction'] = np.where(combined['signed_dist'] >= 0, 'Up', 'Down')
-    
+
+    combined.attrs['log_range'] = (lo, hi)
     return combined
 
 def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
@@ -61,15 +89,33 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
         vertical_spacing=0.035
     )
     
+    abs_range = df_abs.attrs['log_range']
+    rel_range = df_rel.attrs['log_range']
+
     row_configs = [
-        (df_abs[df_abs['species'] == 'Poplar'], "Poplar Abs"),
-        (df_abs[df_abs['species'] == 'Sorghum'], "Sorghum Abs"),
-        (df_rel[df_rel['species'] == 'Poplar'], "Poplar Rel"),
-        (df_rel[df_rel['species'] == 'Sorghum'], "Sorghum Rel")
+        (df_abs[df_abs['species'] == 'Poplar'], "Poplar Abs", abs_range),
+        (df_abs[df_abs['species'] == 'Sorghum'], "Sorghum Abs", abs_range),
+        (df_rel[df_rel['species'] == 'Poplar'], "Poplar Rel", rel_range),
+        (df_rel[df_rel['species'] == 'Sorghum'], "Sorghum Rel", rel_range)
     ]
-    
-    for row_idx, (df, row_title) in enumerate(row_configs):
-        r = row_idx + 1 
+
+    # Colour scale: symmetric, set by the 98th percentile of |I-dist| so the
+    # icefire ramp actually spans the bulk of the data instead of a few outliers.
+    cmax = float(pd.concat([df_abs['abs_dist'], df_rel['abs_dist']]).quantile(0.98))
+
+    for row_idx, (df, row_title, log_range) in enumerate(row_configs):
+        r = row_idx + 1
+        lo, hi = log_range
+        # Label every other decade — neighbouring panels are close enough that
+        # every decade collides. X ticks skip the two edge decades as well,
+        # otherwise adjacent panels print their labels on top of each other.
+        y_decades = list(range(int(lo), int(hi) + 1, 2))
+        x_decades = list(range(int(lo) + 1, int(hi), 2))
+        y_text = [f"10<sup>{k}</sup>" for k in y_decades]
+        x_text = [f"10<sup>{k}</sup>" for k in x_decades]
+        # The Abs rows (1-2) and Rel rows (3-4) span different decades, so the
+        # Abs block needs its own x labels rather than borrowing row 4's.
+        show_x = (r in (2, 4))
         
         print(f"\n{'='*55}\n STATS FOR: {row_title}\n{'='*55}")
         print(f"{'Day':<5} | {'Dir':<5} | {'PopMean':<10} | {'SE':<10} | {'n':<5}\n{'-'*55}")
@@ -88,7 +134,7 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
                 customdata = day_df[['Control', 'FeLim', 'rxn_dist_quantile']].values
 
                 fig.add_trace(go.Scatter(
-                    x=day_df['Control_norm'], y=day_df['FeLim_norm'],
+                    x=day_df['Control_log'], y=day_df['FeLim_log'],
                     mode='markers', customdata=customdata,
                     marker=dict(
                         color=day_df['signed_dist'], coloraxis="coloraxis", 
@@ -100,23 +146,25 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
                 ), row=r, col=c)
                 
             fig.add_trace(go.Scatter(
-                x=[0, 1], y=[0, 1], mode='lines',
+                x=[lo, hi], y=[lo, hi], mode='lines',
                 line=dict(color='rgba(0,0,0,0.5)', width=1.5, dash='dash'),
                 hoverinfo='skip', showlegend=False
             ), row=r, col=c)
 
             # X-Axes: Tick labels ONLY on the bottom row (r == 4)
             fig.update_xaxes(
-                range=[0, 1], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0],
-                tickformat=".2f", showticklabels=(r == 4), row=r, col=c
+                range=[lo, hi], tickmode='array', tickvals=x_decades, ticktext=x_text,
+                showticklabels=show_x, row=r, col=c
             )
             # Y-Axes: Tick labels ONLY on the far left column (c == 1).
             # scaleanchor="x" forces the subplot to be a perfect square!
             fig.update_yaxes(
-                range=[0, 1], tickmode='array', tickvals=[0.0, 0.25, 0.5, 0.75, 1.0],
-                tickformat=".2f", showticklabels=(c == 1), scaleanchor="x", scaleratio=1, row=r, col=c
+                range=[lo, hi], tickmode='array', tickvals=y_decades, ticktext=y_text,
+                showticklabels=(c == 1), scaleanchor="x", scaleratio=1, row=r, col=c
             )
-            
+
+            # Row 2 gets tick labels but no axis title — the title would land on
+            # top of row 3's panels.
             if r == 4: fig.update_xaxes(title_text="Control", row=r, col=c)
             if c == 1: fig.update_yaxes(title_text=f"<b>{row_title}</b><br>FeLim", row=r, col=c)
 
@@ -161,11 +209,23 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
 
         fig.update_xaxes(range=[0, 23], tickmode='array', tickvals=[2, 4, 7, 14, 21], ticktext=['2d', '4d', '7d', '14d', '21d'], showticklabels=(r == 4), row=r, col=6)
 
+        # Scale the trend panel to its own row: Abs and Rel I-dist live on
+        # different scales, and a hard-coded range flattens one of them.
+        top = float(np.nanmax(np.concatenate([up_mean.values + up_se.values,
+                                              down_mean.values + down_se.values])))
+        # Round up to a round number of ~4 ticks
+        step = 10.0 ** np.floor(np.log10(top / 4.0))
+        for mult in (1, 2, 2.5, 5, 10):
+            if top / (step * mult) <= 4.5:
+                step *= mult
+                break
+        top = np.ceil(top / step) * step
+        ticks = np.arange(0.0, top + step / 2, step)
         fig.update_yaxes(
-            range=[-0.002, 0.040],
+            range=[-0.05 * top, top],
             tickmode='array',
-            tickvals=[0.000, 0.010, 0.020, 0.030, 0.040],
-            ticktext=["0", "0.01", "0.02", "0.03", "0.04"],
+            tickvals=list(ticks),
+            ticktext=[f"{t:g}" for t in ticks],
             side='right',
             row=r, col=6
         )
@@ -187,13 +247,18 @@ def plot_normalized_dashboard(df_abs, df_rel, out_png, out_html):
     # --- Global Publication Layout ---
     fig.update_layout(
         height=1400, width=1950, plot_bgcolor='white',
-        margin=dict(t=50, b=50, l=60, r=60),
+        margin=dict(t=50, b=50, l=60, r=120),
         font=dict(size=16, color='black', family='Arial'), 
         coloraxis=dict(
-            colorscale='icefire', cmin=-1, cmax=1,
+            # RdBu reversed: blue = down, red = up, pale in the middle. The old
+            # 'icefire' ramp goes black at both ends, which hid the black
+            # top-5% outlines once the scale was tightened onto the data.
+            colorscale='RdBu_r', cmin=-cmax, cmax=cmax,
             colorbar=dict(
-                thickness=20, len=0.7, y=0.5,
-                tickmode='array', tickvals=[-1.0, -0.5, 0.0, 0.5, 1.0], tickformat=".2f", tickfont=dict(size=16)
+                thickness=20, len=0.7, y=0.5, x=1.045,
+                tickmode='array',
+                tickvals=[-cmax, -cmax / 2, 0.0, cmax / 2, cmax],
+                tickformat=".2f", tickfont=dict(size=16)
             )
         ),
         legend=dict(

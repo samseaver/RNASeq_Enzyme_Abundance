@@ -5,6 +5,7 @@ import os
 import sys
 import argparse
 import types
+import numpy as np
 import pandas as pa
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -39,6 +40,7 @@ METHOD_FILES = {
 }
 FONT = "Helvetica, Arial, sans-serif"
 QUANTILE_THRESHOLD = 0.95
+LOG_FLOOR_QUANTILE = 0.001   # must match generate_reaction_scores_figure.py
 # Numeric day values — used for the x-axis so spacing reflects actual time
 DAY_NUMERIC = {'2d': 2, '4d': 4, '7d': 7, '14d': 14, '21d': 21}
 
@@ -94,7 +96,7 @@ def compute_top_reaction_counts(data_dir, species_list, method, tissue, treatmen
                                  models_dir=None, tmm_dir=None, ignore_organellar_roles=None):
     """Replicate the dark-circle highlight logic from generate_reaction_scores_figure.py:
       - Pivot scores so Control / FeLim are columns
-      - Normalize by the single global max across ALL species and ALL days
+      - Take log10 of both conditions
       - Rank absolute distance from the identity line globally
       - Count reactions at or above `threshold` per species per day
 
@@ -132,10 +134,15 @@ def compute_top_reaction_counts(data_dir, species_list, method, tissue, treatmen
         return {sp: pa.DataFrame(columns=['day', 'counts']) for sp in species_list}
     combined = pa.concat(all_dfs, ignore_index=True)
 
-    # Global normalisation — same as generate_reaction_scores_figure.py
-    global_max = max(combined[control_id].max(), combined[treatment].max())
+    # Distance to the identity line in log space — same as
+    # prepare_data_group() in generate_reaction_scores_figure.py, so that the
+    # counts here match the black-outlined points in that figure.
+    positive = pa.concat([combined[control_id], combined[treatment]]).dropna()
+    positive = positive[positive > 0]
+    floor_val = 10.0 ** np.floor(np.log10(positive.quantile(LOG_FLOOR_QUANTILE)))
     combined['abs_dist'] = (
-        (combined[treatment] - combined[control_id]) / global_max
+        (np.log10(combined[treatment].clip(lower=floor_val))
+         - np.log10(combined[control_id].clip(lower=floor_val))) / np.sqrt(2)
     ).abs()
     # Global rank across all species + all days (pct=True gives 0–1 fraction)
     combined['rxn_dist_quantile'] = combined['abs_dist'].rank(pct=True)
