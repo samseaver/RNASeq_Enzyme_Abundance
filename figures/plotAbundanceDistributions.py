@@ -53,7 +53,22 @@ def load_classified_tmm(species_name, tmm_dir, orthologs_dir, plastid_gene_file,
                          tissue='Leaf', treatments=('Control', 'FeLim'), exclude_days=('0h', '1h'),
                          include_days=None):
     tmm_file = find_tmm_file(tmm_dir, species_name)
-    tmm_df = pa.read_csv(tmm_file, sep=',')
+    # CLAUDE 2026-08-12: the TMM tables shipped in projects/*/rnaseq-data are
+    # tab-separated and carry a single `condition` column of the form
+    # Tissue_Treatment_Timepoint (e.g. Leaf_FeLim_7d) rather than the three
+    # separate columns this loader was written against. Sniff the delimiter and
+    # split `condition` when present, so the same code reads either layout.
+    with open(tmm_file, 'rb') as _fh:
+        _head = _fh.read(4096)
+    if tmm_file.endswith(('.xz', '.gz', '.bz2')):
+        _sep = '\t'
+    else:
+        _sep = '\t' if _head.split(b'\n')[0].count(b'\t') else ','
+    tmm_df = pa.read_csv(tmm_file, sep=_sep)
+    if 'condition' in tmm_df.columns and 'tissue' not in tmm_df.columns:
+        parts = tmm_df['condition'].str.split('_', n=2, expand=True)
+        tmm_df['tissue'], tmm_df['treatment'], tmm_df['time_stamp'] = (
+            parts[0], parts[1], parts[2])
 
     tmm_df = tmm_df[(tmm_df['tissue'] == tissue) & (tmm_df['treatment'].isin(treatments))]
     if exclude_days:

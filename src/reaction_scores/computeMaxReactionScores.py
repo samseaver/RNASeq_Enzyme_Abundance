@@ -51,14 +51,24 @@ def find_tmm_file(tmm_dir, species_name):
 # Mirrors computeScoresAndPredictions.readTMMdata: restrict to genes present in
 # the model. TMM outlier capping removed --- values are used uncapped.
 def load_tmm_data(tmm_file, species, id_col='Gene_ID', value_col='value'):
-    tmm_df = pa.read_csv(tmm_file, sep=',')
+    # CLAUDE 2026-08-12: the TMM tables under projects/*/rnaseq-data are
+    # tab-separated and already carry a `condition` column of the form
+    # Tissue_Treatment_Timepoint. Sniff the delimiter, and only rebuild
+    # `condition` when the three source columns are actually present.
+    if tmm_file.endswith(('.xz', '.gz', '.bz2')):
+        sep = '\t'
+    else:
+        with open(tmm_file, 'rb') as fh:
+            sep = '\t' if fh.readline().count(b'\t') else ','
+    tmm_df = pa.read_csv(tmm_file, sep=sep)
 
     if tmm_df.columns[0] != id_col:
         tmm_df.columns.values[0] = id_col
 
-    tmm_df['condition'] = (tmm_df['tissue'].astype(str) + '_'
-                            + tmm_df['treatment'].astype(str) + '_'
-                            + tmm_df['time_stamp'].astype(str))
+    if 'condition' not in tmm_df.columns:
+        tmm_df['condition'] = (tmm_df['tissue'].astype(str) + '_'
+                                + tmm_df['treatment'].astype(str) + '_'
+                                + tmm_df['time_stamp'].astype(str))
 
     tmm_df = tmm_df[tmm_df[id_col].isin(species.metModel.modelfeatures_dict)]
 
