@@ -4,6 +4,20 @@ Transcript processing and reaction scoring for the plastidial metabolism of
 *Sorghum bicolor* (BTx623) and *Populus trichocarpa* (Nisqually-1) under iron
 limitation.
 
+## Preprint
+
+**Simulating Iron Deficiency in Plant Plastidial Metabolism With a Flexible
+Neural-Mechanistic Hybrid Approach**
+
+<https://doi.org/10.1101/2025.06.10.658179>
+
+That DOI is versioned and still serves the earlier submission; bioRxiv has not
+yet posted the revision this repository corresponds to. Until it does, the
+title above is the one to cite, and the code and data here match the revised
+manuscript rather than the version currently online.
+
+## Context
+
 This repository turns TMM-normalized transcript abundances into per-reaction
 enzyme-capacity estimates for a plastidial metabolic reconstruction, and builds
 two of the manuscript figures. It is one of three components:
