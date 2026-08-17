@@ -51,9 +51,6 @@ class Species:
             json_model = json.loads(data)
             self.metModel = Model().fromJSON(json_model)
 
-            with open(self.name+'.json','w') as f:
-                json.dump(self.metModel.as_dict(),f,indent=2)
-
         if self.metModel == None:
             raise ValueError(f"  Couldn't load metabolic model from {modelJSON_file_path}.")
 
