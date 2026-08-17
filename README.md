@@ -80,15 +80,27 @@ glucosinolate false positives that PlantSEED places in the plastid of species
 that do not make glucosinolates.
 
 ```bash
+git clone https://github.com/ModelSEED/PlantSEED.git
+git -C PlantSEED checkout v2.5
+
+PLANTSEED=$PWD/PlantSEED \
+PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python \
+    ./example_plastid_extraction.sh
+```
+
+That rebuilds all three plastidial models — Sorghum, Poplar and Arabidopsis —
+in place, and reproduces the tracked files byte-for-byte. For a single species:
+
+```bash
 PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python \
 ./extract-plastidial-model.py \
-    -m <PlantSEED v2.5>/Papers/bioflux-preprint-260807/Sbicolor_v3.1.1_model.json \
+    -m PlantSEED/Papers/bioflux-preprint-260807/Sbicolor_v3.1.1_model.json \
     -o projects/qpsi-plastidial/inputs/Sbicolor-v3.1.1-plastidial-reconstruction.json
 ```
 
-`./example_plastid_extraction.sh` runs both species against the older
-reconstructions in `Models/`. Those predate PlantSEED `v2.5` and will not
-reproduce the published models — use the `v2.5` artifacts as above.
+The genome-scale reconstructions under `Models/` predate `v2.5` and will not
+reproduce the published plastidial models; they are kept only as the input to
+stage 1's example.
 
 ### 3. Reaction scores
 
