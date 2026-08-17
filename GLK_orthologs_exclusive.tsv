@@ -1,0 +1,28 @@
+# GOLDEN2-LIKE paralogs used in the photosynthesis figure (fig_photo_etc,
+# panels C and D) of the BioFlux manuscript.
+#
+# arabidopsis_gene / arabidopsis_name / psi / tag record the PlantSEED ortholog
+# call. tag O means OrthoFinder called the pair orthologous, which is accepted
+# regardless of identity -- note all four PSI values fall below the monocot
+# (0.55) and eudicot (0.60) thresholds, so none would have been accepted on
+# identity alone.
+#
+# paper_label is the name the manuscript uses, and for Sorghum it deliberately
+# does NOT follow the Arabidopsis assignment. The slots were swapped on
+# 2026-08-04 so that SbGLK1 is the gene in the grass GLK1 clade
+# (Sobic.010G096300, which clusters with rice Os06g24070) rather than the gene
+# that is the better match to Arabidopsis GLK1. The C3/C4 sub-functionalization
+# argument (Wang et al., 2012) is about the grass clades, so the grass-clade
+# assignment is the one the text and its Pearson r values refer to.
+#
+# Poplar's two copies are an indistinguishable recent Salicaceae whole-genome
+# duplication pair and cannot be separated into GLK1 and GLK2, so the manuscript
+# labels them A and B.
+#
+# Authoritative source for the mapping: CONFIG.glk_orthologs in
+# Paper_Figures/fig_photo_etc.py of the companion gradient-descent repository.
+arabidopsis_gene	arabidopsis_name	species_gene	psi	tag	paper_label
+AT2G20570	GLK1	Potri.007G136901	0.48	O	PtGLK-A
+AT5G44190	GLK2	Potri.017G015800	0.47	O	PtGLK-B
+AT2G20570	GLK1	Sobic.003G002600	0.42	O	SbGLK2
+AT5G44190	GLK2	Sobic.010G096300	0.38	O	SbGLK1
