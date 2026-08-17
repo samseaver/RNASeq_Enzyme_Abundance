@@ -89,8 +89,10 @@ class Compound:
         self.id = re.sub(r"_[a-z]0", new_cprmt, self.id)
         # update comparment ref
         self.modelcompartment_ref = "~/modelcompartments/id/"+new_cprmt.replace('_', '')
-        # update compound ref
-        self.compound_ref = "~/template/reactions/id/"+self.id.split('_')[0]
+        # update compound ref -- compounds resolve against the template's
+        # compounds collection, matching the constructor above. Writing
+        # ~/template/reactions/id/ here produced a ref that never resolves.
+        self.compound_ref = "~/template/compounds/id/"+self.id.split('_')[0]
 
     def deepcopy(self):
         return copy.deepcopy(self)

@@ -18660,7 +18660,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00001",
+            "compound_ref": "~/template/compounds/id/cpd00001",
             "formula": "",
             "id": "cpd00001_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -18764,7 +18764,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00007",
+            "compound_ref": "~/template/compounds/id/cpd00007",
             "formula": "",
             "id": "cpd00007_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -18804,7 +18804,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00009",
+            "compound_ref": "~/template/compounds/id/cpd00009",
             "formula": "",
             "id": "cpd00009_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -18844,7 +18844,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00011",
+            "compound_ref": "~/template/compounds/id/cpd00011",
             "formula": "",
             "id": "cpd00011_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -18884,7 +18884,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00013",
+            "compound_ref": "~/template/compounds/id/cpd00013",
             "formula": "",
             "id": "cpd00013_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19132,7 +19132,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00048",
+            "compound_ref": "~/template/compounds/id/cpd00048",
             "formula": "",
             "id": "cpd00048_c0",
             "modelcompartment_ref": "~/modelcompartments/id/c0",
@@ -19148,7 +19148,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00048",
+            "compound_ref": "~/template/compounds/id/cpd00048",
             "formula": "",
             "id": "cpd00048_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19268,7 +19268,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00067",
+            "compound_ref": "~/template/compounds/id/cpd00067",
             "formula": "",
             "id": "cpd00067_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19652,7 +19652,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00144",
+            "compound_ref": "~/template/compounds/id/cpd00144",
             "formula": "",
             "id": "cpd00144_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
@@ -19700,7 +19700,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00163",
+            "compound_ref": "~/template/compounds/id/cpd00163",
             "formula": "",
             "id": "cpd00163_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
@@ -21468,7 +21468,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd11632",
+            "compound_ref": "~/template/compounds/id/cpd11632",
             "formula": "",
             "id": "cpd11632_c0",
             "modelcompartment_ref": "~/modelcompartments/id/c0",
@@ -21484,7 +21484,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd11632",
+            "compound_ref": "~/template/compounds/id/cpd11632",
             "formula": "",
             "id": "cpd11632_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
