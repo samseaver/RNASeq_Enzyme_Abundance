@@ -19,7 +19,6 @@ project_root = str(Path(__file__).resolve()).split('src')[0]
 sys.path.append(project_root)
 from src.util.modelComponents import *
 
-from src.util.proteinWeightGenerator import ProteinWeightGenerator
 from parameters import *
 
 import plotly.express as px
@@ -84,72 +83,6 @@ class ComputeScoresPredictions:
         self.control_id = param.control_id
         self.trmt_colmn = param.trmt_colmn
         self.treatments = list()
-
-# Read RNASeq data (transcript values used uncapped)
-# Compute protein weights and total Plastid Protein Mass
-# Compute relative molecular abundance (rma) to be used for relative-RES
-def readRNASeq(spc, csp, verbose=True):
-    print(f" Computing Protein weights for {spc.name} ...")
-    # Read RANSeq data from file
-    relab_df = pa.read_csv(spc.RNASeq_file_path)
-
-    # # keep only genes involved in plastidial reactions
-    relab_df = relab_df[(relab_df[csp.rnaSeq_id_col].isin(spc.metModel.modelfeatures_dict))]
-
-    print("WE ARE READING RNASEQ FILE: ",spc.RNASeq_file_path)
-
-    # TMM outlier capping removed --- transcript values are used uncapped.
-
-    # compute protein weights
-    pwg = ProteinWeightGenerator(spc.name, csp.project, spc.RNASeq_file_path,
-                                set(spc.metModel.modelfeatures_dict.keys()),
-                                csp.group_columns, cap_percent=-1)
-
-    ## compute plastid protein mass and protein molecular weight
-    pwg.computeWeightsAndMass(to_file=False)
-    weights_df = pa.DataFrame.from_dict(pwg.protein_weight_dict, orient="index", columns=['weight'])
-    weights_df = weights_df.rename_axis(csp.rnaSeq_id_col).reset_index()
-
-    # Add gene weights
-    relab_df = pa.merge(relab_df, weights_df, on=csp.rnaSeq_id_col, how='left')
-    # get total plastid protein mass datafame
-    totalProteinMass_df = pwg.plastid_weight_sums  # totalPlastidProteinMass()
-    if verbose: print(totalProteinMass_df.reset_index().head(5))
-
-    # Compute relative molecular abundance
-    temp = pa.DataFrame()
-    for name, group in relab_df.groupby(csp.group_columns):
-        totalMass = totalProteinMass_df.loc[name[0], name[1], name[2]]['TotalPlastidMass']
-        group['rma'] = (group['weight']*group[csp.value_column]) / totalMass
-        group['rma_std'] = (group['weight']*group[csp.value_column+'_std']) / totalMass
-        temp = pa.concat([temp, group])
-    relab_df = temp
-
-    temp = relab_df[["Gene_ID", "time_stamp", "value", "weight", "rma", "tissue", "treatment"]]
-    temp = temp[(temp["tissue"] == 'Leaf') & (relab_df["treatment"] == 'Control')]
-    temp["fold"] = temp["rma"] / temp["value"]
-    ind = ['Gene_ID']
-    col = ['time_stamp']
-    val = ["value", "weight", "rma", "fold"]
-    temp = temp.pivot(index=ind, columns=col, values=val)
-    temp.columns = temp.columns.get_level_values(0) + '_' +  temp.columns.get_level_values(1)
-
-
-    if verbose: print(relab_df.head(5))
-    csp.value_column = 'rma'
-
-    # #Compute molecular abundance: ralab / weight
-    # relab_df['molab'] = relab_df['relab'] / relab_df['weight']
-    # for name, group in relab_df.groupby(csp.group_columns):
-    #     totalMass = totalProteinMass_df.loc[name[0], name[1], name[2]]['TotalPlastidMass']
-    #     relab_df['relab'] = relab_df['relab'] * totalMass
-
-    # Save dataframe to file
-    relab_path = os.path.join(csp.results_folder, f"{spc.name}_relab.csv")
-    relab_df.to_csv(relab_path, index=False)
-
-    if verbose: print(relab_df.head(5))
-    return relab_df, pwg
 
 # Read Trimmed Mean of the M-values (TMM) values from file.
 # Read TMM values (used uncapped)
