@@ -24,20 +24,33 @@ SPECIES_SYNONYMS = {
 
 
 def find_model_json(models_dir, species_name):
+    # Match "plastidial" and "reconstruction" independently rather than as the
+    # single substring "plastidial-reconstruction". The two models are named
+    # inconsistently -- Sbicolor-v3.1.1-plastidial-reconstruction.json but
+    # plastidial-Ptrichocarpa-v4.1-reconstruction_fixed.json -- and requiring
+    # the joined form silently dropped Poplar.
     synonyms = SPECIES_SYNONYMS.get(species_name, [species_name])
     candidates = []
     for file_name in os.listdir(models_dir):
         if not file_name.endswith('.json'):
             continue
         lower = file_name.lower()
-        if "plastidial-reconstruction" not in lower or "cleaned" in lower or "media" in lower:
+        if "plastidial" not in lower or "reconstruction" not in lower:
+            continue
+        if "cleaned" in lower or "media" in lower:
             continue
         if any(syn.lower() in lower for syn in synonyms):
             candidates.append(file_name)
     if not candidates:
         raise FileNotFoundError(
-            f"No plastidial-reconstruction model JSON found for {species_name} in {models_dir}")
-    return os.path.join(models_dir, sorted(candidates)[0])
+            f"No plastidial reconstruction JSON found for {species_name} in {models_dir}")
+    if len(candidates) > 1:
+        # Silently taking sorted()[0] is how a stale model gets picked up
+        # without anyone noticing. Make the caller choose.
+        raise ValueError(
+            f"Ambiguous plastidial reconstruction for {species_name} in {models_dir}: "
+            f"{sorted(candidates)}. Pass --models-dir to a directory with one per species.")
+    return os.path.join(models_dir, candidates[0])
 
 
 def find_tmm_file(tmm_dir, species_name):
@@ -109,8 +122,10 @@ if __name__ == "__main__":
                      "matching the approach used in computeScoresAndPredictions.generate_reactionScores."
     )
     parser.add_argument("--species", nargs='+', default=["Poplar", "Sorghum"])
-    parser.add_argument("--models-dir", default=os.path.join(project_root, "Models"))
-    parser.add_argument("--tmm-dir", default=os.path.join(project_root, "data", "RNAseq", "tmm"))
+    parser.add_argument("--models-dir",
+                         default=os.path.join(project_root, "projects", "qpsi-plastidial", "inputs"))
+    parser.add_argument("--tmm-dir",
+                         default=os.path.join(project_root, "projects", "qpsi-plastidial", "rnaseq-data"))
     parser.add_argument("--ignore-organellar-roles",
                          default=os.path.join(project_root, "data", "organellar-encoded_subunits_to_ignore.txt"))
     parser.add_argument("--output-dir", default=os.path.join(project_root, "data", "other_input_files"))

@@ -21,17 +21,10 @@ Outputs
 -------
 fig_proteome.png (override with --output).
 
-Two defaults do not match this repository's layout and must be passed:
+Run: micromamba run -n bf-runtime python figures/fig_proteome.py
 
-    cd figures
-    micromamba run -n bf-runtime python fig_proteome.py \
-      --tmm-dir ../projects/qpsi-plastidial/rnaseq-data \
-      --models-dir <dir of *plastidial-reconstruction*.json>
-
---tmm-dir defaults to data/RNAseq/tmm, which does not exist here. --models-dir
-cannot yet point at projects/qpsi-plastidial/inputs: find_model_json matches the
-literal substring "plastidial-reconstruction", and the Poplar model is named
-plastidial-Ptrichocarpa-v4.1-reconstruction_fixed.json, so Poplar is skipped.
+Every default now resolves against this repository, so no arguments are needed
+to reproduce the published figure.
 """
 import warnings
 warnings.simplefilter(action='ignore', category=Warning)
@@ -291,7 +284,8 @@ if __name__ == '__main__':
                                                'qpsi-plastidial', 'integration_results'),
                          help='Folder with {Species}_reaction_score*.tsv files')
     parser.add_argument('--tmm-dir',
-                         default=os.path.join(project_root, 'data', 'RNAseq', 'tmm'))
+                         default=os.path.join(project_root, 'projects',
+                                               'qpsi-plastidial', 'rnaseq-data'))
     parser.add_argument('--orthologs-dir',
                          default=os.path.join(project_root, 'data', 'orthologs'))
     parser.add_argument('--plastid-gene-file',
@@ -304,8 +298,9 @@ if __name__ == '__main__':
     parser.add_argument('--exclude-days', nargs='*', default=['0h', '1h'])
     parser.add_argument('--output', default='fig_proteome.png')
     parser.add_argument('--models-dir',
-                         default=os.path.join(project_root, 'Models'),
-                         help='Folder with plastidial-reconstruction model JSON files')
+                         default=os.path.join(project_root, 'projects',
+                                               'qpsi-plastidial', 'inputs'),
+                         help='Folder with one plastidial reconstruction JSON per species')
     parser.add_argument('--ignore-organellar-roles',
                          default=os.path.join(project_root, 'data',
                                                'organellar-encoded_subunits_to_ignore.txt'))

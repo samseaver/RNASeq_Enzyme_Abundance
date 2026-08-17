@@ -300,11 +300,13 @@ if __name__ == "__main__":
     parser.add_argument("--output", default="combined_method_comparison.png")
     parser.add_argument("--scale", type=float, default=4)
     parser.add_argument("--models-dir",
-                         default=os.path.join(project_root, "Models"),
-                         help="Folder with plastidial-reconstruction model JSON files")
+                         default=os.path.join(project_root, "projects",
+                                               "qpsi-plastidial", "inputs"),
+                         help="Folder with one plastidial reconstruction JSON per species")
     parser.add_argument("--tmm-dir",
-                         default=os.path.join(project_root, "data", "RNAseq", "tmm"),
-                         help="Folder with TMM CSV files (used to compute sum/max scores on-the-fly)")
+                         default=os.path.join(project_root, "projects",
+                                               "qpsi-plastidial", "rnaseq-data"),
+                         help="Folder with TMM tables (used to compute sum/max scores on-the-fly)")
     parser.add_argument("--ignore-organellar-roles",
                          default=os.path.join(project_root, "data",
                                                "organellar-encoded_subunits_to_ignore.txt"))
