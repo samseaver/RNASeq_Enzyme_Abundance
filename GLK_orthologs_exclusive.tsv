@@ -10,10 +10,26 @@
 # paper_label is the name the manuscript uses, and for Sorghum it deliberately
 # does NOT follow the Arabidopsis assignment. The slots were swapped on
 # 2026-08-04 so that SbGLK1 is the gene in the grass GLK1 clade
-# (Sobic.010G096300, which clusters with rice Os06g24070) rather than the gene
-# that is the better match to Arabidopsis GLK1. The C3/C4 sub-functionalization
-# argument (Wang et al., 2012) is about the grass clades, so the grass-clade
-# assignment is the one the text and its Pearson r values refer to.
+# (Sobic.010G096300, which clusters with rice Os06g24070).
+#
+# Why the two numberings disagree: the grass GLK1 clade does not share its most
+# recent common ancestor with Arabidopsis GLK1. It shares it with Arabidopsis
+# GLK2. The rows below are that result -- AT5G44190 (AtGLK2) is the exclusive
+# Arabidopsis match of Sobic.010G096300, the grass GLK1-clade gene, while
+# AT2G20570 (AtGLK1) matches Sobic.003G002600. So a label taken from the
+# Arabidopsis best hit calls the grass GLK1-clade gene "GLK2", inverting it
+# against the grass literature.
+#
+# The digits are crossed because GLK1 and GLK2 were numbered independently in
+# the two lineages -- in Arabidopsis, and in the grasses via maize G2/ZmGLK1 and
+# rice OsGLK1/OsGLK2 -- before the relationships across the monocot/eudicot split
+# were resolved. The numbers are historical nomenclature, not a claim of
+# orthology, and they do not correspond between lineages.
+#
+# The manuscript follows the grass numbering because the C3/C4
+# sub-functionalization argument (Wang et al., 2012) is about the grass clades:
+# it is the bundle-sheath/mesophyll-compartmentalized grass GLK1 that the
+# Pearson r of +0.86 in the text refers to.
 #
 # Poplar's two copies are an indistinguishable recent Salicaceae whole-genome
 # duplication pair and cannot be separated into GLK1 and GLK2, so the manuscript
