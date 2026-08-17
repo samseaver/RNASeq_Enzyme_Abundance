@@ -4,3 +4,6 @@ __pycache__/
 integration_results
 data/RNASeq_data
 .fa
+
+# Claude Code session logs, written into whichever directory a session runs from
+.recall/
