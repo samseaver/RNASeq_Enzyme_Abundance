@@ -143,7 +143,6 @@ def _draw_line_panel(ax, method_counts, species_list, day_order):
     ax.set_ylim(bottom=0)
     ax.set_ylabel('# reactions at 95th percentile', fontsize=9)
     ax.set_xlabel('Time point', fontsize=9)
-    ax.yaxis.grid(True, linestyle=':', color=(0, 0, 0, 0.15), linewidth=0.8)
     ax.set_axisbelow(True)
     ax.set_facecolor('white')
     ax.spines['top'].set_visible(False)
@@ -166,12 +165,15 @@ def _line_legend(ax, species_list):
             markerfacecolor='white', markeredgecolor='black',
             markersize=7, label=m['label'],
         ))
+    # Tucked against the y-axis so the legend fills the gap between it and the
+    # 7d peak. The x-limits run day 1 to day 22, so 7d sits at (7 - 1) / 21 =
+    # 0.286 of the axis; the legend is ~0.19 wide, so anchoring its left edge
+    # at 0.01 puts its centre near 0.105 and its right edge clear of the peak.
     ax.legend(handles=handles, fontsize=8, loc='upper left',
               frameon=True, framealpha=0.9,
               labelspacing=0.2, handletextpad=0.4,
-              handlelength=1.8, borderpad=0.35, 
-              bbox_to_anchor=(0.1, 0.99))
-              # bbox_to_anchor=(0.3, 0.79))
+              handlelength=1.8, borderpad=0.35,
+              bbox_to_anchor=(0.01, 0.99))
 
 
 # ── Main assembly ─────────────────────────────────────────────────────────────
