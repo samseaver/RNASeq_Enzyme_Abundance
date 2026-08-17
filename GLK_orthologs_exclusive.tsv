@@ -14,11 +14,27 @@
 #
 # Why the two numberings disagree: the grass GLK1 clade does not share its most
 # recent common ancestor with Arabidopsis GLK1. It shares it with Arabidopsis
-# GLK2. The rows below are that result -- AT5G44190 (AtGLK2) is the exclusive
-# Arabidopsis match of Sobic.010G096300, the grass GLK1-clade gene, while
-# AT2G20570 (AtGLK1) matches Sobic.003G002600. So a label taken from the
-# Arabidopsis best hit calls the grass GLK1-clade gene "GLK2", inverting it
-# against the grass literature.
+# GLK2. A label taken from the Arabidopsis side therefore calls the grass
+# GLK1-clade gene "GLK2", inverting it against the grass literature.
+#
+# READ THE psi COLUMN WITH CARE -- it is not the evidence for that. The source
+# tables (data/orthologs/Ath-{Sbi,Ptr}-Orthologs.tsv) are a fully connected 2x2:
+# every Arabidopsis GLK hits every species GLK, and the scores are nearly flat.
+#
+#     AT2G20570 - Sobic.003G002600  0.42     AT2G20570 - Potri.007G136901  0.48
+#     AT2G20570 - Sobic.010G096300  0.41     AT2G20570 - Potri.017G015800  0.48
+#     AT5G44190 - Sobic.003G002600  0.39     AT5G44190 - Potri.007G136901  0.47
+#     AT5G44190 - Sobic.010G096300  0.38     AT5G44190 - Potri.017G015800  0.47
+#
+# "exclusive" in this filename means a 1:1 assignment was imposed on that graph.
+# For Sorghum the two possible assignments tie exactly (0.42+0.38 = 0.41+0.39 =
+# 0.80), so which one ended up here is arbitrary -- the other one would have
+# paired AtGLK2 with Sobic.003G002600 and made the numbering agree. For Poplar
+# the four scores are 0.48/0.48/0.47/0.47, indistinguishable, which is the same
+# thing seen from the other side of the A/B pair below.
+#
+# So the clade assignment rests on the rice Os06g24070 co-clustering and the
+# grass literature, not on anything in this table.
 #
 # The digits are crossed because GLK1 and GLK2 were numbered independently in
 # the two lineages -- in Arabidopsis, and in the grasses via maize G2/ZmGLK1 and
