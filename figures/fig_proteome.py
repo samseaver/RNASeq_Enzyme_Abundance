@@ -1,12 +1,37 @@
 """
-Combined paper figure (Option C):
-  Panel A  –  per-day KDE density grid (species × days)
-               plastid vs non-plastid genes, Control solid / FeLim dashed
-  Panel B  –  reaction-score method comparison line plot
-               # reactions at 95th percentile over time, blue=Poplar / orange=Sorghum
+Figure 3: plastid proteome distributions paired with the method comparison.
+
+  Panel A  –  per-day KDE density grid (species x days), plastid vs
+              non-plastid genes, Control solid / FeLim dashed
+  Panel B  –  reaction-score method comparison line plot: # scored reactions
+              in the 95th percentile of |I-dist| over time,
+              blue = Poplar / orange = Sorghum
 
 Imports data-loading functions directly from the two source scripts so all
 logic stays in one place and this script stays thin.
+
+Data sources
+------------
+projects/qpsi-plastidial/integration_results/{Species}_reaction_score*.tsv
+projects/qpsi-plastidial/rnaseq-data/{Species}_raw_genes_tmm_mean.tsv[.xz]
+data/plastid_proteome/compiled_arabidopsis_plastid_genes.txt
+a directory of plastidial reconstruction JSONs (--models-dir)
+
+Outputs
+-------
+fig_proteome.png (override with --output).
+
+Two defaults do not match this repository's layout and must be passed:
+
+    cd figures
+    micromamba run -n bf-runtime python fig_proteome.py \
+      --tmm-dir ../projects/qpsi-plastidial/rnaseq-data \
+      --models-dir <dir of *plastidial-reconstruction*.json>
+
+--tmm-dir defaults to data/RNAseq/tmm, which does not exist here. --models-dir
+cannot yet point at projects/qpsi-plastidial/inputs: find_model_json matches the
+literal substring "plastidial-reconstruction", and the Poplar model is named
+plastidial-Ptrichocarpa-v4.1-reconstruction_fixed.json, so Poplar is skipped.
 """
 import warnings
 warnings.simplefilter(action='ignore', category=Warning)
@@ -183,7 +208,7 @@ def build_combined_figure(
     species_list=('Poplar', 'Sorghum'),
     treatment='FeLim', control_id='Control', tissue='Leaf',
     day_order=DAY_ORDER, exclude_days=('0h', '1h'),
-    output_path='combined_paper_figure.pdf',
+    output_path='fig_proteome.png',
     models_dir=None, ignore_organellar_roles=None,
 ):
     # ── Load data ─────────────────────────────────────────────────────────
@@ -277,7 +302,7 @@ if __name__ == '__main__':
     parser.add_argument('--control',   default='Control')
     parser.add_argument('--tissue',    default='Leaf')
     parser.add_argument('--exclude-days', nargs='*', default=['0h', '1h'])
-    parser.add_argument('--output', default='combined_paper_figure.pdf')
+    parser.add_argument('--output', default='fig_proteome.png')
     parser.add_argument('--models-dir',
                          default=os.path.join(project_root, 'Models'),
                          help='Folder with plastidial-reconstruction model JSON files')

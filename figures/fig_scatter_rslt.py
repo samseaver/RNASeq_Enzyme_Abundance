@@ -1,4 +1,25 @@
 #!/usr/bin/env python
+"""
+Figure 4: Control vs FeLim reaction scores, 4 rows x 5 timepoints.
+
+Rows 1-2 are the objective reaction score r_s (Poplar, Sorghum); rows 3-4 the
+relative score r_s-tilde. Both axes are log10 -- scores span roughly five
+decades -- and the dashed diagonal is the identity line. Colour is I-dist, the
+perpendicular distance to that line in log space; the top 5% by |I-dist| are
+outlined in black. Column 6 carries the weighted mean and standard error of
+I-dist per day.
+
+Data sources
+------------
+projects/qpsi-plastidial/integration_results/{Poplar,Sorghum}_reaction_scores.tsv
+                                             {Poplar,Sorghum}_reaction_molar_fractions.tsv
+
+Outputs
+-------
+fig_scatter_rslt.png and fig_scatter_rslt.html, beside this script.
+
+Run: micromamba run -n bf-runtime python figures/fig_scatter_rslt.py
+"""
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -307,8 +328,8 @@ if __name__ == '__main__':
     print("Grouping and Normalizing Relative Data (Poplar & Sorghum)...")
     df_rel = prepare_data_group(poplar_rel, sorghum_rel, val_col='relative_reaction_score')
 
-    out_png = os.path.join(script_dir, "reaction_scores_dashboard_figure.png")
-    out_html = os.path.join(script_dir, "reaction_scores_dashboard_figure.html")
+    out_png = os.path.join(script_dir, "fig_scatter_rslt.png")
+    out_html = os.path.join(script_dir, "fig_scatter_rslt.html")
 
     if not df_abs.empty and not df_rel.empty:
         plot_normalized_dashboard(df_abs, df_rel, out_png, out_html)

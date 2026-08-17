@@ -40,7 +40,7 @@ METHOD_FILES = {
 }
 FONT = "Helvetica, Arial, sans-serif"
 QUANTILE_THRESHOLD = 0.95
-LOG_FLOOR_QUANTILE = 0.001   # must match generate_reaction_scores_figure.py
+LOG_FLOOR_QUANTILE = 0.001   # must match fig_scatter_rslt.py
 # Numeric day values — used for the x-axis so spacing reflects actual time
 DAY_NUMERIC = {'2d': 2, '4d': 4, '7d': 7, '14d': 14, '21d': 21}
 
@@ -71,7 +71,7 @@ def compute_scores_on_the_fly(species_name, method, models_dir, tmm_dir, ignore_
 def load_and_pivot(source, value_col, tissue, treatment, control_id, exclude_days=None):
     """Pivot reaction scores so control and treatment are separate columns.
     `source` may be a file path (str) or a pre-loaded DataFrame.
-    Mirrors load_and_pivot() in generate_reaction_scores_figure.py."""
+    Mirrors load_and_pivot() in fig_scatter_rslt.py."""
     if isinstance(source, str):
         df = pa.read_csv(source, sep='\t')
     else:
@@ -94,7 +94,7 @@ def load_and_pivot(source, value_col, tissue, treatment, control_id, exclude_day
 def compute_top_reaction_counts(data_dir, species_list, method, tissue, treatment, control_id,
                                  exclude_days, day_order, threshold=QUANTILE_THRESHOLD,
                                  models_dir=None, tmm_dir=None, ignore_organellar_roles=None):
-    """Replicate the dark-circle highlight logic from generate_reaction_scores_figure.py:
+    """Replicate the dark-circle highlight logic from fig_scatter_rslt.py:
       - Pivot scores so Control / FeLim are columns
       - Take log10 of both conditions
       - Rank absolute distance from the identity line globally
@@ -105,7 +105,7 @@ def compute_top_reaction_counts(data_dir, species_list, method, tissue, treatmen
     For 'relative': reads the precomputed _reaction_molar_fractions.tsv file.
 
     The ranking scope (all species × all days combined, per method) matches
-    prepare_data_group() in generate_reaction_scores_figure.py exactly.
+    prepare_data_group() in fig_scatter_rslt.py exactly.
     """
     compute_live = method == 'max' and models_dir and tmm_dir
 
@@ -135,7 +135,7 @@ def compute_top_reaction_counts(data_dir, species_list, method, tissue, treatmen
     combined = pa.concat(all_dfs, ignore_index=True)
 
     # Distance to the identity line in log space — same as
-    # prepare_data_group() in generate_reaction_scores_figure.py, so that the
+    # prepare_data_group() in fig_scatter_rslt.py, so that the
     # counts here match the black-outlined points in that figure.
     positive = pa.concat([combined[control_id], combined[treatment]]).dropna()
     positive = positive[positive > 0]
