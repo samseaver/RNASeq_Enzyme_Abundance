@@ -13,15 +13,11 @@ El Alaoui, S., Henry, C. S., Blaby-Haas, C., Paape, T., Xie, M., and
 Seaver, S. M. bioRxiv, version 2, posted 2026-08-17.
 <https://doi.org/10.1101/2025.06.10.658179>
 
-This repository corresponds to version 2. Version 1 (2025-06-15) was posted
-under a different title and predates the PlantSEED v2.5 reconstructions, the
-log-space I-dist and the p sweep described below.
-
 ## Context
 
 This repository turns TMM-normalized transcript abundances into per-reaction
 enzyme-capacity estimates for a plastidial metabolic reconstruction, and builds
-two of the manuscript figures. It is one of three components:
+two figures for the preprint. It is one of three components:
 
 | | |
 |---|---|
@@ -66,26 +62,11 @@ export PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python
 
 ## Pipeline
 
-Each stage writes the inputs of the next. Stages 1 and 2 only need re-running
-when the upstream reconstruction changes; stages 3 and 4 when the transcript
-data or the models change.
+Each stage writes the inputs of the next. Stage 1 only needs re-running when
+the upstream reconstruction changes; stages 2 and 3 when the transcript data or
+the models change.
 
-### 1. Reconcile transcript IDs with model gene IDs
-
-Model gene IDs and RNA-seq gene IDs rarely agree on suffixes. This reports the
-overlap under a series of regex strippings and, with `-o`, writes a model whose
-IDs match the transcript table.
-
-```bash
-./model-transcript-mapper.py \
-    -m Models/Sbicolor-v3.1.1-reconstruction.json \
-    -t projects/qpsi-plastidial/rnaseq-data/Sorghum_raw_genes_tmm_mean.tsv.xz \
-    -o Models/Sbicolor-v3.1.1-reconstruction_cleaned.json
-```
-
-`./example_transcript_mapping.sh` runs both species.
-
-### 2. Extract the plastidial model
+### 1. Extract the plastidial model
 
 Takes a genome-scale reconstruction and returns the plastid stroma (`_d0`) and
 thylakoid (`_y0`) subnetwork, plus the media exchanges and the plastidial
@@ -113,11 +94,7 @@ PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python \
     -o projects/qpsi-plastidial/inputs/Sbicolor-v3.1.1-plastidial-reconstruction.json
 ```
 
-The genome-scale reconstructions under `Models/` predate `v2.5` and will not
-reproduce the published plastidial models; they are kept only as the input to
-stage 1's example.
-
-### 3. Reaction scores
+### 2. Reaction scores
 
 Reads the models in `projects/qpsi-plastidial/inputs/` and the TMM tables in
 `projects/qpsi-plastidial/rnaseq-data/`, and writes
@@ -133,7 +110,7 @@ Output columns: `condition`, `reaction_id`, `reaction_score`,
 `limiting_subunit`. Conditions are `Tissue_Treatment_Timepoint`, e.g.
 `Leaf_FeLim_7d`.
 
-### 4. Relative reaction scores
+### 3. Relative reaction scores
 
 Divides each reaction score by the plastidial protein pool for its condition,
 using the Arabidopsis plastid-proteome reference and the ortholog mapping.
@@ -147,6 +124,29 @@ using the Arabidopsis plastid-proteome reference and the ortholog mapping.
 ```
 
 `./example_molar_fractions.sh` runs both species.
+
+## Preliminary check: do the transcript IDs match the model?
+
+Not a pipeline stage. Reaction scoring silently produces nothing for a gene
+whose ID in the model does not match its ID in the transcript table, and gene
+IDs routinely differ by a transcript suffix or an assembly-version prefix. This
+reports the overlap before you spend time on a run that would come back empty.
+
+```bash
+micromamba run -n bf-runtime python model-transcript-mapper.py \
+    -m projects/qpsi-plastidial/inputs/Sbicolor-v3.1.1-plastidial-reconstruction.json \
+    -t projects/qpsi-plastidial/rnaseq-data/Sorghum_raw_genes_tmm_mean.tsv.xz
+```
+
+On the tracked Sorghum model that reports 398 of 416 model genes matched. The
+18 that do not match are genes with no transcript in the dataset, not an ID
+mismatch — which is the distinction the report exists to make. It tries a series
+of regex strippings to find a systematic suffix difference, and says so when
+there isn't one. Passing `-o` writes a model with the ID fixes applied.
+
+`test_model_with_fba.py` is the other check in the same spirit: it loads a model
+in KBase or COBRA format and runs FBA/FVA, to confirm the network still solves.
+It needs `cobrakbase` for the KBase format.
 
 ## Figures
 
@@ -180,11 +180,12 @@ top 5%.
 
 ```
 parameters.py                     species, project and column configuration
-generate_reaction_scores.py       stage 3 driver
-extract-plastidial-model.py       stage 2
-model-transcript-mapper.py        stage 1
-calculate-plastidial-molar-fractions.py   stage 4
-example_*.sh                      both-species wrappers for stages 1, 2 and 4
+extract-plastidial-model.py       stage 1
+generate_reaction_scores.py       stage 2 driver
+calculate-plastidial-molar-fractions.py   stage 3
+example_*.sh                      both-species wrappers for stages 1 and 3
+model-transcript-mapper.py        preliminary ID check (see above)
+test_model_with_fba.py            loads a model and runs FBA/FVA on it
 figures/                          the two manuscript figures and their panels
 src/plastidial_model_extraction/  plastid subnetwork extraction; parameters.json
 src/reaction_scores/              scoring, model and TMM lookup
@@ -196,7 +197,6 @@ projects/qpsi-plastidial/
 data/orthologs/                   Arabidopsis-to-species ortholog tables
 data/plastid_proteome/            curated Arabidopsis plastid gene list
 data/metabolic_models/            media, biomass, and reference reconstructions
-Models/                           pre-v2.5 genome-scale reconstructions
 ```
 
 ## Data availability

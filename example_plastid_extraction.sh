@@ -13,8 +13,8 @@
 #
 #     export PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python
 #
-# This previously ran against Models/*-reconstruction_cleaned.json, which
-# predate v2.5 and do not reproduce the published models.
+# This previously ran against a Models/ directory of pre-v2.5 reconstructions,
+# which did not reproduce the published models; that directory has been removed.
 #
 # Output filenames are the ones the rest of the pipeline expects. The Poplar
 # model is named inconsistently for historical reasons and is left that way,
