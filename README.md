@@ -41,6 +41,31 @@ subunits. For a complex the score is limited by its least abundant subunit
 plastidial protein pool for that condition, so the two species can be compared
 as allocation shares rather than raw abundances.
 
+*Why the second score exists.* The two species do not put comparable amounts of
+transcript into the plastid to begin with, so their absolute scores are not on a
+common footing. Summed over plastid-localized genes in leaf
+(`integration_results/<Species>_plastid_transcript_totals.tsv`):
+
+| | mean | range across leaf conditions |
+|---|---|---|
+| Sorghum | 836,000 | 327,000 – 1,259,000 |
+| Poplar | 495,000 | 357,000 – 611,000 |
+
+Sorghum's plastid pool is not only larger on average but swings roughly
+four-fold across the time course, against under two-fold for Poplar. Comparing
+raw $r_s$ between them, or across timepoints within Sorghum, largely measures
+that pool rather than the enzyme. Dividing it out is what makes the comparison
+meaningful, and it is the score behind the cross-species allocation results.
+
+*What it must not be used for.* $\tilde{r}_s$ is a **share of a moving total**,
+not a capacity. A reaction's share can rise while its absolute enzyme abundance
+falls, simply because the pool around it contracted faster — which is exactly
+what happens in Sorghum after day 7. It therefore cannot be used to bound or
+interpret flux. The flux work uses the un-normalized $r_s$, and the companion
+repository reads `<Species>_reaction_scores.tsv` and not the molar-fractions
+file for precisely this reason. Use $\tilde{r}_s$ for allocation, $r_s$ for
+capacity.
+
 ## Environment
 
 Python 3 with `pandas`, `numpy`, `cobra`, `matplotlib`, `seaborn` and `plotly`
@@ -148,6 +173,9 @@ same OrthoFinder run as the annotation:
 
 They are also what `figures/fig_proteome.py` reads, through `--orthologs-dir`. A
 new species needs its own equivalent table against Arabidopsis.
+
+The output of this stage is for comparing allocation between species and across
+time, not for constraining flux — see "Two scores" above.
 
 ```bash
 ./calculate-plastidial-molar-fractions.py \
