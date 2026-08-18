@@ -54,7 +54,7 @@ common footing. Summed over plastid-localized genes in leaf
 Sorghum's plastid pool is not only larger on average but swings roughly
 four-fold across the time course, against under two-fold for Poplar. Comparing
 raw $r_s$ between them, or across timepoints within Sorghum, largely measures
-that pool rather than the enzyme. Dividing it out is what makes the comparison
+that pool rather than the enzyme. The normalization makes the comparison
 meaningful, and it is the score behind the cross-species allocation results.
 
 *What it must not be used for.* $\tilde{r}_s$ is a **share of a moving total**,
@@ -102,26 +102,20 @@ depends on the preliminary checks described further down.
 Takes a genome-scale reconstruction and returns the plastid stroma (`_d0`) and
 thylakoid (`_y0`) subnetwork, plus the media exchanges and the plastidial
 biomass reaction. Which reactions are injected or excluded is declared in
-`src/plastidial_model_extraction/parameters.json` — including the twelve
-glucosinolate false positives that PlantSEED places in the plastid of species
-that do not make glucosinolates.
+`src/plastidial_model_extraction/parameters.json`.
 
 **This stage rests on Arabidopsis orthology that is already in place.** Both the
 plastid and thylakoid localizations it selects on, and the gene-protein-reaction
 rules it carries through, come from PlantSEED's OrthoFinder-based annotation,
 which propagates curated Arabidopsis roles and compartments onto the target
 genome. All 375 reactions arrive with their GPRs already attached. The
-extraction itself runs no OrthoFinder and reads no ortholog table — that work is
-finished in the `v2.5` artifacts, against the reference set of species those
-artifacts were built for.
+extraction itself only works on the individual models that already have GPRs —
+that work is finished in the `v2.5` artifacts, against the reference set of
+species those artifacts were built for.
 
-Applying this to a species outside that set is therefore not a matter of
-pointing the script at a new model. It needs a PlantSEED annotation of that
+Applying this work to a new species requires PlantSEED annotation of that
 genome first, which means OrthoFinder orthologs against the curated Arabidopsis
-reference; and the injected and excluded reaction lists in `parameters.json` are
-tuned to Sorghum and Poplar, so they would need revisiting too — the
-glucosinolate exclusions above are only correct for species that do not make
-glucosinolates.
+reference.
 
 ```bash
 git clone https://github.com/ModelSEED/PlantSEED.git
@@ -147,8 +141,7 @@ PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python \
 Reads the models in `projects/qpsi-plastidial/inputs/` and the TMM tables in
 `projects/qpsi-plastidial/rnaseq-data/`, and writes
 `{Species}_reaction_scores.tsv` to `projects/qpsi-plastidial/integration_results/`.
-Species, project and column names come from `parameters.py`; set
-`RESULTS_FOLDER` to write somewhere else and diff before overwriting.
+Species, project and column names come from `parameters.py`.
 
 ```bash
 micromamba run -n bf-runtime python generate_reaction_scores.py
