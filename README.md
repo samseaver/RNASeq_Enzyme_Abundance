@@ -9,12 +9,13 @@ limitation.
 **Simulating Iron Deficiency in Plant Plastidial Metabolism With a Flexible
 Neural-Mechanistic Hybrid Approach**
 
+El Alaoui, S., Henry, C. S., Blaby-Haas, C., Paape, T., Xie, M., and
+Seaver, S. M. bioRxiv, version 2, posted 2026-08-17.
 <https://doi.org/10.1101/2025.06.10.658179>
 
-That DOI is versioned and still serves the earlier submission; bioRxiv has not
-yet posted the revision this repository corresponds to. Until it does, the
-title above is the one to cite, and the code and data here match the revised
-manuscript rather than the version currently online.
+This repository corresponds to version 2. Version 1 (2025-06-15) was posted
+under a different title and predates the PlantSEED v2.5 reconstructions, the
+log-space I-dist and the p sweep described below.
 
 ## Context
 
