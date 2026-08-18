@@ -62,9 +62,41 @@ export PYTHONPATH=/path/to/ModelSEEDDatabase/Libs/Python
 
 ## Pipeline
 
-Each stage writes the inputs of the next. Stage 1 only needs re-running when
-the upstream reconstruction changes; stages 2 and 3 when the transcript data or
-the models change.
+Three stages. Each writes the inputs of the next.
+
+| stage | reads | writes |
+|---|---|---|
+| 1. Extract the plastidial model | a PlantSEED `v2.5` genome-scale model | `projects/qpsi-plastidial/inputs/<Species>-…-reconstruction.json` |
+| 2. Reaction scores | that model + `rnaseq-data/<Species>_raw_genes_tmm_mean.tsv[.xz]` | `integration_results/<Species>_reaction_scores.tsv` |
+| 3. Relative reaction scores | those scores + the TMM table + the plastid proteome reference | `integration_results/<Species>_reaction_molar_fractions.tsv` |
+
+Stage 1 only needs re-running when the upstream reconstruction changes; stages
+2 and 3 when the transcript data or the models change. Nothing in the pipeline
+depends on the preliminary checks described further down.
+
+### If you are coming from an older checkout
+
+The pipeline used to be documented as four stages, with transcript-to-model ID
+reconciliation as stage 1, writing "cleaned" reconstructions into a `Models/`
+directory. That has been removed, and the current three stages are numbered
+accordingly:
+
+| was | is now |
+|---|---|
+| 1. Reconcile transcript IDs | preliminary check, not a stage — see below |
+| 2. Extract the plastidial model | **1.** Extract the plastidial model |
+| 3. Reaction scores | **2.** Reaction scores |
+| 4. Relative reaction scores | **3.** Relative reaction scores |
+
+Nothing downstream ever consumed the reconciled models, and the published
+reconstructions were not built from them — they come from PlantSEED `v2.5`,
+where ID reconciliation has already happened upstream. `Models/` held pre-`v2.5`
+snapshots that existed only to feed that example, so it and
+`example_transcript_mapping.sh` are gone. `model-transcript-mapper.py` itself is
+kept, as a check to run before a pipeline run rather than as part of one.
+
+The `bioflux-preprint-260813` tag predates this reorganization and still
+contains the four-stage layout.
 
 ### 1. Extract the plastidial model
 
