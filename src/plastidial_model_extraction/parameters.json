@@ -7,8 +7,7 @@
         "cprmts" : ["_c0", "_y0", "_m0"]
     },
     "reactions":{
-        "purine_reactions" : ["rxn00917", "rxn00834", "rxn00239"],
-        "udp_missing" : ["rxn00211", "rxn01007", "rxn00213"],
+        "udp_missing" : ["rxn00211", "rxn01007"],
         "asparagine_reaction" : ["rxn00416"],
         "TCA_missing" : ["rxn00330", "rxn00154", "rxn00799", "rxn00499"],
         "Phenylpropanoids_missing" : ["rxn00495", "rxn01611"],
@@ -16,11 +15,16 @@
         "oneCarbon_missing" : ["rxn04954"],
         "Pyrimidines_missing": ["rxn01362", "rxn00710"],
         "ATP_new_reactions": ["rxn20632", "rxn20595", "rxn08173"],
-        "main_cprmt_rxns" : ["purine_reactions", "udp_missing", "asparagine_reaction","oneCarbon_missing"],
+        "main_cprmt_rxns" : ["udp_missing", "asparagine_reaction","oneCarbon_missing"],
         "extra_cprmt_rxns" : {"_c0": ["TCA_missing", "Phenylpropanoids_missing", "acetyl_coa_missing","Pyrimidines_missing"],
                               "_y0": ["ATP_new_reactions"]},
         "missing_trans" : {"_c0": ["cpd00137", "cpd00103"]},
         "remove_trans" : ["rxn13213", "rxn10826", "rxn09777"],
-        "reactionsFromMSD" : ["rxn01361"]
+        "reactionsFromMSD" : ["rxn01361"],
+        "glucosinolate_false_positives" : ["rxn13975_d0", "rxn13995_d0", "rxn14059_d0",
+                                           "rxn14156_d0", "rxn14248_d0", "rxn14278_d0",
+                                           "rxn23780_d0", "rxn27069_d0", "rxn27070_d0",
+                                           "rxn27071_d0", "rxn27072_d0", "rxn27073_d0"],
+        "exclude_reactions" : ["glucosinolate_false_positives"]
     }
 }

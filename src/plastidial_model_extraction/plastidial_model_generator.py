@@ -105,6 +105,16 @@ class ModelBuilder:
         self.missing_trans = param_dict["reactions"]["missing_trans"]
         self.remove_trans = set(param_dict["reactions"]["remove_trans"])
         self.reactionsFromMSD = set(param_dict["reactions"]["reactionsFromMSD"])
+
+        # Reactions dropped outright before filtering, keyed by full model id
+        # (e.g. "rxn13975_d0"). Same subsystem-name indirection as
+        # main_cprmt_rxns, so the reason for each group stays readable in
+        # parameters.json. Optional -- absent key means exclude nothing.
+        excluded = set()
+        for subsys in param_dict["reactions"].get("exclude_reactions", []):
+            excluded.update(param_dict["reactions"][subsys])
+        self.exclude_reactions = excluded
+
         self.missing_rxns_dict = dict()
         rxn_set = set()
         for subsys in param_dict["reactions"]["main_cprmt_rxns"]:

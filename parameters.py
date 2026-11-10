@@ -19,7 +19,7 @@ class Parameters:
     def __init__(self, verbose=True):
         self.project         = 'qpsi-plastidial'
         self.value_column    = 'value'
-        self.project_species = ["Sorghum"] # ["Sorghum", "Poplar"]
+        self.project_species = ["Sorghum", "Poplar"]
         self.group_columns   = ['condition']
         self.rnaSeq_id_col   = 'Gene_ID'
         self.error           = False
@@ -32,7 +32,7 @@ class Parameters:
         # Baseline Directory Structuring
         self.json_files_folder = os.path.join(project_root, "projects", self.project, "inputs")
         self.RNASeq_folder     = os.path.join(project_root, "projects", self.project, "rnaseq-data")
-        self.results_folder    = os.path.join(project_root, "projects", self.project, "integration_results")
+        self.results_folder    = os.environ.get("RESULTS_FOLDER", os.path.join(project_root, "projects", self.project, "integration_results"))
         self.reaction_file_suffix = '_reaction_scores.tsv'
 
         # Initial Directory Existence Testing

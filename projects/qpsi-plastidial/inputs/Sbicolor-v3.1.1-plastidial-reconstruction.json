@@ -1,6 +1,6 @@
 {
-    "name": "test_model",
-    "id": "test_model",
+    "name": "Sbicolor_v3.1.1_model",
+    "id": "Sbicolor_v3.1.1_model",
     "source": "KBase",
     "source_id": "PlantSEED_v3",
     "gapfillings": [],
@@ -120,9 +120,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.010G255100",
-                                "~/genome/features/id/Sobic.010G255100",
-                                "~/genome/features/id/Sobic.010G255100",
                                 "~/genome/features/id/Sobic.010G255100"
                             ],
                             "note": "Features characterized and annotated",
@@ -167,7 +164,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G118600",
                                 "~/genome/features/id/Sobic.008G118600"
                             ],
                             "note": "Features characterized and annotated",
@@ -208,7 +204,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G054500",
                                 "~/genome/features/id/Sobic.004G054600"
                             ],
                             "note": "Features characterized and annotated",
@@ -306,7 +301,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.010G030700",
                                 "~/genome/features/id/Sobic.010G030700"
                             ],
                             "note": "Features characterized and annotated",
@@ -453,9 +447,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G518500",
-                                "~/genome/features/id/Sobic.006G261300",
-                                "~/genome/features/id/Sobic.006G261300",
-                                "~/genome/features/id/Sobic.006G261300",
                                 "~/genome/features/id/Sobic.007G009200"
                             ],
                             "note": "Features characterized and annotated",
@@ -502,9 +493,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G234200",
                                 "~/genome/features/id/Sobic.003G234400",
-                                "~/genome/features/id/Sobic.003G234500",
-                                "~/genome/features/id/Sobic.003G234500",
-                                "~/genome/features/id/Sobic.003G234500",
                                 "~/genome/features/id/Sobic.003G234500",
                                 "~/genome/features/id/Sobic.003G234600"
                             ],
@@ -594,9 +582,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G291300",
-                                "~/genome/features/id/Sobic.002G291300",
-                                "~/genome/features/id/Sobic.002G291300",
                                 "~/genome/features/id/Sobic.002G291300"
                             ],
                             "note": "Features characterized and annotated",
@@ -644,10 +629,19 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_484399",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.001G052600"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "FMN adenylyltransferase (EC 2.7.7.2)",
+                            "triggering": 1
+                        },
+                        {
+                            "feature_refs": [],
+                            "note": "Complex-based-gapfilling",
+                            "optionalSubunit": 0,
+                            "role": "PS_role_da15b4",
                             "triggering": 1
                         }
                     ],
@@ -687,9 +681,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
                                 "~/genome/features/id/Sobic.008G156300"
                             ],
                             "note": "Features characterized and annotated",
@@ -738,10 +729,10 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G290600",
-                                "~/genome/features/id/Sobic.003G244700",
                                 "~/genome/features/id/Sobic.001G057200",
-                                "~/genome/features/id/Sobic.002G054400"
+                                "~/genome/features/id/Sobic.001G290600",
+                                "~/genome/features/id/Sobic.002G054400",
+                                "~/genome/features/id/Sobic.003G244700"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -790,11 +781,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G326900",
-                                "~/genome/features/id/Sobic.001G326900",
-                                "~/genome/features/id/Sobic.001G326900",
-                                "~/genome/features/id/Sobic.001G326900",
-                                "~/genome/features/id/Sobic.009G132900",
-                                "~/genome/features/id/Sobic.009G132900",
                                 "~/genome/features/id/Sobic.009G132900"
                             ],
                             "note": "Features characterized and annotated",
@@ -851,8 +837,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G093600",
-                                "~/genome/features/id/Sobic.001G047600"
+                                "~/genome/features/id/Sobic.001G047600",
+                                "~/genome/features/id/Sobic.004G093600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -872,7 +858,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G244000",
-                                "~/genome/features/id/Sobic.010G101300",
                                 "~/genome/features/id/Sobic.010G101300"
                             ],
                             "note": "Features characterized and annotated",
@@ -883,8 +868,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G259700",
-                                "~/genome/features/id/Sobic.007G190100",
-                                "~/genome/features/id/Sobic.007G190100",
                                 "~/genome/features/id/Sobic.007G190100"
                             ],
                             "note": "Features characterized and annotated",
@@ -937,6 +920,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G197500",
+                                "~/genome/features/id/Sobic.007G134800",
                                 "~/genome/features/id/Sobic.008G059900"
                             ],
                             "note": "Features characterized and annotated",
@@ -1017,14 +1002,11 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_93da03",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.003G036200",
-                                "~/genome/features/id/Sobic.009G108700"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features uncharacterized and unannotated",
                             "optionalSubunit": 0,
-                            "role": "NADP-dependent malic enzyme (EC 1.1.1.40)",
-                            "triggering": 1
+                            "role": "Unknown",
+                            "triggering": 0
                         }
                     ],
                     "note": "universal"
@@ -1181,14 +1163,8 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G260800",
-                                "~/genome/features/id/Sobic.001G260800",
-                                "~/genome/features/id/Sobic.001G260800",
-                                "~/genome/features/id/Sobic.001G260800",
-                                "~/genome/features/id/Sobic.001G260800",
-                                "~/genome/features/id/Sobic.002G211300.1.p",
-                                "~/genome/features/id/Sobic.002G211300.2.p",
                                 "~/genome/features/id/Sobic.002G006600",
-                                "~/genome/features/id/Sobic.002G006600"
+                                "~/genome/features/id/Sobic.002G211300"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -1233,8 +1209,8 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G325700",
-                                "~/genome/features/id/Sobic.002G356200",
-                                "~/genome/features/id/Sobic.001G416700"
+                                "~/genome/features/id/Sobic.001G416700",
+                                "~/genome/features/id/Sobic.002G356200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -1375,12 +1351,7 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G084100",
-                                "~/genome/features/id/Sobic.001G084100",
-                                "~/genome/features/id/Sobic.001G084100",
-                                "~/genome/features/id/Sobic.001G084100",
-                                "~/genome/features/id/Sobic.001G084100",
-                                "~/genome/features/id/Sobic.001G171300.1.p",
-                                "~/genome/features/id/Sobic.001G171300.2.p",
+                                "~/genome/features/id/Sobic.001G171300",
                                 "~/genome/features/id/Sobic.001G459800"
                             ],
                             "note": "Features characterized and annotated",
@@ -1426,52 +1397,6 @@
         },
         {
             "direction": "=",
-            "id": "rxn00213_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_0d5078",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.002G291200",
-                                "~/genome/features/id/Sobic.002G291200",
-                                "~/genome/features/id/Sobic.004G013500"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "UTP--glucose-1-phosphate uridylyltransferase (EC 2.7.7.9)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "universal"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00062_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00089_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00012_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00026_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn00213",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn00213_d"
-        },
-        {
-            "direction": "=",
             "id": "rxn00224_d0",
             "modelReactionProteins": [
                 {
@@ -1479,24 +1404,9 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
-                                "~/genome/features/id/Sobic.004G179400",
                                 "~/genome/features/id/Sobic.002G159300",
                                 "~/genome/features/id/Sobic.004G006200",
-                                "~/genome/features/id/Sobic.004G006200",
-                                "~/genome/features/id/Sobic.004G006200",
-                                "~/genome/features/id/Sobic.004G006200",
-                                "~/genome/features/id/Sobic.004G006200"
+                                "~/genome/features/id/Sobic.004G179400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -1577,55 +1487,6 @@
         },
         {
             "direction": "=",
-            "id": "rxn00239_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_5a355d",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.008G112600",
-                                "~/genome/features/id/Sobic.008G112600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Guanylate kinase (EC 2.7.4.8)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "universal"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00002_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00067_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00126_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00008_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00031_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn00239",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn00239_d"
-        },
-        {
-            "direction": "=",
             "id": "rxn00248_d0",
             "modelReactionProteins": [
                 {
@@ -1681,7 +1542,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G166200",
                                 "~/genome/features/id/Sobic.007G166200",
                                 "~/genome/features/id/Sobic.007G166300"
                             ],
@@ -1741,7 +1601,6 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G143700",
                                 "~/genome/features/id/Sobic.003G143700"
                             ],
                             "note": "Features characterized and annotated",
@@ -1798,10 +1657,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G303300",
-                                "~/genome/features/id/Sobic.004G331700",
-                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.003G370800",
+                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.009G149400"
                             ],
                             "note": "Features characterized and annotated",
@@ -1847,7 +1704,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G006600",
-                                "~/genome/features/id/Sobic.002G006600",
                                 "~/genome/features/id/Sobic.007G213700"
                             ],
                             "note": "Features characterized and annotated",
@@ -1892,7 +1748,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G006600",
                                 "~/genome/features/id/Sobic.002G006600"
                             ],
                             "note": "Features characterized and annotated",
@@ -1908,7 +1763,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G006600",
                                 "~/genome/features/id/Sobic.002G006600",
                                 "~/genome/features/id/Sobic.007G213700"
                             ],
@@ -1956,8 +1810,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G187900",
                                 "~/genome/features/id/Sobic.007G227000",
-                                "~/genome/features/id/Sobic.009G164300",
-                                "~/genome/features/id/Sobic.009G164300",
                                 "~/genome/features/id/Sobic.009G164300"
                             ],
                             "note": "Features characterized and annotated",
@@ -2054,7 +1906,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G127100",
                                 "~/genome/features/id/Sobic.006G127100"
                             ],
                             "note": "Features characterized and annotated",
@@ -2107,7 +1958,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G065600"
+                                "~/genome/features/id/Sobic.001G065600",
+                                "~/genome/features/id/Sobic.002G036000"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -2153,10 +2005,8 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G011700",
                                 "~/genome/features/id/Sobic.002G111800",
-                                "~/genome/features/id/Sobic.003G412100",
-                                "~/genome/features/id/Sobic.003G412100",
-                                "~/genome/features/id/Sobic.003G412100",
-                                "~/genome/features/id/Sobic.002G155100"
+                                "~/genome/features/id/Sobic.002G155100",
+                                "~/genome/features/id/Sobic.003G412100"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -2243,10 +2093,8 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_9b145a",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G465900"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features characterized but unannotated",
                             "optionalSubunit": 0,
                             "role": "Adenylylsulfate kinase (EC 2.7.1.25)",
                             "triggering": 1
@@ -2292,8 +2140,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G008700",
-                                "~/genome/features/id/Sobic.001G094300"
+                                "~/genome/features/id/Sobic.001G094300",
+                                "~/genome/features/id/Sobic.006G008700"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -2337,7 +2185,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.009G094700",
                                 "~/genome/features/id/Sobic.009G094700"
                             ],
                             "note": "Features characterized and annotated",
@@ -2740,8 +2587,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G056400",
                                 "~/genome/features/id/Sobic.001G056500",
-                                "~/genome/features/id/Sobic.001G056601",
-                                "~/genome/features/id/Sobic.001G056601",
                                 "~/genome/features/id/Sobic.002G054700"
                             ],
                             "note": "Features characterized and annotated",
@@ -2795,9 +2640,9 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.001G410000",
                                 "~/genome/features/id/Sobic.002G133100",
-                                "~/genome/features/id/Sobic.006G066200",
-                                "~/genome/features/id/Sobic.001G410000"
+                                "~/genome/features/id/Sobic.006G066200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -2845,10 +2690,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G303300",
-                                "~/genome/features/id/Sobic.004G331700",
-                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.003G370800",
+                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.009G149400"
                             ],
                             "note": "Features characterized and annotated",
@@ -2893,7 +2736,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G160500.1.p",
+                                "~/genome/features/id/Sobic.001G160500",
                                 "~/genome/features/id/Sobic.004G220300",
                                 "~/genome/features/id/Sobic.004G220400",
                                 "~/genome/features/id/Sobic.004G220500",
@@ -3039,7 +2882,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.010G160400",
                                 "~/genome/features/id/Sobic.010G258500",
                                 "~/genome/features/id/Sobic.010G258700"
                             ],
@@ -3089,10 +2931,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G303300",
-                                "~/genome/features/id/Sobic.004G331700",
-                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.003G370800",
+                                "~/genome/features/id/Sobic.004G331700",
                                 "~/genome/features/id/Sobic.009G149400"
                             ],
                             "note": "Features characterized and annotated",
@@ -3123,19 +2963,15 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.005G152200",
-                                "~/genome/features/id/Sobic.002G041100",
                                 "~/genome/features/id/Sobic.002G041100",
                                 "~/genome/features/id/Sobic.002G041200",
-                                "~/genome/features/id/Sobic.002G041200",
-                                "~/genome/features/id/Sobic.002G041200",
                                 "~/genome/features/id/Sobic.003G199900",
-                                "~/genome/features/id/Sobic.003G199900",
-                                "~/genome/features/id/Sobic.003G199900",
-                                "~/genome/features/id/Sobic.005G152000",
+                                "~/genome/features/id/Sobic.005G114600",
+                                "~/genome/features/id/Sobic.005G134501",
                                 "~/genome/features/id/Sobic.005G152000",
                                 "~/genome/features/id/Sobic.005G152100",
-                                "~/genome/features/id/Sobic.008G005300"
+                                "~/genome/features/id/Sobic.005G152200",
+                                "~/genome/features/id/Sobic.005G152800"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -3268,11 +3104,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G081500",
-                                "~/genome/features/id/Sobic.002G081500",
-                                "~/genome/features/id/Sobic.002G081500",
-                                "~/genome/features/id/Sobic.002G081500",
-                                "~/genome/features/id/Sobic.002G081500",
-                                "~/genome/features/id/Sobic.003G443400",
                                 "~/genome/features/id/Sobic.003G443400"
                             ],
                             "note": "Features characterized and annotated",
@@ -3378,11 +3209,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G201900",
-                                "~/genome/features/id/Sobic.001G201900",
-                                "~/genome/features/id/Sobic.001G201900",
-                                "~/genome/features/id/Sobic.001G201900",
-                                "~/genome/features/id/Sobic.001G201900",
-                                "~/genome/features/id/Sobic.001G535500",
                                 "~/genome/features/id/Sobic.001G535500"
                             ],
                             "note": "Features characterized and annotated",
@@ -3439,9 +3265,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G373600",
                                 "~/genome/features/id/Sobic.001G097100",
-                                "~/genome/features/id/Sobic.001G097100"
+                                "~/genome/features/id/Sobic.003G373600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -3531,6 +3356,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G413750",
                                 "~/genome/features/id/Sobic.003G427200",
                                 "~/genome/features/id/Sobic.003G427300"
                             ],
@@ -3576,7 +3402,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G218600",
                                 "~/genome/features/id/Sobic.007G218600",
                                 "~/genome/features/id/Sobic.009G160500"
                             ],
@@ -3675,7 +3500,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G112700",
-                                "~/genome/features/id/Sobic.006G109100",
                                 "~/genome/features/id/Sobic.006G109100"
                             ],
                             "note": "Features characterized and annotated",
@@ -3685,12 +3509,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G029300.1.p",
-                                "~/genome/features/id/Sobic.001G029300.2.p",
-                                "~/genome/features/id/Sobic.001G029300.3.p",
-                                "~/genome/features/id/Sobic.001G029300.4.p",
-                                "~/genome/features/id/Sobic.001G029300.5.p",
-                                "~/genome/features/id/Sobic.001G427700",
+                                "~/genome/features/id/Sobic.001G029300",
                                 "~/genome/features/id/Sobic.001G427700"
                             ],
                             "note": "Features characterized and annotated",
@@ -3819,9 +3638,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G025800",
-                                "~/genome/features/id/Sobic.001G544600",
-                                "~/genome/features/id/Sobic.003G281200"
+                                "~/genome/features/id/Sobic.003G281200",
+                                "~/genome/features/id/Sobic.004G025800"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -3869,7 +3687,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G051100",
                                 "~/genome/features/id/Sobic.002G051100"
                             ],
                             "note": "Features characterized and annotated",
@@ -3906,15 +3723,9 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G056400",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
                                 "~/genome/features/id/Sobic.001G519800",
-                                "~/genome/features/id/Sobic.001G519800"
+                                "~/genome/features/id/Sobic.004G056400",
+                                "~/genome/features/id/Sobic.006G105900"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -3966,14 +3777,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
-                                "~/genome/features/id/Sobic.006G105900",
                                 "~/genome/features/id/Sobic.001G519800",
-                                "~/genome/features/id/Sobic.001G519800"
+                                "~/genome/features/id/Sobic.006G105900"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -4025,8 +3830,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G244500",
-                                "~/genome/features/id/Sobic.002G244500",
                                 "~/genome/features/id/Sobic.002G244500"
                             ],
                             "note": "Features characterized and annotated",
@@ -4075,7 +3878,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G372400",
                                 "~/genome/features/id/Sobic.003G372400",
                                 "~/genome/features/id/Sobic.009G148700"
                             ],
@@ -4133,8 +3935,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G523800",
-                                "~/genome/features/id/Sobic.001G523800",
                                 "~/genome/features/id/Sobic.001G523800"
                             ],
                             "note": "Features characterized and annotated",
@@ -4183,7 +3983,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G378800",
                                 "~/genome/features/id/Sobic.001G378800"
                             ],
                             "note": "Features characterized and annotated",
@@ -4224,8 +4023,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G392500.1.p",
-                                "~/genome/features/id/Sobic.006G157000",
                                 "~/genome/features/id/Sobic.006G157000"
                             ],
                             "note": "Features characterized and annotated",
@@ -4306,13 +4103,10 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.001G305600",
                                 "~/genome/features/id/Sobic.001G447500",
                                 "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
+                                "~/genome/features/id/Sobic.006G176600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -4356,8 +4150,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G330500",
-                                "~/genome/features/id/Sobic.009G137700"
+                                "~/genome/features/id/Sobic.002G330500"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -4394,7 +4187,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.006G213400",
-                                "~/genome/features/id/Sobic.007G075200",
                                 "~/genome/features/id/Sobic.007G075200"
                             ],
                             "note": "Features characterized and annotated",
@@ -4425,60 +4217,6 @@
             "probability": 0,
             "protons": 0,
             "reaction_ref": "~/template/reactions/id/rxn00832_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn00834_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_8c1981",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G069900",
-                                "~/genome/features/id/Sobic.002G029600",
-                                "~/genome/features/id/Sobic.002G029600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Inosine-5'-monophosphate dehydrogenase (EC 1.1.1.205)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "universal"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00001_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00003_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00114_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00004_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00067_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00497_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn00834",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn00834_d"
         },
         {
             "direction": ">",
@@ -4590,9 +4328,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G067300",
-                                "~/genome/features/id/Sobic.001G067300",
-                                "~/genome/features/id/Sobic.001G067300",
                                 "~/genome/features/id/Sobic.001G067300"
                             ],
                             "note": "Features characterized and annotated",
@@ -4698,13 +4433,10 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.001G305600",
                                 "~/genome/features/id/Sobic.001G447500",
                                 "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
+                                "~/genome/features/id/Sobic.006G176600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -4784,71 +4516,6 @@
             "reaction_ref": "~/template/reactions/id/rxn00907_d"
         },
         {
-            "direction": ">",
-            "id": "rxn00917_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e57681",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.006G278500",
-                                "~/genome/features/id/Sobic.006G278500"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "GMP synthase [glutamine-hydrolyzing] (EC 6.3.5.2)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "universal"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00001_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00002_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00053_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00497_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00012_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00018_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 3.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00067_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00126_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn00917",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn00917_d"
-        },
-        {
             "direction": "<",
             "id": "rxn00931_d0",
             "modelReactionProteins": [
@@ -4857,7 +4524,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G424300"
+                                "~/genome/features/id/Sobic.003G424300",
+                                "~/genome/features/id/Sobic.007G143600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -4906,8 +4574,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -4964,7 +4630,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G512800",
                                 "~/genome/features/id/Sobic.007G068100"
                             ],
                             "note": "Features characterized and annotated",
@@ -5005,9 +4670,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G130300",
                                 "~/genome/features/id/Sobic.001G007000",
-                                "~/genome/features/id/Sobic.001G007000"
+                                "~/genome/features/id/Sobic.006G130300"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -5051,9 +4715,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G133100",
-                                "~/genome/features/id/Sobic.006G066200",
-                                "~/genome/features/id/Sobic.001G410000"
+                                "~/genome/features/id/Sobic.001G410000",
+                                "~/genome/features/id/Sobic.006G066200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -5101,14 +4764,11 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G418100",
-                                "~/genome/features/id/Sobic.001G418100",
                                 "~/genome/features/id/Sobic.001G376501",
+                                "~/genome/features/id/Sobic.001G418100",
                                 "~/genome/features/id/Sobic.003G149500",
-                                "~/genome/features/id/Sobic.009G112600",
-                                "~/genome/features/id/Sobic.001G414650",
-                                "~/genome/features/id/Sobic.003G348800",
-                                "~/genome/features/id/Sobic.003G442300"
+                                "~/genome/features/id/Sobic.003G442300",
+                                "~/genome/features/id/Sobic.009G112600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -5200,7 +4860,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G092200",
                                 "~/genome/features/id/Sobic.007G092200"
                             ],
                             "note": "Features characterized and annotated",
@@ -5298,7 +4957,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G265400",
-                                "~/genome/features/id/Sobic.009G220000",
                                 "~/genome/features/id/Sobic.009G220000"
                             ],
                             "note": "Features characterized and annotated",
@@ -5437,7 +5095,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G259200",
-                                "~/genome/features/id/Sobic.009G004100",
                                 "~/genome/features/id/Sobic.009G004100"
                             ],
                             "note": "Features characterized and annotated",
@@ -5485,10 +5142,20 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_7cf50f",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.004G234100",
+                                "~/genome/features/id/Sobic.010G090100"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "2,3-bisphosphoglycerate-dependent phosphoglycerate mutase (EC 5.4.2.11)",
+                            "triggering": 1
+                        },
+                        {
+                            "feature_refs": [],
+                            "note": "Complex-based-gapfilling",
+                            "optionalSubunit": 0,
+                            "role": "PS_role_0f609d",
                             "triggering": 1
                         }
                     ],
@@ -5520,7 +5187,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.004G272100",
                                 "~/genome/features/id/Sobic.004G272100",
                                 "~/genome/features/id/Sobic.006G200800"
                             ],
@@ -5569,11 +5235,13 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_d16cea",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features uncharacterized and unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.005G115600"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
-                            "role": "Unknown",
-                            "triggering": 0
+                            "role": "6-phosphogluconate dehydrogenase, decarboxylating (EC 1.1.1.44)",
+                            "triggering": 1
                         }
                     ],
                     "note": "universal"
@@ -5617,9 +5285,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G491000",
-                                "~/genome/features/id/Sobic.001G491000",
-                                "~/genome/features/id/Sobic.001G491000",
-                                "~/genome/features/id/Sobic.001G491000",
                                 "~/genome/features/id/Sobic.002G257300"
                             ],
                             "note": "Features characterized and annotated",
@@ -5657,9 +5322,7 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.006G034300",
-                                "~/genome/features/id/Sobic.006G034300",
                                 "~/genome/features/id/Sobic.009G062800",
-                                "~/genome/features/id/Sobic.010G023700",
                                 "~/genome/features/id/Sobic.010G023700",
                                 "~/genome/features/id/Sobic.010G024000"
                             ],
@@ -5792,11 +5455,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
@@ -5845,7 +5503,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G193700",
                                 "~/genome/features/id/Sobic.001G193700"
                             ],
                             "note": "Features characterized and annotated",
@@ -5970,7 +5627,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.010G250200",
                                 "~/genome/features/id/Sobic.010G250200"
                             ],
                             "note": "Features characterized and annotated",
@@ -5980,7 +5636,6 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.010G250200",
                                 "~/genome/features/id/Sobic.010G250200"
                             ],
                             "note": "Features characterized and annotated",
@@ -6427,6 +6082,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G413750",
                                 "~/genome/features/id/Sobic.003G427200",
                                 "~/genome/features/id/Sobic.003G427300"
                             ],
@@ -6476,9 +6132,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
                                 "~/genome/features/id/Sobic.008G156300"
                             ],
                             "note": "Features characterized and annotated",
@@ -6583,7 +6236,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G294100",
                                 "~/genome/features/id/Sobic.003G294100"
                             ],
                             "note": "Features characterized and annotated",
@@ -6674,14 +6326,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -6830,13 +6477,10 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.001G305600",
                                 "~/genome/features/id/Sobic.001G447500",
                                 "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
+                                "~/genome/features/id/Sobic.006G176600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -7111,7 +6755,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.006G186600",
-                                "~/genome/features/id/Sobic.006G186600",
                                 "~/genome/features/id/Sobic.010G216300"
                             ],
                             "note": "Features characterized and annotated",
@@ -7160,9 +6803,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G373600",
                                 "~/genome/features/id/Sobic.001G097100",
-                                "~/genome/features/id/Sobic.001G097100"
+                                "~/genome/features/id/Sobic.003G373600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -7309,8 +6951,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G056400",
                                 "~/genome/features/id/Sobic.001G056500",
-                                "~/genome/features/id/Sobic.001G056601",
-                                "~/genome/features/id/Sobic.001G056601",
                                 "~/genome/features/id/Sobic.002G054700"
                             ],
                             "note": "Features characterized and annotated",
@@ -7361,7 +7001,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G236300",
-                                "~/genome/features/id/Sobic.004G236300",
                                 "~/genome/features/id/Sobic.006G235500"
                             ],
                             "note": "Features characterized and annotated",
@@ -7410,8 +7049,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169900",
-                                "~/genome/features/id/Sobic.003G169900",
                                 "~/genome/features/id/Sobic.003G169900",
                                 "~/genome/features/id/Sobic.008G116000",
                                 "~/genome/features/id/Sobic.008G116100"
@@ -7462,9 +7099,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
-                                "~/genome/features/id/Sobic.008G156300",
                                 "~/genome/features/id/Sobic.008G156300"
                             ],
                             "note": "Features characterized and annotated",
@@ -7513,9 +7147,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G104200",
-                                "~/genome/features/id/Sobic.002G105600",
-                                "~/genome/features/id/Sobic.002G105600",
                                 "~/genome/features/id/Sobic.004G053700"
                             ],
                             "note": "Features characterized and annotated",
@@ -7561,7 +7192,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G295400",
-                                "~/genome/features/id/Sobic.006G170200",
                                 "~/genome/features/id/Sobic.006G170200"
                             ],
                             "note": "Features characterized and annotated",
@@ -7606,7 +7236,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G133600",
+                                "~/genome/features/id/Sobic.008G133500",
                                 "~/genome/features/id/Sobic.008G133600"
                             ],
                             "note": "Features characterized and annotated",
@@ -7643,10 +7273,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G030800",
                                 "~/genome/features/id/Sobic.001G339100",
-                                "~/genome/features/id/Sobic.001G339100",
-                                "~/genome/features/id/Sobic.001G339100"
+                                "~/genome/features/id/Sobic.006G030800"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -7738,9 +7366,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G067300",
-                                "~/genome/features/id/Sobic.001G067300",
-                                "~/genome/features/id/Sobic.001G067300",
                                 "~/genome/features/id/Sobic.001G067300"
                             ],
                             "note": "Features characterized and annotated",
@@ -7789,7 +7414,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G119900",
                                 "~/genome/features/id/Sobic.003G119900"
                             ],
                             "note": "Features characterized and annotated",
@@ -7874,8 +7498,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169900",
-                                "~/genome/features/id/Sobic.003G169900",
                                 "~/genome/features/id/Sobic.003G169900",
                                 "~/genome/features/id/Sobic.008G116000",
                                 "~/genome/features/id/Sobic.008G116100"
@@ -8158,8 +7780,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G067100",
-                                "~/genome/features/id/Sobic.008G067100",
                                 "~/genome/features/id/Sobic.008G067100"
                             ],
                             "note": "Features characterized and annotated",
@@ -8377,10 +7997,8 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_f94d30",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G166600"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features characterized but unannotated",
                             "optionalSubunit": 0,
                             "role": "N-acetyl-gamma-glutamyl-phosphate reductase (EC 1.2.1.38)",
                             "triggering": 1
@@ -8471,7 +8089,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G531400",
-                                "~/genome/features/id/Sobic.004G144400",
                                 "~/genome/features/id/Sobic.004G144400"
                             ],
                             "note": "Features characterized and annotated",
@@ -8521,7 +8138,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G531400",
-                                "~/genome/features/id/Sobic.004G144400",
                                 "~/genome/features/id/Sobic.004G144400"
                             ],
                             "note": "Features characterized and annotated",
@@ -8614,8 +8230,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G067100",
-                                "~/genome/features/id/Sobic.008G067100",
                                 "~/genome/features/id/Sobic.008G067100"
                             ],
                             "note": "Features characterized and annotated",
@@ -8664,14 +8278,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G160600",
-                                "~/genome/features/id/Sobic.004G143900",
-                                "~/genome/features/id/Sobic.006G112600",
-                                "~/genome/features/id/Sobic.006G112600",
-                                "~/genome/features/id/Sobic.006G112600",
-                                "~/genome/features/id/Sobic.006G112600",
-                                "~/genome/features/id/Sobic.006G112600",
-                                "~/genome/features/id/Sobic.007G086600"
+                                "~/genome/features/id/Sobic.006G112600"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -8971,7 +8578,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G130600",
-                                "~/genome/features/id/Sobic.008G162100",
                                 "~/genome/features/id/Sobic.008G162100"
                             ],
                             "note": "Features characterized and annotated",
@@ -9021,7 +8627,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G130600",
-                                "~/genome/features/id/Sobic.008G162100",
                                 "~/genome/features/id/Sobic.008G162100"
                             ],
                             "note": "Features characterized and annotated",
@@ -9063,12 +8668,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G090900",
-                                "~/genome/features/id/Sobic.008G069500.1.p",
-                                "~/genome/features/id/Sobic.008G070350",
-                                "~/genome/features/id/Sobic.008G070350",
-                                "~/genome/features/id/Sobic.008G070350",
-                                "~/genome/features/id/Sobic.008G070350",
-                                "~/genome/features/id/Sobic.008G070350",
                                 "~/genome/features/id/Sobic.008G070350",
                                 "~/genome/features/id/Sobic.009G214200"
                             ],
@@ -9171,10 +8770,8 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G438600",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.001G531800"
+                                "~/genome/features/id/Sobic.001G531800",
+                                "~/genome/features/id/Sobic.007G171200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -9223,10 +8820,8 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G438600",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.007G171200",
-                                "~/genome/features/id/Sobic.001G531800"
+                                "~/genome/features/id/Sobic.001G531800",
+                                "~/genome/features/id/Sobic.007G171200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -9274,7 +8869,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.009G012300",
                                 "~/genome/features/id/Sobic.009G012300",
                                 "~/genome/features/id/Sobic.009G072000"
                             ],
@@ -9477,6 +9071,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.004G124601",
                                 "~/genome/features/id/Sobic.006G083100"
                             ],
                             "note": "Features characterized and annotated",
@@ -9573,7 +9168,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G118700",
                                 "~/genome/features/id/Sobic.006G244700"
                             ],
                             "note": "Features characterized and annotated",
@@ -9623,8 +9217,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G114400",
-                                "~/genome/features/id/Sobic.001G114400",
-                                "~/genome/features/id/Sobic.006G247900",
                                 "~/genome/features/id/Sobic.006G247900"
                             ],
                             "note": "Features characterized and annotated",
@@ -9635,8 +9227,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G114400",
-                                "~/genome/features/id/Sobic.001G114400",
-                                "~/genome/features/id/Sobic.006G247900",
                                 "~/genome/features/id/Sobic.006G247900"
                             ],
                             "note": "Features characterized and annotated",
@@ -9701,8 +9291,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G067100",
-                                "~/genome/features/id/Sobic.008G067100",
                                 "~/genome/features/id/Sobic.008G067100"
                             ],
                             "note": "Features characterized and annotated",
@@ -9718,8 +9306,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G067100",
-                                "~/genome/features/id/Sobic.008G067100",
                                 "~/genome/features/id/Sobic.008G067100"
                             ],
                             "note": "Features characterized and annotated",
@@ -9829,8 +9415,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G392500.1.p",
-                                "~/genome/features/id/Sobic.006G157000",
                                 "~/genome/features/id/Sobic.006G157000"
                             ],
                             "note": "Features characterized and annotated",
@@ -9872,7 +9456,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.006G213400",
-                                "~/genome/features/id/Sobic.007G075200",
                                 "~/genome/features/id/Sobic.007G075200"
                             ],
                             "note": "Features characterized and annotated",
@@ -9974,7 +9557,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G334100",
-                                "~/genome/features/id/Sobic.009G130500",
                                 "~/genome/features/id/Sobic.009G130500"
                             ],
                             "note": "Features characterized and annotated",
@@ -10096,14 +9678,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -10152,14 +9729,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -10299,8 +9871,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.009G135500",
-                                "~/genome/features/id/Sobic.002G064500"
+                                "~/genome/features/id/Sobic.009G135500"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -10388,7 +9959,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G103300",
                                 "~/genome/features/id/Sobic.003G103300"
                             ],
                             "note": "Features characterized and annotated",
@@ -10757,8 +10327,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G140900",
-                                "~/genome/features/id/Sobic.006G140900",
                                 "~/genome/features/id/Sobic.006G140900"
                             ],
                             "note": "Features characterized and annotated",
@@ -10998,14 +10566,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -11142,8 +10705,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G187900",
                                 "~/genome/features/id/Sobic.007G227000",
-                                "~/genome/features/id/Sobic.009G164300",
-                                "~/genome/features/id/Sobic.009G164300",
                                 "~/genome/features/id/Sobic.009G164300"
                             ],
                             "note": "Features characterized and annotated",
@@ -11188,7 +10749,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G108800",
                                 "~/genome/features/id/Sobic.005G110541"
                             ],
                             "note": "Features characterized and annotated",
@@ -11229,7 +10789,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G108800",
                                 "~/genome/features/id/Sobic.005G110541"
                             ],
                             "note": "Features characterized and annotated",
@@ -11266,7 +10825,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G108800",
                                 "~/genome/features/id/Sobic.005G110541"
                             ],
                             "note": "Features characterized and annotated",
@@ -11380,14 +10938,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -11504,8 +11057,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -11555,8 +11106,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -11606,8 +11155,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -11656,7 +11203,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -11697,7 +11243,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -11738,7 +11283,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -11963,6 +11507,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -12011,6 +11556,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -12059,6 +11605,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -12107,6 +11654,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -12155,6 +11703,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -12460,8 +12009,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -12564,9 +12111,8 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G471100",
-                                "~/genome/features/id/Sobic.001G471100",
-                                "~/genome/features/id/Sobic.001G401700"
+                                "~/genome/features/id/Sobic.001G401700",
+                                "~/genome/features/id/Sobic.001G471100"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -12619,12 +12165,11 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G018900",
-                                "~/genome/features/id/Sobic.004G018900",
-                                "~/genome/features/id/Sobic.004G019000.1.p",
+                                "~/genome/features/id/Sobic.004G019000",
                                 "~/genome/features/id/Sobic.004G019100",
                                 "~/genome/features/id/Sobic.004G019300",
                                 "~/genome/features/id/Sobic.004G019400",
-                                "~/genome/features/id/Sobic.004G019400"
+                                "~/genome/features/id/Sobic.004G019550"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -12673,8 +12218,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -12788,8 +12331,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G159101",
-                                "~/genome/features/id/Sobic.004G087000"
+                                "~/genome/features/id/Sobic.003G159101"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -12806,17 +12348,16 @@
                             "triggering": 1
                         },
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.007G109200.1.p"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features characterized but unannotated",
                             "optionalSubunit": 0,
                             "role": "Plastidial ATP synthase epsilon chain",
                             "triggering": 1
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G316700"
+                                "~/genome/features/id/Sobic.002G316700",
+                                "~/genome/features/id/Sobic.004G169800"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -12997,8 +12538,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -13059,8 +12598,12 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_5e3a95",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.004G088100",
+                                "~/genome/features/id/Sobic.010G033300",
+                                "~/genome/features/id/Sobic.010G180400"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "Palmitoyl-[acyl carrier protein] thioesterase (EC 3.1.2.-)",
                             "triggering": 1
@@ -13524,8 +13067,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -13583,8 +13124,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -13642,8 +13181,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -13801,11 +13338,13 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_d16cea",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features uncharacterized and unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.005G115600"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
-                            "role": "Unknown",
-                            "triggering": 0
+                            "role": "6-phosphogluconate dehydrogenase, decarboxylating (EC 1.1.1.44)",
+                            "triggering": 1
                         }
                     ],
                     "note": "universal"
@@ -13847,8 +13386,12 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_ad46c6",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.004G088100",
+                                "~/genome/features/id/Sobic.010G033300",
+                                "~/genome/features/id/Sobic.010G180400"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "Stearoyl-[acyl carrier protein] thioesterase (EC 3.1.2.-)",
                             "triggering": 1
@@ -13992,14 +13535,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -14048,8 +13586,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -14106,7 +13642,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169600",
                                 "~/genome/features/id/Sobic.009G107400"
                             ],
                             "note": "Features characterized and annotated",
@@ -14143,7 +13678,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169600",
                                 "~/genome/features/id/Sobic.009G107400"
                             ],
                             "note": "Features characterized and annotated",
@@ -14206,92 +13740,6 @@
             "reaction_ref": "~/template/reactions/id/rxn13365_d"
         },
         {
-            "direction": "=",
-            "id": "rxn13975_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17400_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17402_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn13975",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn13975_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn13995_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17416_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17417_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn13995",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn13995_d"
-        },
-        {
             "direction": ">",
             "id": "rxn14012_d0",
             "modelReactionProteins": [
@@ -14301,14 +13749,9 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.007G070000",
-                                "~/genome/features/id/Sobic.010G229400",
-                                "~/genome/features/id/Sobic.010G229400",
                                 "~/genome/features/id/Sobic.008G088821",
-                                "~/genome/features/id/Sobic.009G246400"
+                                "~/genome/features/id/Sobic.009G246400",
+                                "~/genome/features/id/Sobic.010G229400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -14346,49 +13789,6 @@
             "probability": 0,
             "protons": 0,
             "reaction_ref": "~/template/reactions/id/rxn14012_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn14059_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17408_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17409_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn14059",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn14059_d"
         },
         {
             "direction": ">",
@@ -14536,92 +13936,6 @@
         },
         {
             "direction": "=",
-            "id": "rxn14156_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17420_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17421_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn14156",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn14156_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn14248_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17404_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17405_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn14248",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn14248_d"
-        },
-        {
-            "direction": "=",
             "id": "rxn14261_d0",
             "modelReactionProteins": [
                 {
@@ -14667,93 +13981,6 @@
             "probability": 0,
             "protons": 0,
             "reaction_ref": "~/template/reactions/id/rxn14261_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn14278_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_a9758f",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.004G023900"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Methylthioalkylmalate dehydratase large subunit (EC 4.2.1.170)",
-                            "triggering": 1
-                        },
-                        {
-                            "feature_refs": [],
-                            "note": "Complex-based-gapfilling",
-                            "optionalSubunit": 0,
-                            "role": "PS_role_b63608",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17412_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17413_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn14278",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn14278_d"
-        },
-        {
-            "direction": ">",
-            "id": "rxn14294_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_9a8856",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.007G055800.1.p"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "Alpha-farnesene synthase (EC 4.2.3.46)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00350_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00012_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00067_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd06559_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn14294",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn14294_d"
         },
         {
             "direction": "<",
@@ -14819,8 +14046,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G241500",
-                                "~/genome/features/id/Sobic.003G241500",
-                                "~/genome/features/id/Sobic.009G238900",
                                 "~/genome/features/id/Sobic.009G238900"
                             ],
                             "note": "Features characterized and annotated",
@@ -15004,8 +14229,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G290200",
-                                "~/genome/features/id/Sobic.004G098000",
-                                "~/genome/features/id/Sobic.004G098000",
                                 "~/genome/features/id/Sobic.004G098000"
                             ],
                             "note": "Features characterized and annotated",
@@ -15051,9 +14274,7 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.006G034300",
-                                "~/genome/features/id/Sobic.006G034300",
                                 "~/genome/features/id/Sobic.009G062800",
-                                "~/genome/features/id/Sobic.010G023700",
                                 "~/genome/features/id/Sobic.010G023700",
                                 "~/genome/features/id/Sobic.010G024000"
                             ],
@@ -15099,7 +14320,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G512800",
                                 "~/genome/features/id/Sobic.007G068100"
                             ],
                             "note": "Features characterized and annotated",
@@ -15274,8 +14494,6 @@
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G253300",
                                 "~/genome/features/id/Sobic.002G201700",
-                                "~/genome/features/id/Sobic.007G139500",
-                                "~/genome/features/id/Sobic.007G139500",
                                 "~/genome/features/id/Sobic.007G139500"
                             ],
                             "note": "Features characterized and annotated",
@@ -15325,8 +14543,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.001G425400",
-                                "~/genome/features/id/Sobic.001G425400",
-                                "~/genome/features/id/Sobic.010G219700",
                                 "~/genome/features/id/Sobic.010G219700"
                             ],
                             "note": "Features characterized and annotated",
@@ -15364,50 +14580,6 @@
         },
         {
             "direction": ">",
-            "id": "rxn16809_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_b1cdea",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.007G055800.1.p"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "(E)-beta-Ocimene Synthase (EC 4.2.3.106)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00283_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00012_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00067_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd06763_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn16809",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn16809_d"
-        },
-        {
-            "direction": ">",
             "id": "rxn17196_d0",
             "modelReactionProteins": [
                 {
@@ -15415,11 +14587,10 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G431700",
-                                "~/genome/features/id/Sobic.010G005500",
                                 "~/genome/features/id/Sobic.001G067100",
                                 "~/genome/features/id/Sobic.002G033400",
-                                "~/genome/features/id/Sobic.002G033400"
+                                "~/genome/features/id/Sobic.003G431700",
+                                "~/genome/features/id/Sobic.010G005500"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -15467,6 +14638,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -15516,7 +14688,10 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G256800",
-                                "~/genome/features/id/Sobic.002G256900"
+                                "~/genome/features/id/Sobic.002G256900",
+                                "~/genome/features/id/Sobic.004G088100",
+                                "~/genome/features/id/Sobic.010G033300",
+                                "~/genome/features/id/Sobic.010G180400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -15577,7 +14752,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -15618,7 +14792,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -15659,7 +14832,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -15767,8 +14939,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -15872,13 +15042,11 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_3e0d25",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G470000"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features uncharacterized and unannotated",
                             "optionalSubunit": 0,
-                            "role": "Serine acetyltransferase (EC 2.3.1.30)",
-                            "triggering": 1
+                            "role": "Unknown",
+                            "triggering": 0
                         }
                     ],
                     "note": "universal"
@@ -15888,7 +15056,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G110100",
                                 "~/genome/features/id/Sobic.003G110100",
                                 "~/genome/features/id/Sobic.006G016900"
                             ],
@@ -15986,7 +15153,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -16286,10 +15452,8 @@
                             "triggering": 1
                         },
                         {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.003G168600"
-                            ],
-                            "note": "Features characterized and annotated",
+                            "feature_refs": [],
+                            "note": "Features characterized but unannotated",
                             "optionalSubunit": 0,
                             "role": "Cytochrome b6-f complex PetD, subunit IV (EC 7.1.1.6)",
                             "triggering": 1
@@ -16303,7 +15467,6 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G078000",
                                 "~/genome/features/id/Sobic.001G078000"
                             ],
                             "note": "Features characterized and annotated",
@@ -16313,7 +15476,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G171900.1.p"
+                                "~/genome/features/id/Sobic.003G171900"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -16366,10 +15529,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G356000",
-                                "~/genome/features/id/Sobic.003G356000",
-                                "~/genome/features/id/Sobic.009G160100",
-                                "~/genome/features/id/Sobic.009G160100",
-                                "~/genome/features/id/Sobic.009G160100",
                                 "~/genome/features/id/Sobic.009G160100"
                             ],
                             "note": "Features characterized and annotated",
@@ -16380,10 +15539,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G356000",
-                                "~/genome/features/id/Sobic.003G356000",
-                                "~/genome/features/id/Sobic.009G160100",
-                                "~/genome/features/id/Sobic.009G160100",
-                                "~/genome/features/id/Sobic.009G160100",
                                 "~/genome/features/id/Sobic.009G160100"
                             ],
                             "note": "Features characterized and annotated",
@@ -16457,8 +15612,10 @@
                             "triggering": 1
                         },
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.003G169100"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "Photosystem II CP47 protein PsbB",
                             "triggering": 1
@@ -16488,10 +15645,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G168800",
-                                "~/genome/features/id/Sobic.003G171950.1.p",
-                                "~/genome/features/id/Sobic.008G102100.1.p",
-                                "~/genome/features/id/Sobic.008G102300.1.p"
+                                "~/genome/features/id/Sobic.003G168800"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -16500,7 +15654,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.009G123100.1.p"
+                                "~/genome/features/id/Sobic.009G123100"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -16509,7 +15663,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G288700.1.p"
+                                "~/genome/features/id/Sobic.002G288700"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -16551,10 +15705,10 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169000.1.p",
-                                "~/genome/features/id/Sobic.003G255266.1.p",
-                                "~/genome/features/id/Sobic.008G102200.1.p",
-                                "~/genome/features/id/Sobic.008G102400.1.p"
+                                "~/genome/features/id/Sobic.003G169000",
+                                "~/genome/features/id/Sobic.003G255266",
+                                "~/genome/features/id/Sobic.008G102200",
+                                "~/genome/features/id/Sobic.008G102400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -16785,55 +15939,6 @@
             "reaction_ref": "~/template/reactions/id/rxn23415_d"
         },
         {
-            "direction": "=",
-            "id": "rxn23780_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17401_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17403_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn23780",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn23780_d"
-        },
-        {
             "direction": ">",
             "id": "rxn23805_d0",
             "modelReactionProteins": [
@@ -16841,8 +15946,11 @@
                     "complex_ref": "~/template/complexes/id/PS_complex_c95adc",
                     "modelReactionProteinSubunits": [
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.008G171000",
+                                "~/genome/features/id/Sobic.008G171300"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "2-methyl-6-solanyl-1,4-benzoquinone methyltransferase, eukaryotic type",
                             "triggering": 1
@@ -16940,8 +16048,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.006G140900",
-                                "~/genome/features/id/Sobic.006G140900",
                                 "~/genome/features/id/Sobic.006G140900"
                             ],
                             "note": "Features characterized and annotated",
@@ -17235,7 +16341,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.003G404000",
-                                "~/genome/features/id/Sobic.004G153300",
                                 "~/genome/features/id/Sobic.006G048700"
                             ],
                             "note": "Features characterized and annotated",
@@ -17386,6 +16491,7 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
+                                "~/genome/features/id/Sobic.002G401301",
                                 "~/genome/features/id/Sobic.010G073500"
                             ],
                             "note": "Features characterized and annotated",
@@ -17484,7 +16590,10 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G256800",
-                                "~/genome/features/id/Sobic.002G256900"
+                                "~/genome/features/id/Sobic.002G256900",
+                                "~/genome/features/id/Sobic.004G088100",
+                                "~/genome/features/id/Sobic.010G033300",
+                                "~/genome/features/id/Sobic.010G180400"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -17581,7 +16690,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -17622,7 +16730,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G344400",
                                 "~/genome/features/id/Sobic.001G344400",
                                 "~/genome/features/id/Sobic.002G374600"
                             ],
@@ -17725,7 +16832,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.007G079600",
                                 "~/genome/features/id/Sobic.009G150900"
                             ],
                             "note": "Features characterized and annotated",
@@ -17767,8 +16873,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -17818,8 +16922,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -17869,8 +16971,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -17920,8 +17020,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -17979,9 +17077,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.004G132600",
-                                "~/genome/features/id/Sobic.005G014700",
-                                "~/genome/features/id/Sobic.005G014700",
-                                "~/genome/features/id/Sobic.005G014700",
                                 "~/genome/features/id/Sobic.005G014700"
                             ],
                             "note": "Features characterized and annotated",
@@ -18188,7 +17283,6 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.008G063500",
                                 "~/genome/features/id/Sobic.008G063500"
                             ],
                             "note": "Features characterized and annotated",
@@ -18207,9 +17301,7 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.001G314200",
-                                "~/genome/features/id/Sobic.001G314200",
-                                "~/genome/features/id/Sobic.002G297300"
+                                "~/genome/features/id/Sobic.001G314200"
                             ],
                             "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
@@ -18217,8 +17309,10 @@
                             "triggering": 1
                         },
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.001G046900"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "Photosystem I subunit II PsaD",
                             "triggering": 1
@@ -18234,7 +17328,6 @@
                         },
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G119500",
                                 "~/genome/features/id/Sobic.002G119500"
                             ],
                             "note": "Features characterized and annotated",
@@ -18275,8 +17368,10 @@
                             "triggering": 1
                         },
                         {
-                            "feature_refs": [],
-                            "note": "Features characterized but unannotated",
+                            "feature_refs": [
+                                "~/genome/features/id/Sobic.009G174150"
+                            ],
+                            "note": "Features characterized and annotated",
                             "optionalSubunit": 0,
                             "role": "Photosystem I subunit VII iron-sulfur center PsaC",
                             "triggering": 1
@@ -18485,251 +17580,6 @@
         },
         {
             "direction": "=",
-            "id": "rxn27069_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17406_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17407_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn27069",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn27069_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn27070_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17410_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17411_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn27070",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn27070_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn27071_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17414_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17415_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn27071",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn27071_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn27072_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17418_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17419_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn27072",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn27072_d"
-        },
-        {
-            "direction": "=",
-            "id": "rxn27073_d0",
-            "modelReactionProteins": [
-                {
-                    "complex_ref": "~/template/complexes/id/PS_complex_e65be5",
-                    "modelReactionProteinSubunits": [
-                        {
-                            "feature_refs": [
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G305600",
-                                "~/genome/features/id/Sobic.001G540100",
-                                "~/genome/features/id/Sobic.001G305600"
-                            ],
-                            "note": "Features characterized and annotated",
-                            "optionalSubunit": 0,
-                            "role": "2-oxo-5-methylthiopentanoate transaminase (EC 2.6.1.-)",
-                            "triggering": 1
-                        }
-                    ],
-                    "note": "conditional"
-                }
-            ],
-            "modelReactionReagents": [
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17422_d0"
-                },
-                {
-                    "coefficient": -1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00023_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd17423_d0"
-                },
-                {
-                    "coefficient": 1.0,
-                    "modelcompound_ref": "~/modelcompounds/id/cpd00024_d0"
-                }
-            ],
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "rxn27073",
-            "probability": 0,
-            "protons": 0,
-            "reaction_ref": "~/template/reactions/id/rxn27073_d"
-        },
-        {
-            "direction": "=",
             "id": "rxn27266_d0",
             "modelReactionProteins": [
                 {
@@ -18789,9 +17639,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.002G401800",
-                                "~/genome/features/id/Sobic.002G401800",
-                                "~/genome/features/id/Sobic.002G401800",
                                 "~/genome/features/id/Sobic.002G401800"
                             ],
                             "note": "Features characterized and annotated",
@@ -18946,7 +17793,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169600",
                                 "~/genome/features/id/Sobic.009G107400"
                             ],
                             "note": "Features characterized and annotated",
@@ -18983,8 +17829,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G410500",
-                                "~/genome/features/id/Sobic.003G410500",
                                 "~/genome/features/id/Sobic.003G410500",
                                 "~/genome/features/id/Sobic.007G043400"
                             ],
@@ -19064,7 +17908,6 @@
                     "modelReactionProteinSubunits": [
                         {
                             "feature_refs": [
-                                "~/genome/features/id/Sobic.003G169600",
                                 "~/genome/features/id/Sobic.009G107400"
                             ],
                             "note": "Features characterized and annotated",
@@ -19192,8 +18035,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.005G054900",
-                                "~/genome/features/id/Sobic.008G051300",
                                 "~/genome/features/id/Sobic.008G051300"
                             ],
                             "note": "Features characterized and annotated",
@@ -19251,8 +18092,6 @@
                         {
                             "feature_refs": [
                                 "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.002G151000",
-                                "~/genome/features/id/Sobic.007G112100",
                                 "~/genome/features/id/Sobic.007G112100"
                             ],
                             "note": "Features characterized and annotated",
@@ -19588,7 +18427,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00001",
+            "compound_ref": "~/template/compounds/id/cpd00001",
             "formula": "",
             "id": "cpd00001_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19692,7 +18531,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00007",
+            "compound_ref": "~/template/compounds/id/cpd00007",
             "formula": "",
             "id": "cpd00007_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19732,7 +18571,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00009",
+            "compound_ref": "~/template/compounds/id/cpd00009",
             "formula": "",
             "id": "cpd00009_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19772,7 +18611,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00011",
+            "compound_ref": "~/template/compounds/id/cpd00011",
             "formula": "",
             "id": "cpd00011_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -19812,7 +18651,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00013",
+            "compound_ref": "~/template/compounds/id/cpd00013",
             "formula": "",
             "id": "cpd00013_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -20060,7 +18899,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00048",
+            "compound_ref": "~/template/compounds/id/cpd00048",
             "formula": "",
             "id": "cpd00048_c0",
             "modelcompartment_ref": "~/modelcompartments/id/c0",
@@ -20076,7 +18915,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00048",
+            "compound_ref": "~/template/compounds/id/cpd00048",
             "formula": "",
             "id": "cpd00048_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -20196,7 +19035,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00067",
+            "compound_ref": "~/template/compounds/id/cpd00067",
             "formula": "",
             "id": "cpd00067_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -20492,14 +19331,6 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00126",
-            "formula": "",
-            "id": "cpd00126_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "GMP"
-        },
-        {
-            "charge": 0,
             "compound_ref": "~/template/compounds/id/cpd00129",
             "formula": "",
             "id": "cpd00129_d0",
@@ -20588,7 +19419,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00144",
+            "compound_ref": "~/template/compounds/id/cpd00144",
             "formula": "",
             "id": "cpd00144_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
@@ -20636,7 +19467,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00163",
+            "compound_ref": "~/template/compounds/id/cpd00163",
             "formula": "",
             "id": "cpd00163_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
@@ -21129,14 +19960,6 @@
             "id": "cpd00493_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
             "name": "Pyridoxamine phosphate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd00497",
-            "formula": "",
-            "id": "cpd00497_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "XMP"
         },
         {
             "charge": 0,
@@ -22076,22 +20899,6 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd06559",
-            "formula": "",
-            "id": "cpd06559_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "alpha-Farnesene"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd06763",
-            "formula": "",
-            "id": "cpd06763_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "beta-Ocimene"
-        },
-        {
-            "charge": 0,
             "compound_ref": "~/template/compounds/id/cpd07274",
             "formula": "",
             "id": "cpd07274_d0",
@@ -22428,7 +21235,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd11632",
+            "compound_ref": "~/template/compounds/id/cpd11632",
             "formula": "",
             "id": "cpd11632_c0",
             "modelcompartment_ref": "~/modelcompartments/id/c0",
@@ -22444,7 +21251,7 @@
         },
         {
             "charge": 0,
-            "compound_ref": "~/template/reactions/id/cpd11632",
+            "compound_ref": "~/template/compounds/id/cpd11632",
             "formula": "",
             "id": "cpd11632_e0",
             "modelcompartment_ref": "~/modelcompartments/id/e0",
@@ -22537,198 +21344,6 @@
             "id": "cpd16638_d0",
             "modelcompartment_ref": "~/modelcompartments/id/d0",
             "name": "cis-octadec-9-enoyl-coa"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17400",
-            "formula": "",
-            "id": "cpd17400_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(2'-Methylthio)ethylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17401",
-            "formula": "",
-            "id": "cpd17401_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-Oxo-5-methylthiopentanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17402",
-            "formula": "",
-            "id": "cpd17402_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(2'-Methylthio)ethylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17403",
-            "formula": "",
-            "id": "cpd17403_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Homomethionine"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17404",
-            "formula": "",
-            "id": "cpd17404_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(3'-Methylthio)propylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17405",
-            "formula": "",
-            "id": "cpd17405_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(3'-Methylthio)propylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17406",
-            "formula": "",
-            "id": "cpd17406_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-Oxo-6-methylthiohexanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17407",
-            "formula": "",
-            "id": "cpd17407_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Dihomomethionine"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17408",
-            "formula": "",
-            "id": "cpd17408_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(4'-Methylthio)butylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17409",
-            "formula": "",
-            "id": "cpd17409_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(4'-Methylthio)butylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17410",
-            "formula": "",
-            "id": "cpd17410_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-Oxo-7-methylthioheptanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17411",
-            "formula": "",
-            "id": "cpd17411_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Trihomomethionine"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17412",
-            "formula": "",
-            "id": "cpd17412_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(5'-Methylthio)pentylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17413",
-            "formula": "",
-            "id": "cpd17413_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(5'-Methylthio)pentylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17414",
-            "formula": "",
-            "id": "cpd17414_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "8-Methylthio-2-octanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17415",
-            "formula": "",
-            "id": "cpd17415_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Tetrahomomethionine"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17416",
-            "formula": "",
-            "id": "cpd17416_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(6'-Methylthio)hexylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17417",
-            "formula": "",
-            "id": "cpd17417_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(6'-Methylthio)hexylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17418",
-            "formula": "",
-            "id": "cpd17418_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "9-Methylthio-2-nonanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17419",
-            "formula": "",
-            "id": "cpd17419_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Pentahomomethionine"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17420",
-            "formula": "",
-            "id": "cpd17420_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "2-(7'-Methylthio)heptylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17421",
-            "formula": "",
-            "id": "cpd17421_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "3-(7'-Methylthio)heptylmalate"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17422",
-            "formula": "",
-            "id": "cpd17422_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "10-Methylthio-2-decanoic acid"
-        },
-        {
-            "charge": 0,
-            "compound_ref": "~/template/compounds/id/cpd17423",
-            "formula": "",
-            "id": "cpd17423_d0",
-            "modelcompartment_ref": "~/modelcompartments/id/d0",
-            "name": "Hexahomomethionine"
         },
         {
             "charge": 0,

@@ -1,12 +1,30 @@
 """
-Combined paper figure (Option C):
-  Panel A  –  per-day KDE density grid (species × days)
-               plastid vs non-plastid genes, Control solid / FeLim dashed
-  Panel B  –  reaction-score method comparison line plot
-               # reactions at 95th percentile over time, blue=Poplar / orange=Sorghum
+Figure 3: plastid proteome distributions paired with the method comparison.
+
+  Panel A  –  per-day KDE density grid (species x days), plastid vs
+              non-plastid genes, Control solid / FeLim dashed
+  Panel B  –  reaction-score method comparison line plot: # scored reactions
+              in the 95th percentile of |I-dist| over time,
+              blue = Poplar / orange = Sorghum
 
 Imports data-loading functions directly from the two source scripts so all
 logic stays in one place and this script stays thin.
+
+Data sources
+------------
+projects/qpsi-plastidial/integration_results/{Species}_reaction_score*.tsv
+projects/qpsi-plastidial/rnaseq-data/{Species}_raw_genes_tmm_mean.tsv[.xz]
+data/plastid_proteome/compiled_arabidopsis_plastid_genes.txt
+a directory of plastidial reconstruction JSONs (--models-dir)
+
+Outputs
+-------
+fig_proteome.png (override with --output).
+
+Run: micromamba run -n bf-runtime python figures/fig_proteome.py
+
+Every default now resolves against this repository, so no arguments are needed
+to reproduce the published figure.
 """
 import warnings
 warnings.simplefilter(action='ignore', category=Warning)
@@ -144,7 +162,6 @@ def _draw_line_panel(ax, method_counts, species_list, day_order):
     ax.set_ylim(bottom=0)
     ax.set_ylabel('# reactions at 95th percentile', fontsize=9)
     ax.set_xlabel('Time point', fontsize=9)
-    ax.yaxis.grid(True, linestyle=':', color=(0, 0, 0, 0.15), linewidth=0.8)
     ax.set_axisbelow(True)
     ax.set_facecolor('white')
     ax.spines['top'].set_visible(False)
@@ -167,12 +184,15 @@ def _line_legend(ax, species_list):
             markerfacecolor='white', markeredgecolor='black',
             markersize=7, label=m['label'],
         ))
+    # Tucked against the y-axis so the legend fills the gap between it and the
+    # 7d peak. The x-limits run day 1 to day 22, so 7d sits at (7 - 1) / 21 =
+    # 0.286 of the axis; the legend is ~0.19 wide, so anchoring its left edge
+    # at 0.01 puts its centre near 0.105 and its right edge clear of the peak.
     ax.legend(handles=handles, fontsize=8, loc='upper left',
               frameon=True, framealpha=0.9,
               labelspacing=0.2, handletextpad=0.4,
-              handlelength=1.8, borderpad=0.35, 
-              bbox_to_anchor=(0.06, 1))
-              # bbox_to_anchor=(0.3, 0.79))
+              handlelength=1.8, borderpad=0.35,
+              bbox_to_anchor=(0.01, 0.99))
 
 
 # ── Main assembly ─────────────────────────────────────────────────────────────
@@ -182,7 +202,7 @@ def build_combined_figure(
     species_list=('Poplar', 'Sorghum'),
     treatment='FeLim', control_id='Control', tissue='Leaf',
     day_order=DAY_ORDER, exclude_days=('0h', '1h'),
-    output_path='combined_paper_figure.pdf',
+    output_path='fig_proteome.png',
     models_dir=None, ignore_organellar_roles=None,
 ):
     # ── Load data ─────────────────────────────────────────────────────────
@@ -265,7 +285,8 @@ if __name__ == '__main__':
                                                'qpsi-plastidial', 'integration_results'),
                          help='Folder with {Species}_reaction_score*.tsv files')
     parser.add_argument('--tmm-dir',
-                         default=os.path.join(project_root, 'data', 'RNAseq', 'tmm'))
+                         default=os.path.join(project_root, 'projects',
+                                               'qpsi-plastidial', 'rnaseq-data'))
     parser.add_argument('--orthologs-dir',
                          default=os.path.join(project_root, 'data', 'orthologs'))
     parser.add_argument('--plastid-gene-file',
@@ -276,10 +297,11 @@ if __name__ == '__main__':
     parser.add_argument('--control',   default='Control')
     parser.add_argument('--tissue',    default='Leaf')
     parser.add_argument('--exclude-days', nargs='*', default=['0h', '1h'])
-    parser.add_argument('--output', default='combined_paper_figure.pdf')
+    parser.add_argument('--output', default='fig_proteome.png')
     parser.add_argument('--models-dir',
-                         default=os.path.join(project_root, 'Models'),
-                         help='Folder with plastidial-reconstruction model JSON files')
+                         default=os.path.join(project_root, 'projects',
+                                               'qpsi-plastidial', 'inputs'),
+                         help='Folder with one plastidial reconstruction JSON per species')
     parser.add_argument('--ignore-organellar-roles',
                          default=os.path.join(project_root, 'data',
                                                'organellar-encoded_subunits_to_ignore.txt'))
