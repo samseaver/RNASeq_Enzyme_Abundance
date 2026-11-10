@@ -38,6 +38,7 @@ FONT       = "Helvetica Neue, Helvetica, Arial, sans-serif"
 DAY_ORDER  = ('2d', '4d', '7d', '14d', '21d')
 LS_MAP     = {'solid': '-', 'dash': '--', 'dot': ':'}
 MARKER_MAP = {'circle': 'o', 'square': 's', 'triangle-up': '^'}
+methods = ['max', 'sum']#, 'relative']
 
 
 # ── Panel A helpers ──────────────────────────────────────────────────────────
@@ -119,7 +120,7 @@ def _draw_line_panel(ax, method_counts, species_list, day_order):
 
     for species_name in species_list:
         color = SPECIES_COLOR[species_name]
-        for method in ['max', 'sum', 'relative']:
+        for method in methods:
             m          = METHOD_STYLE[method]
             counts_df  = method_counts[method].get(species_name, pa.DataFrame())
             if counts_df.empty:
@@ -157,7 +158,7 @@ def _line_legend(ax, species_list):
         handles.append(Line2D([0], [0], color=SPECIES_COLOR[sp],
                                lw=2, label=sp))
     # Methods — black lines with marker + style
-    for method in ['max', 'sum', 'relative']:
+    for method in methods:
         m = METHOD_STYLE[method]
         handles.append(Line2D(
             [0], [0], color='black',
@@ -170,7 +171,7 @@ def _line_legend(ax, species_list):
               frameon=True, framealpha=0.9,
               labelspacing=0.2, handletextpad=0.4,
               handlelength=1.8, borderpad=0.35, 
-              bbox_to_anchor=(0.1, 0.99))
+              bbox_to_anchor=(0.06, 1))
               # bbox_to_anchor=(0.3, 0.79))
 
 
@@ -196,7 +197,7 @@ def build_combined_figure(
 
     print("Computing reaction-score counts for panel B …")
     method_counts = {}
-    for method in ['max', 'sum', 'relative']:
+    for method in methods:
         method_counts[method] = compute_top_reaction_counts(
             data_dir, list(species_list), method, tissue, treatment, control_id,
             list(exclude_days), list(day_order),
